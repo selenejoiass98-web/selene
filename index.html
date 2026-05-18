@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sélene Jóias — Joias em ouro 18k criadas para mulheres que valorizam elegância, qualidade e significado. Balneário Camboriú, SC.">
+<title>Sélene Jóias — Elegância que transforma</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+/* ── PAGE-SPECIFIC: INDEX ── */
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: var(--nav-h);
+  background: var(--cream);
+  overflow: hidden;
+}
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem 4rem 5rem 6rem;
+}
+.hero-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hero-tag::before { content: ''; width: 32px; height: 1px; background: var(--gold-light); }
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3.5rem, 5.5vw, 6rem);
+  font-weight: 300;
+  color: var(--brown-deep);
+  line-height: 1.0;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.8rem;
+  animation: fadeUp 0.8s 0.25s ease both;
+}
+.hero-title em { font-style: italic; color: var(--gold); }
+.hero-subtitle {
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: var(--text-soft);
+  font-weight: 300;
+  max-width: 380px;
+  letter-spacing: 0.02em;
+  margin-bottom: 2.8rem;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fadeUp 0.8s 0.55s ease both;
+}
+.hero-stats {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--gold-pale);
+  animation: fadeUp 0.8s 0.65s ease both;
+}
+.hero-stat {}
+.hero-stat .num {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--gold);
+  font-style: italic;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+.hero-stat .lbl {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+.hero-visual {
+  position: relative;
+  overflow: hidden;
+  background: var(--cream-dark);
+}
+.hero-visual-main {
+  width: 100%;
+  height: 70%;
+  background: linear-gradient(160deg, #D4B896 0%, #A87E5A 45%, #6B4F3A 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-visual-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
+}
+.hero-visual-overlay {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 2;
+}
+.hero-visual-overlay .feat-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 0.3rem;
+}
+.hero-visual-overlay .feat-name {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(255,255,255,0.9);
+}
+.hero-visual-glyph {
+  font-family: var(--font-serif);
+  font-size: 10rem;
+  color: rgba(255,255,255,0.1);
+  font-style: italic;
+  animation: fadeIn 1.2s 0.3s ease both;
+  user-select: none;
+}
+.hero-visual-bottom {
+  height: 30%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.hero-sub-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  color: rgba(255,255,255,0.15);
+  font-style: italic;
+}
+.hero-sub-panel:first-child {
+  background: linear-gradient(135deg, #C4A882, #8B6B3D);
+}
+.hero-sub-panel:last-child {
+  background: linear-gradient(135deg, #EDE4DA, #C4A47A);
+  color: rgba(0,0,0,0.1);
+}
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  writing-mode: vertical-rl;
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.hero-scroll-hint::after {
+  content: '';
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.25);
+}
+
+/* BRAND BAR */
+.brand-bar {
+  background: var(--brown-deep);
+  padding: 1.1rem 0;
+  overflow: hidden;
+}
+.brand-bar-track {
+  display: flex;
+  gap: 3.5rem;
+  align-items: center;
+  animation: marquee 22s linear infinite;
+  white-space: nowrap;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.brand-bar-item {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(224,206,187,0.55);
+  flex-shrink: 0;
+}
+.brand-bar-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+/* COLLECTIONS */
+.collections {
+  padding: 6rem 0;
+  background: var(--white);
+}
+.collections-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* FEATURED STRIP */
+.featured-strip {
+  background: var(--cream);
+  padding: 5rem 0;
+  overflow: hidden;
+}
+.featured-strip-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  min-height: 500px;
+}
+.featured-visual {
+  background: linear-gradient(150deg, #C4A882 0%, #7C5C35 60%, #3D2B1A 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 480px;
+}
+.featured-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.08) 0%, transparent 60%);
+}
+.featured-glyph {
+  font-family: var(--font-serif);
+  font-size: 14rem;
+  color: rgba(255,255,255,0.07);
+  font-style: italic;
+  user-select: none;
+  position: absolute;
+}
+.featured-badge {
+  position: absolute;
+  top: 2rem; left: 2rem;
+  background: var(--gold-light);
+  color: var(--brown-deep);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+}
+.featured-text {
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.featured-text .section-tag { margin-bottom: 1rem; }
+.featured-text .feat-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  font-weight: 300;
+  color: var(--brown-deep);
+  line-height: 1.1;
+  margin-bottom: 1.2rem;
+}
+.featured-text .feat-title em { font-style: italic; color: var(--gold); }
+.featured-text p {
+  font-size: 0.85rem;
+  line-height: 1.85;
+  color: var(--text-soft);
+  font-weight: 300;
+  margin-bottom: 2.5rem;
+  max-width: 360px;
+}
+.featured-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+.featured-price .current {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--gold);
+  font-weight: 300;
+}
+.featured-price .old {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  text-decoration: line-through;
+}
+.featured-price .installment {
+  font-size: 0.68rem;
+  color: var(--text-soft);
+  letter-spacing: 0.05em;
+}
+
+/* ABOUT */
+.about {
+  padding: 7rem 0;
+  background: var(--white);
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+.about-visual {
+  position: relative;
+}
+.about-img-main {
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: linear-gradient(160deg, #D4B896 0%, #A07848 50%, #3D2B1A 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.about-img-main-glyph {
+  font-family: var(--font-serif);
+  font-size: 9rem;
+  color: rgba(255,255,255,0.1);
+  font-style: italic;
+}
+.about-img-accent {
+  position: absolute;
+  bottom: -2rem;
+  right: -2rem;
+  width: 52%;
+  aspect-ratio: 1;
+  background: var(--brown-deep);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 1.5rem;
+}
+.about-img-accent .big-num {
+  font-family: var(--font-serif);
+  font-size: 3.2rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold-light);
+  line-height: 1;
+}
+.about-img-accent .big-lbl {
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+}
+.about-text .section-title { margin-bottom: 1.5rem; }
+.about-text p {
+  font-size: 0.85rem;
+  line-height: 1.9;
+  color: var(--text-soft);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.2rem;
+}
+.about-pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-top: 2.5rem;
+}
+.pillar {
+  padding: 1.2rem;
+  border: 1px solid var(--gold-pale);
+  background: var(--cream);
+}
+.pillar-icon {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--gold-light);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+.pillar h4 {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--brown-deep);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+.pillar p {
+  font-size: 0.68rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* TESTIMONIALS */
+.testimonials {
+  padding: 6rem 0;
+  background: var(--brown-deep);
+}
+.testimonials .section-tag { color: var(--gold-light); }
+.testimonials .section-tag::before { background: var(--gold); }
+.testimonials .section-title { color: var(--cream); }
+.testimonials .section-title em { color: var(--gold-light); }
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.testimonial {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(196,164,122,0.15);
+  padding: 2rem;
+  transition: border-color var(--transition);
+}
+.testimonial:hover { border-color: rgba(196,164,122,0.35); }
+.testimonial-stars {
+  color: var(--gold-light);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 1.2rem;
+}
+.testimonial-text {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(245,240,234,0.85);
+  line-height: 1.75;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.author-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  color: var(--white);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.author-name {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--gold-pale);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.1rem;
+}
+.author-city {
+  font-size: 0.6rem;
+  color: var(--text-soft);
+  letter-spacing: 0.1em;
+}
+
+/* NEWSLETTER */
+.newsletter {
+  padding: 5.5rem 0;
+  background: var(--cream-dark);
+  text-align: center;
+}
+.newsletter .section-tag { justify-content: center; }
+.newsletter .section-title { margin-bottom: 0.8rem; }
+.newsletter-sub {
+  font-size: 0.83rem;
+  color: var(--text-soft);
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+.newsletter-form {
+  display: flex;
+  max-width: 460px;
+  margin: 0 auto;
+}
+.newsletter-input {
+  flex: 1;
+  padding: 0.9rem 1.4rem;
+  border: 1px solid var(--gold-pale);
+  border-right: none;
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+.newsletter-input:focus { border-color: var(--gold-light); }
+.newsletter-input::placeholder { color: var(--text-soft); }
+.newsletter-btn {
+  padding: 0.9rem 2rem;
+  background: var(--gold);
+  color: var(--white);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition);
+  white-space: nowrap;
+}
+.newsletter-btn:hover { background: var(--brown-mid); }
+.newsletter-privacy {
+  font-size: 0.62rem;
+  color: var(--text-soft);
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-content { padding: 3rem 1.5rem; }
+  .hero-visual { height: 60vw; }
+  .featured-strip-inner { grid-template-columns: 1fr; }
+  .featured-visual { min-height: 300px; }
+  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .about-img-accent { display: none; }
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .collections-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
+@media (max-width: 600px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .hero-stats { gap: 1.5rem; }
+  .about-pillars { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Sélene Jóias</a>
+    <ul class="nav-links">
+      <li><a href="catalogo.html">Coleções</a></li>
+      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="sobre.html">Nossa História</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-cart" onclick="openCart()">
+        Carrinho
+        <span class="cart-badge cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Nova Coleção · Primavera 2025</div>
+    <h1 class="hero-title">
+      Joias que<br>
+      contam sua<br>
+      <em>história</em>
+    </h1>
+    <p class="hero-subtitle">
+      Peças criadas com ouro 18k e pedras selecionadas, 
+      inspiradas na elegância e sofisticação feminina. 
+      Cada joia é única — como você.
+    </p>
+    <div class="hero-actions">
+      <a href="catalogo.html" class="btn btn-primary">Ver Coleção</a>
+      <a href="sobre.html" class="btn btn-ghost">Nossa história</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="num">18k</div>
+        <div class="lbl">Ouro garantido</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">500+</div>
+        <div class="lbl">Clientes felizes</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">1 ano</div>
+        <div class="lbl">De garantia</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-visual-main">
+      <div class="hero-visual-glyph">◈</div>
+      <div class="hero-visual-overlay">
+        <div class="feat-label">Destaque da coleção</div>
+        <div class="feat-name">Colar Lua Dourada</div>
+      </div>
+    </div>
+    <div class="hero-visual-bottom">
+      <div class="hero-sub-panel">✦</div>
+      <div class="hero-sub-panel" style="color:rgba(90,60,30,0.12);">⊛</div>
+    </div>
+    <div class="hero-scroll-hint">Explorar</div>
+  </div>
+</section>
+
+<!-- ── BRAND BAR ── -->
+<div class="brand-bar">
+  <div class="brand-bar-track" id="bar-track">
+    <span class="brand-bar-item">Ouro 18k Certificado</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Frete Grátis acima de R$299</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Garantia de 1 Ano</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Certificado de Autenticidade</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Embalagem Especial Inclusa</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Parcele em até 12x</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Pix com 5% de Desconto</span>
+    <span class="brand-bar-dot"></span>
+    <!-- duplicado para loop contínuo -->
+    <span class="brand-bar-item">Ouro 18k Certificado</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Frete Grátis acima de R$299</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Garantia de 1 Ano</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Certificado de Autenticidade</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Embalagem Especial Inclusa</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Parcele em até 12x</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Pix com 5% de Desconto</span>
+    <span class="brand-bar-dot"></span>
+  </div>
+</div>
+
+<!-- ── COLEÇÕES ── -->
+<section class="collections" id="colecoes">
+  <div class="container">
+    <div class="collections-header reveal">
+      <div>
+        <div class="section-tag">Produtos</div>
+        <h2 class="section-title">Nossa <em>Coleção</em></h2>
+      </div>
+      <a href="catalogo.html" class="btn btn-ghost">Ver todos os produtos</a>
+    </div>
+    <div class="products-grid" id="products-grid"></div>
+  </div>
+</section>
+
+<!-- ── DESTAQUE ── -->
+<section class="featured-strip reveal">
+  <div class="featured-strip-inner">
+    <div class="featured-visual">
+      <div class="featured-glyph">◯</div>
+      <div class="featured-badge">Peça em destaque</div>
+    </div>
+    <div class="featured-text">
+      <div class="section-tag">Mais amado</div>
+      <h2 class="feat-title">Colar Lua<br><em>Dourada</em></h2>
+      <p>Nossa peça mais especial. O disco dourado em ouro 18k maciço captura a luz de um jeito único — delicado durante o dia, marcante à noite. Acompanha corrente veneziana fina de 45cm.</p>
+      <div class="featured-price">
+        <span class="current">R$ 289,00</span>
+        <span class="old">R$ 380,00</span>
+        <span class="installment">ou 12× de R$ 27,08</span>
+      </div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="addToCart({id:'prod-1',name:'Colar Lua Dourada',variant:'Ouro 18k · 45cm',price:289,symbol:'◯'})">
+          Adicionar ao Carrinho
+        </button>
+        <a href="produto.html?id=prod-1" class="btn btn-outline">Ver detalhes</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SOBRE ── -->
+<section class="about" id="sobre">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual reveal">
+        <div class="about-img-main">
+          <div class="about-img-main-glyph">SJ</div>
+        </div>
+        <div class="about-img-accent">
+          <div class="big-num">500+</div>
+          <div class="big-lbl">Mulheres<br>encantadas</div>
+        </div>
+      </div>
+      <div class="about-text reveal reveal-delay-2">
+        <div class="section-tag">Nossa história</div>
+        <h2 class="section-title">Feitas com<br><em>paixão</em></h2>
+        <p>A Sélene Jóias nasceu do desejo de criar peças que vão além da beleza — joias que carregam significado, que marcam momentos e que se tornam parte da história de quem as usa.</p>
+        <p>Trabalhamos com ouro 18k e pedras cuidadosamente selecionadas. Cada peça passa por um rigoroso processo do design ao acabamento final, garantindo qualidade e exclusividade.</p>
+        <a href="sobre.html" class="btn btn-ghost" style="margin-top:0.5rem;">Conhecer nossa história</a>
+        <div class="about-pillars">
+          <div class="pillar">
+            <div class="pillar-icon">✦</div>
+            <h4>Exclusividade</h4>
+            <p>Peças únicas, com atenção a cada detalhe do design ao acabamento.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">◈</div>
+            <h4>Autenticidade</h4>
+            <p>Ouro 18k certificado. O que você vê é o que você recebe.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">∿</div>
+            <h4>Feminilidade</h4>
+            <p>Criadas para celebrar a mulher em todas as suas fases.</p>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">○</div>
+            <h4>Atemporalidade</h4>
+            <p>Design que transcende tendências e dura para sempre.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEPOIMENTOS ── -->
+<section class="testimonials">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Depoimentos</div>
+      <h2 class="section-title">O que nossas<br>clientes <em>dizem</em></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial reveal reveal-delay-1">
+        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+        <p class="testimonial-text">"Recebi o colar de aniversário e fiquei encantada. A embalagem é linda, a peça é impecável. Com certeza voltarei a comprar!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AM</div>
+          <div>
+            <div class="author-name">Ana Martins</div>
+            <div class="author-city">Florianópolis, SC</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal reveal-delay-2">
+        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+        <p class="testimonial-text">"Comprei o anel personalizado e ficou perfeito. O atendimento foi incrível, super atencioso do início ao fim. Recomendo demais!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">JS</div>
+          <div>
+            <div class="author-name">Juliana Silva</div>
+            <div class="author-city">Balneário Camboriú, SC</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial reveal reveal-delay-3">
+        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
+        <p class="testimonial-text">"Presente perfeito para minha mãe. Ela amou o conjunto de brincos. Qualidade incrível, superou todas as expectativas!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">CF</div>
+          <div>
+            <div class="author-name">Camila Ferreira</div>
+            <div class="author-city">Itajaí, SC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── NEWSLETTER ── -->
+<section class="newsletter">
+  <div class="container-sm">
+    <div class="reveal">
+      <div class="section-tag">Novidades</div>
+      <h2 class="section-title">Fique por <em>dentro</em></h2>
+      <p class="newsletter-sub">Receba em primeira mão nossas novas coleções, promoções exclusivas e dicas de estilo.</p>
+      <div class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="Seu melhor e-mail" id="newsletter-email">
+        <button class="newsletter-btn" onclick="subscribeNewsletter()">Assinar</button>
+      </div>
+      <p class="newsletter-privacy">Sem spam. Cancele quando quiser.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Sélene Jóias</div>
+        <div class="tagline">Elegância que transforma</div>
+        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado. Baseada em Balneário Camboriú, entregamos para todo o Brasil.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Coleções</h4>
+        <ul>
+          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+          <li><a href="catalogo.html?cat=colares">Colares</a></li>
+          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+          <li><a href="catalogo.html?cat=conjuntos">Conjuntos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="#">Política de entrega</a></li>
+          <li><a href="#">Trocas e devoluções</a></li>
+          <li><a href="#">Cuidados com joias</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>📱 (47) 99999-9999</li>
+          <li>✉ contato@selenejoias.com.br</li>
+          <li>📍 Balneário Camboriú, SC</li>
+        </ul>
+        <div style="margin-top:1.2rem;font-size:0.65rem;color:var(--text-soft);letter-spacing:0.05em;line-height:1.8;">
+          Seg–Sex: 9h às 18h<br>Sáb: 9h às 13h
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a class="social-link" href="#" title="Instagram">ig</a>
+        <a class="social-link" href="#" title="Facebook">fb</a>
+        <a class="social-link" href="#" title="TikTok">tt</a>
+        <a class="social-link" href="https://wa.me/5547000000000" title="WhatsApp">wa</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── CART DRAWER ── -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h2>Seu Carrinho</h2>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body">
+    <div class="cart-empty" id="cart-empty" style="display:flex;">
+      <div class="cart-empty-icon">◈</div>
+      <p>Seu carrinho está vazio</p>
+      <a href="catalogo.html" class="btn btn-outline" onclick="closeCart()" style="margin-top:0.5rem;font-size:0.62rem;">Ver produtos</a>
+    </div>
+    <div id="cart-items"></div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none;">
+    <div class="free-shipping-bar" id="free-shipping-bar"></div>
+    <div class="cart-totals">
+      <div class="cart-total-row">
+        <span class="label">Subtotal</span>
+        <span class="value" id="cart-subtotal">R$ 0,00</span>
+      </div>
+      <div class="cart-total-row">
+        <span class="label">Frete</span>
+        <span class="value" id="cart-frete">Calcular no checkout</span>
+      </div>
+      <div class="cart-total-row final">
+        <span class="label">Total</span>
+        <span class="value" id="cart-total">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-cta">
+      <a href="checkout.html" class="btn btn-primary" style="justify-content:center;" onclick="closeCart()">Finalizar Compra</a>
+      <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg">Produto adicionado!</span>
+</div>
+
+<script src="assets/js/cart.js"></script>
+<script>
+// ── PRODUTOS (substituir por dados reais) ──
+const PRODUCTS = [
+  { id:'p1', name:'Colar Lua Dourada',    cat:'Colares',   price:289, oldPrice:380, symbol:'◯', badge:'Mais Vendido', variant:'Ouro 18k · 45cm' },
+  { id:'p2', name:'Anel Serpente',        cat:'Anéis',     price:199, oldPrice:null, symbol:'⊛', badge:null, variant:'Ouro 18k · T16' },
+  { id:'p3', name:'Pulseira Elos',        cat:'Pulseiras', price:349, oldPrice:420, symbol:'∞', badge:'Novo', variant:'Ouro 18k · 18cm' },
+  { id:'p4', name:'Brinco Argola Média',  cat:'Brincos',   price:159, oldPrice:null, symbol:'◎', badge:null, variant:'Ouro 18k · 2cm' },
+  { id:'p5', name:'Anel Minimalista',     cat:'Anéis',     price:179, oldPrice:null, symbol:'○', badge:'Exclusivo', variant:'Ouro 18k · T17' },
+  { id:'p6', name:'Colar Borboleta',      cat:'Colares',   price:299, oldPrice:360, symbol:'✦', badge:'Ed. Limitada', variant:'Ouro 18k + Esmalte' },
+];
+
+function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = PRODUCTS.map(p => `
+    <div class="product-card">
+      <a href="produto.html?id=${p.id}" class="product-card-img">
+        <div class="product-card-placeholder">${p.symbol}</div>
+        ${p.badge ? `<span class="product-badge ${p.badge==='Novo'?'novo':''}">${p.badge}</span>` : ''}
+        <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
+      </a>
+      <div class="product-card-info">
+        <div class="product-cat">${p.cat}</div>
+        <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
+        <div class="product-price-row">
+          <div>
+            <span class="product-price">R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+            ${p.oldPrice ? `<span class="product-old-price">R$ ${p.oldPrice},00</span>` : ''}
+          </div>
+          <button class="product-add-btn" onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}'})" title="Adicionar ao carrinho">+</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function subscribeNewsletter() {
+  const email = document.getElementById('newsletter-email').value;
+  if (!email || !email.includes('@')) {
+    showToast('Digite um e-mail válido');
+    return;
+  }
+  showToast('Obrigada! Você está na nossa lista VIP ✦');
+  document.getElementById('newsletter-email').value = '';
+}
+
+renderProducts();
+</script>
+</body>
+</html>

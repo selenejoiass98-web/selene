@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Catálogo Sélene Jóias — Explore nossa coleção completa de joias em ouro 18k. Anéis, colares, pulseiras e brincos.">
+<title>Coleção — Sélene Jóias</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+/* ── CATALOG PAGE ── */
+
+.page-hero {
+  padding-top: var(--nav-h);
+  background: var(--cream);
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--gold-pale);
+}
+.page-hero-inner {
+  padding: 3.5rem 0 0;
+}
+.page-breadcrumb {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.page-breadcrumb a { color: var(--text-soft); transition: color var(--transition); }
+.page-breadcrumb a:hover { color: var(--gold); }
+.page-breadcrumb span { opacity: 0.4; }
+
+.page-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 300;
+  color: var(--brown-deep);
+  line-height: 1.05;
+  margin-bottom: 0.8rem;
+}
+.page-hero-title em { font-style: italic; color: var(--gold); }
+.page-hero-sub {
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+
+/* FILTER BAR */
+.filter-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gold-pale);
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 50;
+}
+.filter-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 0;
+  gap: 1.5rem;
+}
+.filter-cats {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.filter-cat {
+  padding: 0.45rem 1.1rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  border: 1px solid var(--gold-pale);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-sans);
+  white-space: nowrap;
+}
+.filter-cat:hover { border-color: var(--gold-light); color: var(--gold); }
+.filter-cat.active {
+  background: var(--gold);
+  color: var(--white);
+  border-color: var(--gold);
+}
+
+.filter-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+.filter-count {
+  font-size: 0.65rem;
+  color: var(--text-soft);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+.filter-sort {
+  padding: 0.45rem 1rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--text-mid);
+  border: 1px solid var(--gold-pale);
+  background: var(--white);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2rem;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239C8070' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+}
+.filter-sort:focus { border-color: var(--gold-light); }
+
+.filter-toggle-mobile {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  background: none;
+  border: 1px solid var(--gold-pale);
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+
+/* CATALOG LAYOUT */
+.catalog-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 3rem;
+  padding: 3rem 0 5rem;
+  align-items: start;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: sticky;
+  top: calc(var(--nav-h) + 56px);
+}
+.sidebar-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--gold-pale);
+}
+.sidebar-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.sidebar-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+  margin-bottom: 1rem;
+}
+.sidebar-options { display: flex; flex-direction: column; gap: 0.5rem; }
+.sidebar-option {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--text-mid);
+  transition: color var(--transition);
+  padding: 0.2rem 0;
+}
+.sidebar-option:hover { color: var(--gold); }
+.sidebar-option input[type="checkbox"] {
+  width: 14px; height: 14px;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+.sidebar-option.active { color: var(--gold); font-weight: 500; }
+
+/* Price range */
+.price-range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--text-soft);
+  margin-bottom: 0.5rem;
+}
+.price-range-input {
+  width: 100%;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+
+/* Material dots */
+.mat-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid var(--gold-pale);
+}
+
+/* PRODUCTS AREA */
+.products-area {}
+.products-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.products-result {
+  font-size: 0.72rem;
+  color: var(--text-soft);
+  letter-spacing: 0.05em;
+}
+.products-result strong { color: var(--text); font-weight: 500; }
+.view-toggle {
+  display: flex;
+  gap: 0.3rem;
+}
+.view-btn {
+  width: 32px; height: 32px;
+  background: none;
+  border: 1px solid var(--gold-pale);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  transition: all var(--transition);
+}
+.view-btn.active { background: var(--gold); color: var(--white); border-color: var(--gold); }
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.8rem;
+  transition: all var(--transition);
+}
+.catalog-grid.two-col {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+}
+
+/* Empty state */
+.empty-state {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--text-soft);
+}
+.empty-state .empty-icon {
+  font-family: var(--font-serif);
+  font-size: 4rem;
+  color: var(--gold-pale);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+.empty-state p { font-size: 0.85rem; margin-bottom: 1.5rem; }
+
+/* PAGINATION */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--gold-pale);
+}
+.page-btn {
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--gold-pale);
+  background: none;
+  font-size: 0.75rem;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-sans);
+}
+.page-btn:hover { border-color: var(--gold); color: var(--gold); }
+.page-btn.active { background: var(--gold); color: var(--white); border-color: var(--gold); }
+.page-btn.arrow { font-size: 1rem; }
+
+/* MOBILE SIDEBAR DRAWER */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(42,31,20,0.45);
+  z-index: 150;
+}
+.sidebar-overlay.open { display: block; }
+.sidebar-drawer {
+  position: fixed;
+  top: 0; left: 0;
+  width: 280px;
+  height: 100vh;
+  background: var(--white);
+  z-index: 151;
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+.sidebar-drawer.open { transform: translateX(0); }
+.sidebar-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gold-pale);
+}
+.sidebar-drawer-header h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--brown-deep);
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .catalog-layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .filter-toggle-mobile { display: flex; }
+  .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+}
+@media (max-width: 500px) {
+  .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .filter-cats { display: none; }
+  .filter-bar-inner { justify-content: flex-end; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Sélene Jóias</a>
+    <ul class="nav-links">
+      <li><a href="catalogo.html" style="color:var(--gold);">Coleções</a></li>
+      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="sobre.html">Nossa História</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-cart" onclick="openCart()">
+        Carrinho
+        <span class="cart-badge cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── PAGE HERO ── -->
+<div class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="page-breadcrumb">
+        <a href="index.html">Início</a>
+        <span>›</span>
+        <span id="breadcrumb-current">Coleção</span>
+      </div>
+      <h1 class="page-hero-title" id="page-title">Nossa <em>Coleção</em></h1>
+      <p class="page-hero-sub">Joias em ouro 18k criadas com exclusividade e elegância</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── FILTER BAR ── -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-bar-inner">
+      <div class="filter-cats" id="filter-cats">
+        <button class="filter-cat active" data-cat="todos" onclick="filterCat('todos', this)">Todos</button>
+        <button class="filter-cat" data-cat="aneis" onclick="filterCat('aneis', this)">Anéis</button>
+        <button class="filter-cat" data-cat="colares" onclick="filterCat('colares', this)">Colares</button>
+        <button class="filter-cat" data-cat="pulseiras" onclick="filterCat('pulseiras', this)">Pulseiras</button>
+        <button class="filter-cat" data-cat="brincos" onclick="filterCat('brincos', this)">Brincos</button>
+        <button class="filter-cat" data-cat="conjuntos" onclick="filterCat('conjuntos', this)">Conjuntos</button>
+      </div>
+      <div class="filter-right">
+        <button class="filter-toggle-mobile" onclick="openSidebarDrawer()">⚙ Filtros</button>
+        <span class="filter-count" id="filter-count">12 produtos</span>
+        <select class="filter-sort" onchange="sortProducts(this.value)">
+          <option value="default">Ordenar por</option>
+          <option value="preco-asc">Menor preço</option>
+          <option value="preco-desc">Maior preço</option>
+          <option value="novidades">Novidades</option>
+          <option value="mais-vendidos">Mais vendidos</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CATALOG LAYOUT ── -->
+<div class="container">
+  <div class="catalog-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Categoria</div>
+        <div class="sidebar-options">
+          <label class="sidebar-option"><input type="checkbox" onchange="toggleSidebarCat('aneis',this)"> Anéis <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(4)</span></label>
+          <label class="sidebar-option"><input type="checkbox" onchange="toggleSidebarCat('colares',this)"> Colares <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(3)</span></label>
+          <label class="sidebar-option"><input type="checkbox" onchange="toggleSidebarCat('pulseiras',this)"> Pulseiras <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(2)</span></label>
+          <label class="sidebar-option"><input type="checkbox" onchange="toggleSidebarCat('brincos',this)"> Brincos <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(3)</span></label>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">Preço</div>
+        <div class="price-range-labels">
+          <span id="price-min-label">R$ 0</span>
+          <span id="price-max-label">R$ 800</span>
+        </div>
+        <input type="range" class="price-range-input" min="0" max="800" value="800" id="price-range" oninput="filterPrice(this.value)">
+        <div style="font-size:0.65rem;color:var(--text-soft);margin-top:0.5rem;letter-spacing:0.05em;">Até <strong id="price-current" style="color:var(--gold);">R$ 800</strong></div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">Material</div>
+        <div class="sidebar-options">
+          <label class="sidebar-option">
+            <div class="mat-dot" style="background:linear-gradient(135deg,#C4A47A,#7C5C35);"></div>
+            Ouro 18k
+          </label>
+          <label class="sidebar-option">
+            <div class="mat-dot" style="background:linear-gradient(135deg,#E8E8E8,#B0B0B0);"></div>
+            Ouro Branco
+          </label>
+          <label class="sidebar-option">
+            <div class="mat-dot" style="background:linear-gradient(135deg,#E8B4A0,#C47858);"></div>
+            Ouro Rosé
+          </label>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">Ocasião</div>
+        <div class="sidebar-options">
+          <label class="sidebar-option"><input type="checkbox"> Uso diário</label>
+          <label class="sidebar-option"><input type="checkbox"> Festa & Eventos</label>
+          <label class="sidebar-option"><input type="checkbox"> Presente</label>
+          <label class="sidebar-option"><input type="checkbox"> Noivado</label>
+        </div>
+      </div>
+
+      <button class="btn btn-outline" style="width:100%;justify-content:center;font-size:0.6rem;" onclick="clearFilters()">
+        Limpar filtros
+      </button>
+    </aside>
+
+    <!-- PRODUCTS AREA -->
+    <div class="products-area">
+      <div class="products-toolbar">
+        <p class="products-result"><strong id="result-count">12</strong> produtos encontrados</p>
+        <div class="view-toggle">
+          <button class="view-btn active" onclick="setView(3, this)" title="3 colunas">⊞</button>
+          <button class="view-btn" onclick="setView(2, this)" title="2 colunas">▥</button>
+        </div>
+      </div>
+
+      <div class="catalog-grid" id="catalog-grid"></div>
+
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Sélene Jóias</div>
+        <div class="tagline">Elegância que transforma</div>
+        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Coleções</h4>
+        <ul>
+          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+          <li><a href="catalogo.html?cat=colares">Colares</a></li>
+          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="#">Política de entrega</a></li>
+          <li><a href="#">Trocas e devoluções</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>📱 (47) 99999-9999</li>
+          <li>✉ contato@selenejoias.com.br</li>
+          <li>📍 Balneário Camboriú, SC</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a class="social-link" href="#">ig</a>
+        <a class="social-link" href="#">fb</a>
+        <a class="social-link" href="https://wa.me/5547000000000">wa</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h2>Seu Carrinho</h2>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body">
+    <div class="cart-empty" id="cart-empty" style="display:flex;">
+      <div class="cart-empty-icon">◈</div>
+      <p>Seu carrinho está vazio</p>
+    </div>
+    <div id="cart-items"></div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none;">
+    <div class="free-shipping-bar" id="free-shipping-bar"></div>
+    <div class="cart-totals">
+      <div class="cart-total-row">
+        <span class="label">Subtotal</span>
+        <span class="value" id="cart-subtotal">R$ 0,00</span>
+      </div>
+      <div class="cart-total-row final">
+        <span class="label">Total</span>
+        <span class="value" id="cart-total">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-cta">
+      <a href="checkout.html" class="btn btn-primary" style="justify-content:center;" onclick="closeCart()">Finalizar Compra</a>
+      <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE SIDEBAR -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebarDrawer()"></div>
+<div class="sidebar-drawer" id="sidebar-drawer">
+  <div class="sidebar-drawer-header">
+    <h3>Filtros</h3>
+    <button class="cart-close" onclick="closeSidebarDrawer()">×</button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Categoria</div>
+    <div class="sidebar-options">
+      <label class="sidebar-option"><input type="checkbox"> Anéis</label>
+      <label class="sidebar-option"><input type="checkbox"> Colares</label>
+      <label class="sidebar-option"><input type="checkbox"> Pulseiras</label>
+      <label class="sidebar-option"><input type="checkbox"> Brincos</label>
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Preço máximo</div>
+    <input type="range" class="price-range-input" min="0" max="800" value="800">
+  </div>
+  <div style="margin-top:1.5rem;">
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="closeSidebarDrawer()">Aplicar filtros</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg">Produto adicionado!</span>
+</div>
+
+<script src="assets/js/cart.js"></script>
+<script>
+// ── PRODUTOS ──
+const ALL_PRODUCTS = [
+  { id:'p1',  name:'Colar Lua Dourada',     cat:'colares',   price:289, oldPrice:380, symbol:'◯', badge:'Mais Vendido', variant:'Ouro 18k · 45cm', novo:false },
+  { id:'p2',  name:'Anel Serpente',         cat:'aneis',     price:199, oldPrice:null, symbol:'⊛', badge:null, variant:'Ouro 18k · T16', novo:false },
+  { id:'p3',  name:'Pulseira Elos',         cat:'pulseiras', price:349, oldPrice:420, symbol:'∞', badge:'Novo', variant:'Ouro 18k · 18cm', novo:true },
+  { id:'p4',  name:'Brinco Argola Média',   cat:'brincos',   price:159, oldPrice:null, symbol:'◎', badge:null, variant:'Ouro 18k · 2cm', novo:false },
+  { id:'p5',  name:'Anel Minimalista',      cat:'aneis',     price:179, oldPrice:null, symbol:'○', badge:'Exclusivo', variant:'Ouro 18k · T17', novo:false },
+  { id:'p6',  name:'Colar Borboleta',       cat:'colares',   price:299, oldPrice:360, symbol:'✦', badge:'Ed. Limitada', variant:'Ouro 18k + Esmalte', novo:true },
+  { id:'p7',  name:'Brinco Floral',         cat:'brincos',   price:189, oldPrice:null, symbol:'✿', badge:'Novo', variant:'Ouro 18k', novo:true },
+  { id:'p8',  name:'Anel Solitário',        cat:'aneis',     price:389, oldPrice:480, symbol:'◇', badge:null, variant:'Ouro 18k + Zircônia', novo:false },
+  { id:'p9',  name:'Corrente Veneziana',    cat:'colares',   price:249, oldPrice:null, symbol:'≈', badge:null, variant:'Ouro 18k · 50cm', novo:false },
+  { id:'p10', name:'Pulseira Charm',        cat:'pulseiras', price:219, oldPrice:280, symbol:'⊙', badge:'Novo', variant:'Ouro 18k · 17cm', novo:true },
+  { id:'p11', name:'Brinco Gota',           cat:'brincos',   price:229, oldPrice:null, symbol:'◉', badge:null, variant:'Ouro 18k + Citrino', novo:false },
+  { id:'p12', name:'Anel Aliança Slim',     cat:'aneis',     price:299, oldPrice:null, symbol:'⬭', badge:'Exclusivo', variant:'Ouro 18k · T18', novo:false },
+];
+
+// ── STATE ──
+let currentCat = 'todos';
+let currentSort = 'default';
+let maxPrice = 800;
+let currentPage = 1;
+const perPage = 9;
+
+// ── INIT: lê URL params ──
+function initFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  if (cat) {
+    currentCat = cat;
+    document.querySelectorAll('.filter-cat').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.cat === cat);
+    });
+    const titles = { aneis:'Anéis', colares:'Colares', pulseiras:'Pulseiras', brincos:'Brincos', conjuntos:'Conjuntos' };
+    if (titles[cat]) {
+      document.getElementById('page-title').innerHTML = `<em>${titles[cat]}</em>`;
+      document.getElementById('breadcrumb-current').textContent = titles[cat];
+    }
+  }
+}
+
+// ── FILTER & SORT ──
+function getFiltered() {
+  let list = [...ALL_PRODUCTS];
+  if (currentCat !== 'todos') list = list.filter(p => p.cat === currentCat);
+  list = list.filter(p => p.price <= maxPrice);
+  if (currentSort === 'preco-asc') list.sort((a,b) => a.price - b.price);
+  else if (currentSort === 'preco-desc') list.sort((a,b) => b.price - a.price);
+  else if (currentSort === 'novidades') list.sort((a,b) => b.novo - a.novo);
+  return list;
+}
+
+function filterCat(cat, btn) {
+  currentCat = cat;
+  currentPage = 1;
+  document.querySelectorAll('.filter-cat').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function sortProducts(val) {
+  currentSort = val;
+  currentPage = 1;
+  render();
+}
+
+function filterPrice(val) {
+  maxPrice = parseInt(val);
+  document.getElementById('price-current').textContent = `R$ ${val}`;
+  currentPage = 1;
+  render();
+}
+
+function toggleSidebarCat(cat, checkbox) {
+  if (checkbox.checked) filterCat(cat, document.querySelector(`[data-cat="${cat}"]`));
+  else filterCat('todos', document.querySelector('[data-cat="todos"]'));
+}
+
+function clearFilters() {
+  currentCat = 'todos';
+  currentSort = 'default';
+  maxPrice = 800;
+  currentPage = 1;
+  document.querySelectorAll('.filter-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === 'todos'));
+  document.getElementById('price-range').value = 800;
+  document.getElementById('price-current').textContent = 'R$ 800';
+  document.querySelectorAll('.sidebar-option input[type="checkbox"]').forEach(cb => cb.checked = false);
+  render();
+}
+
+// ── RENDER ──
+function render() {
+  const filtered = getFiltered();
+  const total = filtered.length;
+  const pages = Math.ceil(total / perPage);
+  const start = (currentPage - 1) * perPage;
+  const paginated = filtered.slice(start, start + perPage);
+
+  document.getElementById('filter-count').textContent = `${total} produto${total !== 1 ? 's' : ''}`;
+  document.getElementById('result-count').textContent = total;
+
+  const grid = document.getElementById('catalog-grid');
+
+  if (paginated.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">◈</div>
+        <p>Nenhum produto encontrado com esses filtros.</p>
+        <button class="btn btn-outline" onclick="clearFilters()">Limpar filtros</button>
+      </div>`;
+  } else {
+    grid.innerHTML = paginated.map(p => `
+      <div class="product-card reveal">
+        <a href="produto.html?id=${p.id}" class="product-card-img">
+          <div class="product-card-placeholder">${p.symbol}</div>
+          ${p.badge ? `<span class="product-badge ${p.novo?'novo':''}">${p.badge}</span>` : ''}
+          <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
+        </a>
+        <div class="product-card-info">
+          <div class="product-cat">${p.cat.charAt(0).toUpperCase()+p.cat.slice(1)}</div>
+          <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
+          <div class="product-price-row">
+            <div>
+              <span class="product-price">R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+              ${p.oldPrice ? `<span class="product-old-price">R$ ${p.oldPrice},00</span>` : ''}
+            </div>
+            <button class="product-add-btn" onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}'})" title="Adicionar ao carrinho">+</button>
+          </div>
+          <div style="font-size:0.62rem;color:var(--text-soft);margin-top:0.3rem;letter-spacing:0.05em;">ou 12× de R$ ${(p.price/12).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Pagination
+  const pag = document.getElementById('pagination');
+  if (pages <= 1) { pag.innerHTML = ''; return; }
+  let html = `<button class="page-btn arrow" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for (let i = 1; i <= pages; i++) {
+    html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  html += `<button class="page-btn arrow" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
+  pag.innerHTML = html;
+
+  // Re-init reveal
+  setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+      el.classList.add('visible');
+    });
+  }, 50);
+}
+
+function goPage(p) {
+  const filtered = getFiltered();
+  const pages = Math.ceil(filtered.length / perPage);
+  if (p < 1 || p > pages) return;
+  currentPage = p;
+  render();
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+}
+
+// ── VIEW TOGGLE ──
+function setView(cols, btn) {
+  const grid = document.getElementById('catalog-grid');
+  grid.classList.toggle('two-col', cols === 2);
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── MOBILE SIDEBAR ──
+function openSidebarDrawer() {
+  document.getElementById('sidebar-overlay').classList.add('open');
+  document.getElementById('sidebar-drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebarDrawer() {
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.getElementById('sidebar-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── START ──
+initFromURL();
+render();
+</script>
+</body>
+</html>

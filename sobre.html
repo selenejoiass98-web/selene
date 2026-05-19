@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Conheça a história da Sélene Jóias — joias em ouro 18k criadas com paixão em Balneário Camboriú, SC.">
+<title>Nossa História — Sélene Jóias</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+/* ── SOBRE PAGE ── */
+
+/* HERO */
+.sobre-hero {
+  min-height: 70vh;
+  padding-top: var(--nav-h);
+  background: var(--brown-deep);
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.sobre-hero::before {
+  content: '';
+  position: absolute;
+  top: -20%; left: -10%;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(196,164,122,0.1);
+}
+.sobre-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -15%; right: -5%;
+  width: 350px; height: 350px;
+  border-radius: 50%;
+  border: 1px solid rgba(196,164,122,0.08);
+}
+.sobre-hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  padding: 5rem 0;
+  z-index: 1;
+  position: relative;
+}
+.sobre-hero-text {}
+.sobre-hero-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  opacity: 0.7;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.sobre-hero-tag::before {
+  content: '';
+  width: 28px; height: 1px;
+  background: var(--gold);
+}
+.sobre-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 5vw, 5.5rem);
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+}
+.sobre-hero-title em { font-style: italic; color: var(--gold-light); }
+.sobre-hero-sub {
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.45);
+  font-weight: 300;
+  max-width: 420px;
+  letter-spacing: 0.02em;
+}
+.sobre-hero-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sobre-hero-nums {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(196,164,122,0.15);
+}
+.hero-num-card {
+  background: rgba(255,255,255,0.03);
+  padding: 2rem;
+  text-align: center;
+}
+.hero-num-card .big {
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold-light);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.hero-num-card .lbl {
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+.hero-logo-big {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(196,164,122,0.12);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.hero-logo-big .logo-glyph {
+  font-family: var(--font-serif);
+  font-size: 5rem;
+  font-weight: 300;
+  color: rgba(196,164,122,0.2);
+  font-style: italic;
+  line-height: 1;
+}
+.hero-logo-big .logo-name {
+  font-family: var(--font-serif);
+  font-size: 0.85rem;
+  font-weight: 300;
+  letter-spacing: 0.45em;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* HISTORIA */
+.historia {
+  padding: 7rem 0;
+  background: var(--white);
+}
+.historia-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+.historia-visual {
+  position: relative;
+}
+.historia-img-main {
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: linear-gradient(160deg, #D4B896 0%, #A07848 50%, #3D2B1A 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.historia-img-glyph {
+  font-family: var(--font-serif);
+  font-size: 10rem;
+  color: rgba(255,255,255,0.1);
+  font-style: italic;
+  user-select: none;
+}
+.historia-img-float {
+  position: absolute;
+  bottom: -2rem; right: -2rem;
+  width: 48%;
+  background: var(--cream);
+  border: 1px solid var(--gold-pale);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+.historia-img-float .quote {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--brown-deep);
+  line-height: 1.6;
+  margin-bottom: 0.8rem;
+}
+.historia-img-float .quote-author {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+}
+.historia-text .section-title { margin-bottom: 2rem; }
+.historia-text p {
+  font-size: 0.85rem;
+  line-height: 1.95;
+  color: var(--text-soft);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.4rem;
+}
+.historia-text p strong { color: var(--brown-mid); font-weight: 500; }
+.historia-signature {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--gold-pale);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.sig-avatar {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--white);
+  font-style: italic;
+  flex-shrink: 0;
+}
+.sig-info .sig-name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--brown-deep);
+  margin-bottom: 0.1rem;
+}
+.sig-info .sig-role {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+/* VALORES */
+.valores {
+  padding: 6rem 0;
+  background: var(--cream);
+}
+.valores-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 3rem;
+  background: var(--gold-pale);
+}
+.valor-card {
+  background: var(--white);
+  padding: 2.5rem;
+  transition: background var(--transition);
+}
+.valor-card:hover { background: var(--cream); }
+.valor-icon {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  color: var(--gold-light);
+  font-style: italic;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+.valor-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--brown-deep);
+  margin-bottom: 0.8rem;
+}
+.valor-desc {
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--text-soft);
+  font-weight: 300;
+}
+
+/* PROCESSO */
+.processo {
+  padding: 6rem 0;
+  background: var(--white);
+}
+.processo-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-top: 3rem;
+  position: relative;
+}
+.processo-steps::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 1px;
+  background: var(--gold-pale);
+}
+.processo-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.processo-dot {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.2rem;
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--gold);
+  font-style: italic;
+}
+.processo-step-title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--brown-deep);
+  margin-bottom: 0.5rem;
+}
+.processo-step-desc {
+  font-size: 0.72rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+/* DIFERENCIAIS */
+.diferenciais {
+  padding: 6rem 0;
+  background: var(--brown-deep);
+}
+.diferenciais .section-tag { color: var(--gold-light); }
+.diferenciais .section-tag::before { background: var(--gold); }
+.diferenciais .section-title { color: var(--cream); }
+.diferenciais .section-title em { color: var(--gold-light); }
+.diferenciais-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  margin-top: 3rem;
+  background: rgba(196,164,122,0.12);
+}
+.diferencial-card {
+  background: rgba(255,255,255,0.03);
+  padding: 2.5rem;
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+  transition: background var(--transition);
+}
+.diferencial-card:hover { background: rgba(255,255,255,0.06); }
+.dif-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.dif-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+.dif-desc {
+  font-size: 0.75rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.4);
+  font-weight: 300;
+}
+
+/* CTA */
+.sobre-cta {
+  padding: 6rem 0;
+  background: var(--cream-dark);
+  text-align: center;
+}
+.sobre-cta .section-title { margin-bottom: 1rem; }
+.sobre-cta p {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+.sobre-cta-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .sobre-hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .sobre-hero-visual { order: -1; }
+  .historia-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .historia-img-float { display: none; }
+  .valores-grid { grid-template-columns: 1fr; }
+  .processo-steps { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .processo-steps::before { display: none; }
+  .diferenciais-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .sobre-hero-nums { grid-template-columns: 1fr 1fr; }
+  .processo-steps { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Sélene Jóias</a>
+    <ul class="nav-links">
+      <li><a href="catalogo.html">Coleções</a></li>
+      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="sobre.html" style="color:var(--gold);">Nossa História</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-cart" onclick="openCart()">
+        Carrinho
+        <span class="cart-badge cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="sobre-hero">
+  <div class="container">
+    <div class="sobre-hero-inner">
+      <div class="sobre-hero-text reveal">
+        <div class="sobre-hero-tag">Nossa história</div>
+        <h1 class="sobre-hero-title">
+          Criadas com<br>
+          amor e <em>ouro</em>
+        </h1>
+        <p class="sobre-hero-sub">
+          A Sélene Jóias nasceu da crença de que cada mulher merece 
+          carregar algo especial — uma joia que seja extensão da sua 
+          elegância e da sua história.
+        </p>
+      </div>
+      <div class="sobre-hero-visual reveal reveal-delay-2">
+        <div class="hero-logo-big">
+          <div class="logo-glyph">SJ</div>
+          <div class="logo-name">Sélene Jóias</div>
+        </div>
+        <div class="sobre-hero-nums">
+          <div class="hero-num-card">
+            <div class="big">500+</div>
+            <div class="lbl">Clientes felizes</div>
+          </div>
+          <div class="hero-num-card">
+            <div class="big">18k</div>
+            <div class="lbl">Ouro certificado</div>
+          </div>
+          <div class="hero-num-card">
+            <div class="big">3+</div>
+            <div class="lbl">Anos no mercado</div>
+          </div>
+          <div class="hero-num-card">
+            <div class="big">100%</div>
+            <div class="lbl">Satisfação</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTÓRIA -->
+<section class="historia">
+  <div class="container">
+    <div class="historia-grid">
+      <div class="historia-visual reveal">
+        <div class="historia-img-main">
+          <div class="historia-img-glyph">SJ</div>
+        </div>
+        <div class="historia-img-float">
+          <p class="quote">"Cada joia que crio carrega um pedaço do meu coração."</p>
+          <p class="quote-author">Sélene · Fundadora</p>
+        </div>
+      </div>
+      <div class="historia-text reveal reveal-delay-2">
+        <div class="section-tag">Quem somos</div>
+        <h2 class="section-title">Uma história feita de <em>paixão</em></h2>
+        <p>
+          Tudo começou com um sonho simples: criar joias que fossem mais do que acessórios. 
+          Que fossem <strong>memórias</strong>. Que marcassem momentos, celebrassem conquistas 
+          e acompanhassem mulheres em todas as fases da vida.
+        </p>
+        <p>
+          Nascida em Balneário Camboriú, a Sélene Jóias surgiu de uma paixão genuína pela 
+          joalheria fina e pelo design atemporal. Cada peça é pensada com cuidado — da escolha 
+          do ouro 18k ao acabamento final — para garantir que você receba algo verdadeiramente especial.
+        </p>
+        <p>
+          Hoje, atendemos clientes em todo o Brasil, mas mantemos a essência de uma joalheria 
+          artesanal: <strong>atenção individual, qualidade sem compromisso e amor em cada detalhe</strong>. 
+          Porque acreditamos que você merece o melhor.
+        </p>
+        <div class="historia-signature">
+          <div class="sig-avatar">S</div>
+          <div class="sig-info">
+            <div class="sig-name">Sélene</div>
+            <div class="sig-role">Fundadora & Criadora</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALORES -->
+<section class="valores">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">O que nos move</div>
+      <h2 class="section-title">Nossos <em>valores</em></h2>
+    </div>
+    <div class="valores-grid">
+      <div class="valor-card reveal reveal-delay-1">
+        <div class="valor-icon">✦</div>
+        <div class="valor-title">Exclusividade</div>
+        <p class="valor-desc">Cada peça é criada com atenção individual. Não produzimos em massa — cada joia recebe o tempo e o cuidado que merece, do design ao acabamento.</p>
+      </div>
+      <div class="valor-card reveal reveal-delay-2">
+        <div class="valor-icon">◈</div>
+        <div class="valor-title">Autenticidade</div>
+        <p class="valor-desc">Trabalhamos apenas com ouro 18k certificado. Cada peça acompanha certificado de autenticidade e garantia de 1 ano. O que você vê é o que você recebe.</p>
+      </div>
+      <div class="valor-card reveal reveal-delay-3">
+        <div class="valor-icon">∿</div>
+        <div class="valor-title">Feminilidade</div>
+        <p class="valor-desc">Criamos para celebrar a mulher em todas as suas fases. Nossas joias acompanham momentos únicos — do dia a dia às ocasiões mais especiais da vida.</p>
+      </div>
+      <div class="valor-card reveal reveal-delay-1">
+        <div class="valor-icon">○</div>
+        <div class="valor-title">Atemporalidade</div>
+        <p class="valor-desc">Design que transcende tendências. Criamos peças que você vai amar hoje, daqui a 10 anos e que vai querer passar para as próximas gerações.</p>
+      </div>
+      <div class="valor-card reveal reveal-delay-2">
+        <div class="valor-icon">◎</div>
+        <div class="valor-title">Transparência</div>
+        <p class="valor-desc">Preços justos, processo claro e atendimento honesto. Você sabe exatamente o que está comprando — sem surpresas, com toda confiança.</p>
+      </div>
+      <div class="valor-card reveal reveal-delay-3">
+        <div class="valor-icon">⊛</div>
+        <div class="valor-title">Cuidado</div>
+        <p class="valor-desc">Da embalagem especial ao atendimento pós-venda, cada detalhe importa. Queremos que sua experiência seja tão especial quanto a joia que você escolheu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section class="processo">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Como fazemos</div>
+      <h2 class="section-title">Do design à sua <em>porta</em></h2>
+    </div>
+    <div class="processo-steps">
+      <div class="processo-step reveal reveal-delay-1">
+        <div class="processo-dot">✦</div>
+        <div class="processo-step-title">Criação</div>
+        <p class="processo-step-desc">Cada peça começa com um esboço. O design é desenvolvido pensando na elegância, no conforto e na durabilidade.</p>
+      </div>
+      <div class="processo-step reveal reveal-delay-2">
+        <div class="processo-dot">◈</div>
+        <div class="processo-step-title">Seleção</div>
+        <p class="processo-step-desc">Escolhemos apenas ouro 18k certificado e pedras de alta qualidade para garantir o melhor resultado.</p>
+      </div>
+      <div class="processo-step reveal reveal-delay-3">
+        <div class="processo-dot">○</div>
+        <div class="processo-step-title">Produção</div>
+        <p class="processo-step-desc">Cada joia é produzida com atenção artesanal. O acabamento é feito à mão para garantir perfeição em cada detalhe.</p>
+      </div>
+      <div class="processo-step reveal reveal-delay-4">
+        <div class="processo-dot">✉</div>
+        <div class="processo-step-title">Entrega</div>
+        <p class="processo-step-desc">Embalada com carinho em nossa caixa exclusiva, sua joia chega pronta para presentear — inclusive a si mesma.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFERENCIAIS -->
+<section class="diferenciais">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Por que nos escolher</div>
+      <h2 class="section-title">O que nos torna <em>diferentes</em></h2>
+    </div>
+    <div class="diferenciais-grid">
+      <div class="diferencial-card reveal reveal-delay-1">
+        <div class="dif-icon">🏅</div>
+        <div>
+          <div class="dif-title">Ouro 18k Certificado</div>
+          <p class="dif-desc">Todas as nossas peças são produzidas em ouro 18k (750‰) com certificado de autenticidade incluso. Você recebe a garantia por escrito da qualidade do material.</p>
+        </div>
+      </div>
+      <div class="diferencial-card reveal reveal-delay-2">
+        <div class="dif-icon">📦</div>
+        <div>
+          <div class="dif-title">Embalagem Exclusiva</div>
+          <p class="dif-desc">Cada pedido vem em nossa caixa especial Sélene Jóias, com papel de seda e cartão personalizado. Perfeito para presentear ou se presentear.</p>
+        </div>
+      </div>
+      <div class="diferencial-card reveal reveal-delay-3">
+        <div class="dif-icon">🔄</div>
+        <div>
+          <div class="dif-title">Troca Garantida</div>
+          <p class="dif-desc">Não ficou como esperado? Você tem 30 dias para trocar sem burocracia. Nossa política é simples: queremos que você fique 100% satisfeita.</p>
+        </div>
+      </div>
+      <div class="diferencial-card reveal reveal-delay-4">
+        <div class="dif-icon">💬</div>
+        <div>
+          <div class="dif-title">Atendimento Personalizado</div>
+          <p class="dif-desc">Estamos aqui para ajudar. Atendemos pelo WhatsApp em horário comercial para tirar dúvidas, ajudar na escolha e acompanhar seu pedido.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sobre-cta">
+  <div class="container-sm">
+    <div class="reveal">
+      <div class="section-tag" style="justify-content:center;">Venha nos conhecer</div>
+      <h2 class="section-title">Pronta para encontrar sua <em>joia?</em></h2>
+      <p>Explore nossa coleção e descubra a peça perfeita para você ou para presentear alguém especial.</p>
+      <div class="sobre-cta-btns">
+        <a href="catalogo.html" class="btn btn-primary">Ver Coleção Completa</a>
+        <a href="https://wa.me/5547000000000" class="btn btn-outline" target="_blank">💬 Falar no WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Sélene Jóias</div>
+        <div class="tagline">Elegância que transforma</div>
+        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Coleções</h4>
+        <ul>
+          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+          <li><a href="catalogo.html?cat=colares">Colares</a></li>
+          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="#">Política de entrega</a></li>
+          <li><a href="#">Trocas e devoluções</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>📱 (47) 99999-9999</li>
+          <li>✉ contato@selenejoias.com.br</li>
+          <li>📍 Balneário Camboriú, SC</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a class="social-link" href="#">ig</a>
+        <a class="social-link" href="#">fb</a>
+        <a class="social-link" href="https://wa.me/5547000000000">wa</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h2>Seu Carrinho</h2>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body">
+    <div class="cart-empty" id="cart-empty" style="display:flex;">
+      <div class="cart-empty-icon">◈</div>
+      <p>Seu carrinho está vazio</p>
+      <a href="catalogo.html" class="btn btn-outline" onclick="closeCart()">Ver produtos</a>
+    </div>
+    <div id="cart-items"></div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none;">
+    <div class="free-shipping-bar" id="free-shipping-bar"></div>
+    <div class="cart-totals">
+      <div class="cart-total-row final">
+        <span class="label">Total</span>
+        <span class="value" id="cart-total">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-cta">
+      <a href="checkout.html" class="btn btn-primary" style="justify-content:center;">Finalizar Compra</a>
+      <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script src="assets/js/cart.js"></script>
+</body>
+</html>

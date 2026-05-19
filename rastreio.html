@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rastrear Pedido — Sélene Jóias</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+/* ── RASTREIO PAGE ── */
+
+.rastreio-page {
+  padding-top: var(--nav-h);
+  min-height: 100vh;
+  background: var(--cream);
+}
+
+/* HERO */
+.rastreio-hero {
+  background: var(--brown-deep);
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.rastreio-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(196,164,122,0.08);
+}
+.rastreio-hero-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  opacity: 0.7;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+.rastreio-hero-tag::before,
+.rastreio-hero-tag::after {
+  content: '';
+  width: 28px; height: 1px;
+  background: var(--gold);
+  opacity: 0.5;
+}
+.rastreio-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 300;
+  color: var(--cream);
+  margin-bottom: 0.8rem;
+}
+.rastreio-hero-title em { font-style: italic; color: var(--gold-light); }
+.rastreio-hero-sub {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+
+/* SEARCH BOX */
+.rastreio-search {
+  padding: 3rem 0 2rem;
+  background: var(--white);
+  border-bottom: 1px solid var(--gold-pale);
+}
+.search-box {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.search-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--brown-deep);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.search-sub {
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  text-align: center;
+  margin-bottom: 1.8rem;
+  letter-spacing: 0.03em;
+}
+.search-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0;
+  margin-bottom: 1rem;
+}
+.search-input {
+  padding: 0.9rem 1.4rem;
+  border: 1px solid var(--gold-pale);
+  border-right: none;
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.search-input:focus { border-color: var(--gold-light); }
+.search-input::placeholder { text-transform: none; letter-spacing: 0; color: var(--text-soft); font-size: 0.82rem; }
+.btn-search {
+  padding: 0 2rem;
+  background: var(--gold);
+  color: var(--white);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition);
+  white-space: nowrap;
+}
+.btn-search:hover { background: var(--brown-mid); }
+.btn-search:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.search-tabs {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+.search-tab {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  padding: 0.3rem 0;
+  border-bottom: 1px solid transparent;
+  transition: all var(--transition);
+}
+.search-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.search-tab:hover { color: var(--gold); }
+
+/* RESULT AREA */
+.rastreio-result {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+/* EMPTY STATE */
+.rastreio-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+.empty-icon-big {
+  font-family: var(--font-serif);
+  font-size: 5rem;
+  color: var(--gold-pale);
+  font-style: italic;
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+.rastreio-empty h3 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--brown-deep);
+  margin-bottom: 0.8rem;
+}
+.rastreio-empty p {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+/* ORDER CARD */
+.order-card {
+  background: var(--white);
+  border: 1px solid var(--gold-pale);
+  margin-bottom: 1.2rem;
+  display: none;
+}
+.order-card.show { display: block; }
+.order-card-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--gold-pale);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.order-num {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--brown-deep);
+}
+.order-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 1rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.status-processando { background: #FEF3C7; color: #92400E; }
+.status-pago { background: #D1FAE5; color: #065F46; }
+.status-preparando { background: #EDE9FE; color: #4C1D95; }
+.status-enviado { background: #DBEAFE; color: #1E40AF; }
+.status-entregue { background: #D1FAE5; color: #065F46; }
+
+.order-meta {
+  display: flex;
+  gap: 2rem;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--gold-pale);
+  flex-wrap: wrap;
+}
+.order-meta-item {}
+.order-meta-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 0.2rem;
+}
+.order-meta-val {
+  font-size: 0.78rem;
+  color: var(--text);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+.order-meta-val.tracking {
+  color: var(--gold);
+  cursor: pointer;
+  border-bottom: 1px solid var(--gold-pale);
+  transition: border-color var(--transition);
+  display: inline-block;
+}
+.order-meta-val.tracking:hover { border-color: var(--gold); }
+
+/* TRACKING TIMELINE */
+.tracking-timeline {
+  padding: 2rem;
+}
+.tracking-title {
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.tracking-title::before { content: ''; width: 20px; height: 1px; background: var(--gold-light); }
+
+.timeline-steps {
+  position: relative;
+  padding-left: 2rem;
+}
+.timeline-steps::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--gold-pale);
+}
+.timeline-step {
+  position: relative;
+  padding-bottom: 1.8rem;
+  padding-left: 1.5rem;
+}
+.timeline-step:last-child { padding-bottom: 0; }
+.timeline-step-dot {
+  position: absolute;
+  left: -1.6rem;
+  top: 4px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-pale);
+  background: var(--white);
+  z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.45rem;
+}
+.timeline-step.done .timeline-step-dot {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--white);
+}
+.timeline-step.current .timeline-step-dot {
+  background: var(--white);
+  border-color: var(--gold);
+  border-width: 3px;
+}
+.timeline-step.current .timeline-step-dot::after {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.timeline-step-name {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.03em;
+}
+.timeline-step.pending .timeline-step-name { color: var(--text-soft); }
+.timeline-step-desc {
+  font-size: 0.68rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+.timeline-step-date {
+  font-size: 0.62rem;
+  color: var(--gold-mid);
+  margin-top: 0.2rem;
+  letter-spacing: 0.05em;
+}
+.timeline-step.pending .timeline-step-date { color: var(--gold-pale); }
+
+/* ORDER ITEMS */
+.order-items {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--gold-pale);
+}
+.order-items-title {
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.order-items-title::before { content: ''; width: 20px; height: 1px; background: var(--gold-light); }
+.order-item {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--gold-pale);
+}
+.order-item:last-child { border-bottom: none; }
+.order-item-img {
+  width: 56px; height: 56px;
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  color: var(--gold-pale);
+  font-style: italic;
+}
+.order-item-info .item-name {
+  font-size: 0.82rem;
+  color: var(--text);
+  font-weight: 400;
+  margin-bottom: 0.2rem;
+}
+.order-item-info .item-var {
+  font-size: 0.62rem;
+  color: var(--text-soft);
+  letter-spacing: 0.05em;
+}
+.order-item-price {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  color: var(--gold);
+}
+
+/* ORDER TOTAL */
+.order-total-bar {
+  padding: 1rem 2rem;
+  background: var(--cream);
+  border-top: 1px solid var(--gold-pale);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.order-total-bar .ot-label {
+  font-size: 0.72rem;
+  color: var(--text-soft);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.order-total-bar .ot-value {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  color: var(--gold);
+}
+
+/* ACTIONS BAR */
+.order-actions {
+  padding: 1.2rem 2rem;
+  border-top: 1px solid var(--gold-pale);
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+.btn-action {
+  padding: 0.6rem 1.4rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 1px solid var(--gold-pale);
+  background: var(--white);
+  color: var(--text-mid);
+}
+.btn-action:hover { background: var(--gold); color: var(--white); border-color: var(--gold); }
+.btn-action.primary { background: var(--gold); color: var(--white); border-color: var(--gold); }
+.btn-action.primary:hover { background: var(--brown-mid); border-color: var(--brown-mid); }
+
+/* NOT FOUND */
+.not-found-card {
+  background: var(--white);
+  border: 1px solid #FED7D7;
+  padding: 2rem;
+  text-align: center;
+  display: none;
+}
+.not-found-card.show { display: block; }
+.not-found-card .nf-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+.not-found-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--brown-deep);
+  margin-bottom: 0.5rem;
+}
+.not-found-card p {
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* INFO CARDS */
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.info-card {
+  background: var(--white);
+  border: 1px solid var(--gold-pale);
+  padding: 1.5rem;
+  text-align: center;
+}
+.info-card-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+.info-card h4 {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--brown-deep);
+  margin-bottom: 0.4rem;
+}
+.info-card p {
+  font-size: 0.7rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  .search-row { grid-template-columns: 1fr; }
+  .btn-search { padding: 0.9rem; width: 100%; }
+  .info-cards { grid-template-columns: 1fr; }
+  .order-card-header { flex-direction: column; align-items: flex-start; }
+  .order-meta { gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Sélene Jóias</a>
+    <ul class="nav-links">
+      <li><a href="catalogo.html">Coleções</a></li>
+      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="sobre.html">Nossa História</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-cart" onclick="openCart()">
+        Carrinho
+        <span class="cart-badge cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="rastreio-page">
+
+  <!-- HERO -->
+  <div class="rastreio-hero">
+    <div class="rastreio-hero-tag">Acompanhe seu pedido</div>
+    <h1 class="rastreio-hero-title">Rastrear <em>Pedido</em></h1>
+    <p class="rastreio-hero-sub">Insira o número do pedido ou o código de rastreio dos Correios</p>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="rastreio-search">
+    <div class="container">
+      <div class="search-box">
+        <h2 class="search-title">Localizar meu pedido</h2>
+        <p class="search-sub">O número do pedido foi enviado para o seu e-mail após a compra</p>
+        <div class="search-tabs" style="margin-bottom:1.2rem;">
+          <button class="search-tab active" onclick="setSearchType('pedido', this)">Número do pedido</button>
+          <button class="search-tab" onclick="setSearchType('correios', this)">Código dos Correios</button>
+          <button class="search-tab" onclick="setSearchType('email', this)">E-mail + CPF</button>
+        </div>
+        <div class="search-row">
+          <input type="text" class="search-input" id="search-input"
+            placeholder="Ex: #SJ-12345"
+            oninput="formatSearchInput(this)"
+            onkeydown="if(event.key==='Enter') buscarPedido()">
+          <button class="btn-search" onclick="buscarPedido()" id="btn-buscar">Rastrear</button>
+        </div>
+        <p style="font-size:0.62rem;color:var(--text-soft);text-align:center;letter-spacing:0.05em;">
+          Não encontrou seu pedido? <a href="https://wa.me/5547000000000" style="color:var(--gold);" target="_blank">Fale conosco no WhatsApp</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="rastreio-result" id="rastreio-result">
+
+    <!-- EMPTY -->
+    <div class="rastreio-empty" id="state-empty">
+      <div class="empty-icon-big">◈</div>
+      <h3>Acompanhe sua entrega</h3>
+      <p>Digite o número do seu pedido acima para ver o status atualizado e o histórico de entrega da sua joia.</p>
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="info-card-icon">📧</div>
+          <h4>Confirmação por e-mail</h4>
+          <p>Você recebe um e-mail em cada etapa do pedido — pagamento, envio e entrega.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">📦</div>
+          <h4>Rastreio Correios</h4>
+          <p>Após o envio, você recebe o código de rastreio direto no e-mail para acompanhar.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">💬</div>
+          <h4>Suporte WhatsApp</h4>
+          <p>Em caso de dúvidas, fale diretamente pelo WhatsApp em horário comercial.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOT FOUND -->
+    <div class="not-found-card" id="state-not-found">
+      <div class="nf-icon">🔍</div>
+      <h3>Pedido não encontrado</h3>
+      <p>Não encontramos nenhum pedido com esse número. Verifique se digitou corretamente ou entre em contato conosco.</p>
+      <a href="https://wa.me/5547000000000" class="btn btn-primary" target="_blank" style="display:inline-flex;">💬 Falar no WhatsApp</a>
+    </div>
+
+    <!-- ORDER RESULT -->
+    <div class="order-card" id="order-result">
+
+      <div class="order-card-header">
+        <div>
+          <div style="font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--text-soft);margin-bottom:0.3rem;">Pedido</div>
+          <div class="order-num" id="res-order-num">#SJ-12345</div>
+        </div>
+        <div class="order-status-badge" id="res-status-badge">Em preparação</div>
+      </div>
+
+      <div class="order-meta">
+        <div class="order-meta-item">
+          <div class="order-meta-label">Data do pedido</div>
+          <div class="order-meta-val" id="res-date">—</div>
+        </div>
+        <div class="order-meta-item">
+          <div class="order-meta-label">Pagamento</div>
+          <div class="order-meta-val" id="res-payment">—</div>
+        </div>
+        <div class="order-meta-item">
+          <div class="order-meta-label">Previsão de entrega</div>
+          <div class="order-meta-val" id="res-eta">—</div>
+        </div>
+        <div class="order-meta-item" id="tracking-code-block" style="display:none;">
+          <div class="order-meta-label">Código Correios</div>
+          <div class="order-meta-val tracking" id="res-tracking" onclick="openCorreios()">—</div>
+        </div>
+      </div>
+
+      <!-- TIMELINE -->
+      <div class="tracking-timeline">
+        <div class="tracking-title">Histórico do pedido</div>
+        <div class="timeline-steps" id="timeline-steps"></div>
+      </div>
+
+      <!-- ITEMS -->
+      <div class="order-items">
+        <div class="order-items-title">Itens do pedido</div>
+        <div id="res-items"></div>
+      </div>
+
+      <!-- TOTAL -->
+      <div class="order-total-bar">
+        <span class="ot-label">Total pago</span>
+        <span class="ot-value" id="res-total">—</span>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="order-actions">
+        <button class="btn-action primary" onclick="openCorreios()" id="btn-correios" style="display:none;">
+          📦 Rastrear nos Correios
+        </button>
+        <a href="https://wa.me/5547000000000" class="btn-action" target="_blank">
+          💬 Falar com suporte
+        </a>
+        <button class="btn-action" onclick="window.print()">
+          🖨 Imprimir comprovante
+        </button>
+        <a href="catalogo.html" class="btn-action">
+          ✦ Continuar comprando
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Sélene Jóias</div>
+        <div class="tagline">Elegância que transforma</div>
+        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Coleções</h4>
+        <ul>
+          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+          <li><a href="catalogo.html?cat=colares">Colares</a></li>
+          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="#">Política de entrega</a></li>
+          <li><a href="#">Trocas e devoluções</a></li>
+          <li><a href="rastreio.html">Rastrear pedido</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>📱 (47) 99999-9999</li>
+          <li>✉ contato@selenejoias.com.br</li>
+          <li>📍 Balneário Camboriú, SC</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a class="social-link" href="#">ig</a>
+        <a class="social-link" href="#">fb</a>
+        <a class="social-link" href="https://wa.me/5547000000000">wa</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h2>Seu Carrinho</h2>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body">
+    <div class="cart-empty" id="cart-empty" style="display:flex;">
+      <div class="cart-empty-icon">◈</div>
+      <p>Seu carrinho está vazio</p>
+    </div>
+    <div id="cart-items"></div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none;">
+    <div class="free-shipping-bar" id="free-shipping-bar"></div>
+    <div class="cart-totals">
+      <div class="cart-total-row final">
+        <span class="label">Total</span>
+        <span class="value" id="cart-total">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-cta">
+      <a href="checkout.html" class="btn btn-primary" style="justify-content:center;">Finalizar Compra</a>
+      <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script src="assets/js/cart.js"></script>
+<script>
+// ── STATE ──
+let searchType = 'pedido';
+let currentTracking = null;
+
+// ── DEMO ORDERS (substituir por integração real) ──
+const DEMO_ORDERS = {
+  'SJ-12345': {
+    num: '#SJ-12345',
+    date: '14/05/2025',
+    payment: 'Pix',
+    eta: '19/05/2025',
+    tracking: 'BR123456789BR',
+    status: 'enviado',
+    statusLabel: 'Enviado',
+    total: 'R$ 289,00',
+    items: [
+      { name: 'Colar Lua Dourada', variant: 'Ouro 18k · 45cm', price: 'R$ 289,00', symbol: '◯' }
+    ],
+    timeline: [
+      { name: 'Pedido realizado', desc: 'Recebemos seu pedido com sucesso.', date: '14/05/2025 às 14h32', done: true },
+      { name: 'Pagamento confirmado', desc: 'Pix confirmado e pedido aprovado.', date: '14/05/2025 às 14h35', done: true },
+      { name: 'Em preparação', desc: 'Sua joia está sendo embalada com carinho.', date: '15/05/2025 às 09h00', done: true },
+      { name: 'Enviado pelos Correios', desc: 'SEDEX · Código: BR123456789BR', date: '16/05/2025 às 11h20', done: true, current: false },
+      { name: 'Saiu para entrega', desc: 'Sua joia está a caminho!', date: '', done: false, current: true },
+      { name: 'Entregue', desc: 'Aproveite sua nova joia! ✦', date: '', done: false },
+    ]
+  },
+  'SJ-99999': {
+    num: '#SJ-99999',
+    date: '10/05/2025',
+    payment: 'Cartão · 3×',
+    eta: '—',
+    tracking: 'BR987654321BR',
+    status: 'entregue',
+    statusLabel: 'Entregue',
+    total: 'R$ 508,00',
+    items: [
+      { name: 'Anel Serpente', variant: 'Ouro 18k · T16', price: 'R$ 199,00', symbol: '⊛' },
+      { name: 'Pulseira Elos', variant: 'Ouro 18k · 18cm', price: 'R$ 309,00', symbol: '∞' },
+    ],
+    timeline: [
+      { name: 'Pedido realizado', desc: 'Recebemos seu pedido com sucesso.', date: '10/05/2025 às 10h00', done: true },
+      { name: 'Pagamento confirmado', desc: 'Cartão aprovado.', date: '10/05/2025 às 10h02', done: true },
+      { name: 'Em preparação', desc: 'Suas joias foram embaladas.', date: '11/05/2025 às 09h00', done: true },
+      { name: 'Enviado pelos Correios', desc: 'PAC · Código: BR987654321BR', date: '12/05/2025 às 14h00', done: true },
+      { name: 'Saiu para entrega', desc: 'Saiu para entrega.', date: '13/05/2025 às 08h30', done: true },
+      { name: 'Entregue', desc: 'Entregue com sucesso! Aproveite suas joias ✦', date: '13/05/2025 às 14h15', done: true },
+    ]
+  }
+};
+
+// ── SEARCH TYPE ──
+function setSearchType(type, btn) {
+  searchType = type;
+  document.querySelectorAll('.search-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const input = document.getElementById('search-input');
+  const placeholders = {
+    pedido: 'Ex: #SJ-12345',
+    correios: 'Ex: BR123456789BR',
+    email: 'Digite seu e-mail'
+  };
+  input.placeholder = placeholders[type];
+  input.value = '';
+}
+
+function formatSearchInput(el) {
+  if (searchType === 'pedido') {
+    let v = el.value.replace(/[^0-9]/g, '');
+    if (v) el.value = 'SJ-' + v;
+  }
+}
+
+// ── SEARCH ──
+async function buscarPedido() {
+  const raw = document.getElementById('search-input').value.trim().toUpperCase();
+  const btn = document.getElementById('btn-buscar');
+
+  if (!raw) { showToast('Digite o número do pedido'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Buscando...';
+  hideAll();
+
+  // Simula delay de API
+  await new Promise(r => setTimeout(r, 1000));
+
+  // Normaliza input
+  const key = raw.replace('#','').replace('SJ-','');
+  const order = DEMO_ORDERS['SJ-' + key] || DEMO_ORDERS[raw];
+
+  if (order) {
+    renderOrder(order);
+  } else {
+    document.getElementById('state-not-found').classList.add('show');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Rastrear';
+}
+
+function hideAll() {
+  document.getElementById('state-empty').style.display = 'none';
+  document.getElementById('state-not-found').classList.remove('show');
+  document.getElementById('order-result').classList.remove('show');
+}
+
+function renderOrder(order) {
+  currentTracking = order.tracking;
+
+  document.getElementById('res-order-num').textContent = order.num;
+  document.getElementById('res-date').textContent = order.date;
+  document.getElementById('res-payment').textContent = order.payment;
+  document.getElementById('res-eta').textContent = order.eta || '—';
+  document.getElementById('res-total').textContent = order.total;
+
+  // Status badge
+  const badge = document.getElementById('res-status-badge');
+  badge.textContent = order.statusLabel;
+  badge.className = 'order-status-badge status-' + order.status;
+
+  // Tracking code
+  if (order.tracking) {
+    document.getElementById('res-tracking').textContent = order.tracking;
+    document.getElementById('tracking-code-block').style.display = 'block';
+    document.getElementById('btn-correios').style.display = 'inline-flex';
+  }
+
+  // Timeline
+  const timeline = document.getElementById('timeline-steps');
+  timeline.innerHTML = order.timeline.map(step => `
+    <div class="timeline-step ${step.done ? 'done' : ''} ${step.current ? 'current' : ''} ${!step.done && !step.current ? 'pending' : ''}">
+      <div class="timeline-step-dot">${step.done && !step.current ? '✓' : ''}</div>
+      <div class="timeline-step-name">${step.name}</div>
+      <div class="timeline-step-desc">${step.desc}</div>
+      ${step.date ? `<div class="timeline-step-date">${step.date}</div>` : ''}
+    </div>
+  `).join('');
+
+  // Items
+  document.getElementById('res-items').innerHTML = order.items.map(item => `
+    <div class="order-item">
+      <div class="order-item-img">${item.symbol}</div>
+      <div class="order-item-info">
+        <div class="item-name">${item.name}</div>
+        <div class="item-var">${item.variant}</div>
+      </div>
+      <div class="order-item-price">${item.price}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('order-result').classList.add('show');
+}
+
+function openCorreios() {
+  if (currentTracking) {
+    window.open(`https://rastreamento.correios.com.br/app/index.php?objeto=${currentTracking}`, '_blank');
+  }
+}
+
+// ── INIT: lê URL params ──
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const order = params.get('pedido');
+  if (order) {
+    document.getElementById('search-input').value = order;
+    buscarPedido();
+  }
+});
+</script>
+</body>
+</html>

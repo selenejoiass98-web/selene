@@ -244,7 +244,7 @@ const auth = getAuth(app);
 
 // Se já logado, vai direto pro dashboard
 onAuthStateChanged(auth, user => {
-  if (user) window.location.href = 'dashboard.html';
+  if (user) window.location.href = '/admin/dashboard';
 });
 
 window.login = async function() {
@@ -268,7 +268,7 @@ window.login = async function() {
 
   try {
     await signInWithEmailAndPassword(auth, email, senha);
-    window.location.href = 'dashboard.html';
+    window.location.href = '/admin/dashboard';
   } catch(e) {
     errorMsg.textContent = 'E-mail ou senha incorretos. Tente novamente.';
     errorMsg.classList.add('show');

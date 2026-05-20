@@ -434,8 +434,9 @@ import { getAuth, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, doc, addDoc, getDoc, updateDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+// Cloudinary config
+const CLOUDINARY_CLOUD = 'ddmxyguk0';
+const CLOUDINARY_PRESET = 'selene-joias';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
@@ -449,7 +450,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
+
 
 // ── AUTH ──
 onAuthStateChanged(auth, user => {
@@ -514,7 +515,7 @@ window.updatePreview = function() {
   }
 };
 
-// ── PHOTOS ──
+// ── PHOTOS — Cloudinary ──
 window.handleFiles = async function(files) {
   if (uploadedPhotos.length + files.length > 4) {
     showToast('Máximo de 4 fotos por produto'); return;
@@ -523,25 +524,43 @@ window.handleFiles = async function(files) {
   const bar = document.getElementById('upload-bar');
   progress.style.display = 'block';
 
+  const total = files.length;
+  let done = 0;
+
   for (const file of files) {
-    if (file.size > 5 * 1024 * 1024) { showToast(`${file.name} é muito grande (máx 5MB)`); continue; }
-    const path = `produtos/${Date.now()}_${file.name.replace(/\s/g,'_')}`;
-    const storageRef = ref(storage, path);
-    const task = uploadBytesResumable(storageRef, file);
-    await new Promise((resolve, reject) => {
-      task.on('state_changed',
-        snap => { bar.style.width = `${(snap.bytesTransferred/snap.totalBytes)*100}%`; },
-        reject,
-        async () => {
-          const url = await getDownloadURL(task.snapshot.ref);
-          uploadedPhotos.push({ url, path });
-          renderPhotos();
-          updatePreview();
-          resolve();
-        }
+    if (file.size > 5 * 1024 * 1024) {
+      showToast(`${file.name} é muito grande (máx 5MB)`);
+      continue;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', CLOUDINARY_PRESET);
+      formData.append('folder', 'selene-joias/produtos');
+
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`,
+        { method: 'POST', body: formData }
       );
-    });
+      const data = await res.json();
+
+      if (data.secure_url) {
+        uploadedPhotos.push({ url: data.secure_url, publicId: data.public_id });
+        renderPhotos();
+        updatePreview();
+      } else {
+        showToast('Erro ao enviar foto. Tente novamente.');
+      }
+    } catch(e) {
+      showToast('Erro ao enviar foto. Verifique sua conexão.');
+      console.error(e);
+    }
+
+    done++;
+    bar.style.width = `${(done / total) * 100}%`;
   }
+
   progress.style.display = 'none';
   bar.style.width = '0%';
 };

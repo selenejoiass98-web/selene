@@ -3,965 +3,421 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Produto — Sélene Jóias</title>
-<link rel="stylesheet" href="assets/css/style.css">
+<title>Produto — Admin Sélene Jóias</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ── PRODUCT PAGE ── */
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:#7C5C35; --gold-mid:#A07848; --gold-light:#C4A47A;
+  --gold-pale:#E0CEBB; --cream:#F5F0EA; --cream-d:#EDE4DA;
+  --brown:#3D2B1A; --brown-m:#5C3D28; --text:#2A1F14;
+  --text-m:#5A4030; --text-s:#9C8070; --white:#FEFCF9;
+  --sidebar:240px; --green:#2D6A4F; --red:#C53030;
+}
+body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text); display:flex; min-height:100vh; }
 
-.product-page {
-  padding-top: var(--nav-h);
-  min-height: 100vh;
+/* SIDEBAR — same as dashboard */
+.sidebar {
+  width:var(--sidebar); background:var(--brown);
+  min-height:100vh; position:fixed; top:0; left:0;
+  display:flex; flex-direction:column; z-index:100;
 }
+.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); }
+.sidebar-logo .brand {
+  font-family:'Cormorant Garamond',serif; font-size:1.1rem;
+  font-weight:300; letter-spacing:0.25em; color:var(--gold-light);
+  text-transform:uppercase; display:block;
+}
+.sidebar-logo .tag { font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-top:0.2rem; display:block; }
+.sidebar-nav { flex:1; padding:1rem 0; }
+.nav-section-title { font-size:0.5rem; letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.2); padding:0.8rem 1.5rem 0.4rem; }
+.nav-item { display:flex; align-items:center; gap:0.8rem; padding:0.75rem 1.5rem; font-size:0.72rem; letter-spacing:0.08em; color:rgba(255,255,255,0.5); cursor:pointer; transition:all 0.2s; text-decoration:none; border-left:2px solid transparent; }
+.nav-item:hover { color:var(--gold-light); background:rgba(255,255,255,0.03); }
+.nav-item.active { color:var(--gold-light); background:rgba(196,164,122,0.08); border-left-color:var(--gold); }
+.nav-item .icon { font-size:1rem; flex-shrink:0; }
+.sidebar-footer { padding:1.2rem 1.5rem; border-top:1px solid rgba(196,164,122,0.12); }
+.btn-logout { width:100%; padding:0.55rem; background:rgba(255,255,255,0.05); border:1px solid rgba(196,164,122,0.15); color:rgba(255,255,255,0.4); font-family:'Jost',sans-serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+.btn-logout:hover { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); }
 
-/* BREADCRUMB */
-.breadcrumb-bar {
-  background: var(--cream);
-  border-bottom: 1px solid var(--gold-pale);
-  padding: 0.9rem 0;
-}
-.page-breadcrumb {
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-.page-breadcrumb a { color: var(--text-soft); transition: color var(--transition); }
-.page-breadcrumb a:hover { color: var(--gold); }
-.page-breadcrumb span { opacity: 0.4; }
+/* MAIN */
+.main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; }
+.topbar { background:var(--white); border-bottom:1px solid var(--gold-pale); padding:0 2rem; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+.topbar-title { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:300; color:var(--brown); }
+.topbar-left { display:flex; align-items:center; gap:1rem; }
+.back-btn { display:flex; align-items:center; gap:0.4rem; font-size:0.62rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-s); text-decoration:none; transition:color 0.2s; }
+.back-btn:hover { color:var(--gold); }
 
-/* PRODUCT LAYOUT */
-.product-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5rem;
-  padding: 3rem 0 5rem;
-  align-items: start;
-}
+/* CONTENT */
+.content { padding:2rem; }
+.form-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; align-items:start; }
 
-/* GALLERY */
-.product-gallery { position: sticky; top: calc(var(--nav-h) + 1rem); }
-.gallery-main {
-  aspect-ratio: 1;
-  background: var(--cream);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  margin-bottom: 1rem;
-  position: relative;
-}
-.gallery-main-img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-}
-.gallery-main:hover .gallery-main-img { transform: scale(1.04); }
-.gallery-placeholder {
-  font-family: var(--font-serif);
-  font-size: 12rem;
-  color: var(--gold-pale);
-  font-style: italic;
-  transition: transform 0.5s ease;
-  user-select: none;
-}
-.gallery-main:hover .gallery-placeholder { transform: scale(1.04); }
+/* CARD */
+.form-card { background:var(--white); border:1px solid var(--gold-pale); padding:1.8rem; margin-bottom:1.2rem; }
+.card-title { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:400; color:var(--brown); margin-bottom:1.5rem; padding-bottom:0.8rem; border-bottom:1px solid var(--gold-pale); display:flex; align-items:center; gap:0.5rem; }
 
-.gallery-badge {
-  position: absolute;
-  top: 1.2rem; left: 1.2rem;
-  background: var(--brown-deep);
-  color: var(--gold-pale);
-  font-size: 0.52rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  padding: 0.35rem 0.8rem;
-  z-index: 1;
+/* FORM */
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+.form-row.single { grid-template-columns:1fr; }
+.form-row.three { grid-template-columns:1fr 1fr 1fr; }
+.form-group { display:flex; flex-direction:column; gap:0.4rem; }
+.form-label { font-size:0.58rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-s); }
+.form-label span { color:var(--red); margin-left:2px; }
+.form-input {
+  padding:0.75rem 1rem; border:1px solid var(--gold-pale); background:var(--white);
+  font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text);
+  outline:none; transition:border-color 0.2s; width:100%;
 }
-.gallery-badge.novo { background: var(--gold); color: var(--white); }
+.form-input:focus { border-color:var(--gold-light); }
+.form-input.error { border-color:var(--red); }
+textarea.form-input { resize:vertical; min-height:100px; line-height:1.6; }
+select.form-input { appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239C8070' stroke-width='1.2' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 0.8rem center; padding-right:2rem; cursor:pointer; }
+.form-hint { font-size:0.62rem; color:var(--text-s); letter-spacing:0.03em; }
+.form-error { font-size:0.62rem; color:var(--red); display:none; }
+.form-error.show { display:block; }
 
-.gallery-zoom-hint {
-  position: absolute;
-  bottom: 1rem; right: 1rem;
-  font-size: 0.55rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-  background: rgba(254,252,249,0.85);
-  padding: 0.3rem 0.7rem;
-  opacity: 0;
-  transition: opacity var(--transition);
+/* TOGGLE */
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:0.8rem 0; border-bottom:1px solid var(--gold-pale); }
+.toggle-row:last-child { border-bottom:none; }
+.toggle-info {}
+.toggle-info .t-title { font-size:0.78rem; color:var(--text); font-weight:400; margin-bottom:0.15rem; }
+.toggle-info .t-desc { font-size:0.65rem; color:var(--text-s); }
+.toggle {
+  width:42px; height:22px; border-radius:11px;
+  background:var(--gold-pale); cursor:pointer;
+  position:relative; transition:background 0.2s; flex-shrink:0;
+  border:none;
 }
-.gallery-main:hover .gallery-zoom-hint { opacity: 1; }
+.toggle.on { background:var(--gold); }
+.toggle::after {
+  content:''; position:absolute;
+  top:3px; left:3px;
+  width:16px; height:16px;
+  border-radius:50%; background:white;
+  transition:transform 0.2s;
+}
+.toggle.on::after { transform:translateX(20px); }
 
-.gallery-thumbs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.6rem;
+/* IMAGE UPLOAD */
+.upload-area {
+  border:2px dashed var(--gold-pale);
+  background:var(--cream);
+  padding:2rem;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-bottom:1rem;
+  position:relative;
 }
-.gallery-thumb {
-  aspect-ratio: 1;
-  background: var(--cream);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: border-color var(--transition);
-  font-family: var(--font-serif);
-  font-size: 2rem;
-  color: var(--gold-pale);
-  font-style: italic;
-  overflow: hidden;
+.upload-area:hover, .upload-area.dragover {
+  border-color:var(--gold-light);
+  background:var(--cream-d);
 }
-.gallery-thumb.active { border-color: var(--gold); }
-.gallery-thumb:hover { border-color: var(--gold-light); }
-.gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.upload-area input[type="file"] {
+  position:absolute; inset:0; opacity:0; cursor:pointer; width:100%;
+}
+.upload-icon { font-size:2rem; margin-bottom:0.5rem; color:var(--gold-light); }
+.upload-text { font-size:0.72rem; color:var(--text-s); line-height:1.6; }
+.upload-text strong { color:var(--gold); }
 
-/* PRODUCT INFO */
-.product-info {}
-.product-info-tag {
-  font-size: 0.6rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--gold-mid);
-  margin-bottom: 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
+.photos-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem;
+  margin-bottom:1rem;
 }
-.product-info-tag::before { content: ''; width: 20px; height: 1px; background: var(--gold-light); }
-.product-info-name {
-  font-family: var(--font-serif);
-  font-size: clamp(2rem, 3.5vw, 3rem);
-  font-weight: 300;
-  color: var(--brown-deep);
-  line-height: 1.1;
-  margin-bottom: 0.5rem;
+.photo-item {
+  aspect-ratio:1; position:relative;
+  background:var(--cream); overflow:hidden;
 }
-.product-info-subtitle {
-  font-size: 0.82rem;
-  color: var(--text-soft);
-  font-weight: 300;
-  letter-spacing: 0.03em;
-  margin-bottom: 1.5rem;
+.photo-item img { width:100%; height:100%; object-fit:cover; }
+.photo-delete {
+  position:absolute; top:4px; right:4px;
+  width:22px; height:22px; border-radius:50%;
+  background:rgba(197,48,48,0.9); color:white;
+  border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem; line-height:1;
+}
+.upload-progress {
+  width:100%; height:4px; background:var(--gold-pale);
+  margin-bottom:0.5rem; display:none; border-radius:2px; overflow:hidden;
+}
+.upload-progress-bar {
+  height:100%; background:var(--gold);
+  transition:width 0.3s ease; width:0%;
 }
 
-/* Rating */
-.product-rating {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 1.5rem;
-}
-.rating-stars { color: var(--gold-light); font-size: 0.8rem; letter-spacing: 0.1em; }
-.rating-text { font-size: 0.68rem; color: var(--text-soft); letter-spacing: 0.05em; }
-.rating-text a { color: var(--gold); border-bottom: 1px solid var(--gold-pale); }
+/* SIDEBAR CARD */
+.action-card { background:var(--white); border:1px solid var(--gold-pale); padding:1.5rem; margin-bottom:1rem; }
+.action-card-title { font-size:0.62rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold-mid); margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:1px solid var(--gold-pale); }
 
-/* Price */
-.product-price-block {
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--gold-pale);
-  border-bottom: 1px solid var(--gold-pale);
-  margin-bottom: 1.8rem;
-}
-.price-main {
-  display: flex;
-  align-items: baseline;
-  gap: 0.8rem;
-  margin-bottom: 0.5rem;
-}
-.price-current {
-  font-family: var(--font-serif);
-  font-size: 2.2rem;
-  font-weight: 300;
-  color: var(--gold);
-  line-height: 1;
-}
-.price-old {
-  font-size: 1rem;
-  color: var(--text-soft);
-  text-decoration: line-through;
-}
-.price-discount {
-  background: #FEF3C7;
-  color: #92400E;
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 0.2rem 0.6rem;
-}
-.price-installment {
-  font-size: 0.75rem;
-  color: var(--text-soft);
-  letter-spacing: 0.03em;
-  margin-bottom: 0.8rem;
-}
-.price-pix {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.72rem;
-  color: #2D6A4F;
-  background: #E8F5F0;
-  padding: 0.5rem 0.8rem;
-  border-radius: 2px;
-}
-.price-pix strong { font-weight: 500; }
+.btn-save { width:100%; padding:0.9rem; background:var(--gold); color:white; border:none; font-family:'Jost',sans-serif; font-size:0.68rem; letter-spacing:0.25em; text-transform:uppercase; cursor:pointer; transition:background 0.2s; display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.6rem; }
+.btn-save:hover { background:var(--brown-m); }
+.btn-save:disabled { opacity:0.6; cursor:not-allowed; }
+.btn-draft { width:100%; padding:0.7rem; background:var(--white); color:var(--text-m); border:1px solid var(--gold-pale); font-family:'Jost',sans-serif; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+.btn-draft:hover { border-color:var(--gold); color:var(--gold); }
 
-/* Options */
-.option-group { margin-bottom: 1.5rem; }
-.option-label {
-  font-size: 0.62rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-  margin-bottom: 0.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.option-label a {
-  color: var(--gold);
-  border-bottom: 1px solid var(--gold-pale);
-  font-size: 0.6rem;
-  transition: border-color var(--transition);
-}
-.option-label a:hover { border-color: var(--gold); }
+.status-select { margin-top:1rem; }
 
-.size-options {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-.size-btn {
-  width: 44px; height: 44px;
-  border: 1px solid var(--gold-pale);
-  background: transparent;
-  font-size: 0.72rem;
-  color: var(--text-mid);
-  cursor: pointer;
-  transition: all var(--transition);
-  font-family: var(--font-sans);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.size-btn:hover { border-color: var(--gold-light); color: var(--gold); }
-.size-btn.active { background: var(--gold); color: var(--white); border-color: var(--gold); }
-.size-btn.unavailable {
-  opacity: 0.35;
-  cursor: not-allowed;
-  text-decoration: line-through;
-}
+/* PREVIEW */
+.preview-card { background:var(--cream); border:1px solid var(--gold-pale); padding:1.2rem; }
+.preview-img { width:100%; aspect-ratio:3/4; background:var(--white); display:flex; align-items:center; justify-content:center; margin-bottom:0.8rem; font-family:'Cormorant Garamond',serif; font-size:4rem; color:var(--gold-pale); font-style:italic; overflow:hidden; }
+.preview-img img { width:100%; height:100%; object-fit:cover; }
+.preview-cat { font-size:0.55rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-s); margin-bottom:0.3rem; }
+.preview-name { font-family:'Cormorant Garamond',serif; font-size:1rem; color:var(--brown); margin-bottom:0.3rem; }
+.preview-price { font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--gold); }
 
-.material-options { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-.material-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--gold-pale);
-  background: transparent;
-  font-size: 0.68rem;
-  color: var(--text-mid);
-  cursor: pointer;
-  transition: all var(--transition);
-  font-family: var(--font-sans);
-  letter-spacing: 0.05em;
-}
-.material-btn:hover { border-color: var(--gold-light); }
-.material-btn.active { border-color: var(--gold); background: var(--cream); color: var(--gold); }
-.mat-color {
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.08);
-}
+/* TOAST */
+.toast { position:fixed; bottom:2rem; right:2rem; background:var(--brown); color:var(--cream); padding:0.9rem 1.4rem; font-size:0.75rem; letter-spacing:0.05em; z-index:500; display:flex; align-items:center; gap:0.7rem; transform:translateY(calc(100% + 2rem)); opacity:0; transition:all 0.3s ease; max-width:320px; }
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-dot { width:7px; height:7px; border-radius:50%; background:var(--gold-light); flex-shrink:0; }
+.spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
-/* Qty + CTA */
-.product-cta-row {
-  display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: 0.8rem;
-  margin-bottom: 0.8rem;
-}
-.qty-selector {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--gold-pale);
-  height: 52px;
-}
-.qty-selector .qty-btn {
-  width: 34px; height: 100%;
-  border-radius: 0;
-  background: none;
-  border: none;
-  border-right: 1px solid var(--gold-pale);
-  font-size: 1.1rem;
-  color: var(--text-mid);
-  cursor: pointer;
-  transition: all var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.qty-selector .qty-btn:last-child {
-  border-right: none;
-  border-left: 1px solid var(--gold-pale);
-}
-.qty-selector .qty-btn:hover { background: var(--cream); color: var(--gold); }
-.qty-selector .qty-num {
-  flex: 1;
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--text);
-}
-
-.btn-add-cart {
-  height: 52px;
-  background: var(--gold);
-  color: var(--white);
-  border: none;
-  font-family: var(--font-sans);
-  font-size: 0.68rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-.btn-add-cart:hover { background: var(--brown-mid); }
-
-.btn-buy-now {
-  width: 100%;
-  height: 52px;
-  background: var(--brown-deep);
-  color: var(--cream);
-  border: none;
-  font-family: var(--font-sans);
-  font-size: 0.68rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background var(--transition);
-  margin-bottom: 1rem;
-}
-.btn-buy-now:hover { background: var(--brown-mid); }
-
-/* Guarantees */
-.product-guarantees {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-.guarantee-mini {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.68rem;
-  color: var(--text-mid);
-  letter-spacing: 0.03em;
-}
-.guarantee-mini .g-ico {
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-
-/* Share / Wishlist */
-.product-actions {
-  display: flex;
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--gold-pale);
-}
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font-sans);
-  transition: color var(--transition);
-  padding: 0;
-}
-.action-btn:hover { color: var(--gold); }
-
-/* TABS */
-.product-tabs {
-  padding: 4rem 0;
-  border-top: 1px solid var(--gold-pale);
-}
-.tabs-nav {
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--gold-pale);
-  margin-bottom: 2.5rem;
-}
-.tab-btn {
-  padding: 0.9rem 2rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  cursor: pointer;
-  font-family: var(--font-sans);
-  transition: all var(--transition);
-  margin-bottom: -1px;
-}
-.tab-btn:hover { color: var(--gold); }
-.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-.tab-desc p {
-  font-size: 0.85rem;
-  line-height: 1.9;
-  color: var(--text-mid);
-  font-weight: 300;
-  margin-bottom: 1.2rem;
-  max-width: 640px;
-}
-.spec-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-  max-width: 520px;
-  border: 1px solid var(--gold-pale);
-}
-.spec-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-bottom: 1px solid var(--gold-pale);
-}
-.spec-row:last-child { border-bottom: none; }
-.spec-key {
-  padding: 0.75rem 1rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-  background: var(--cream);
-  border-right: 1px solid var(--gold-pale);
-}
-.spec-val {
-  padding: 0.75rem 1rem;
-  font-size: 0.78rem;
-  color: var(--text);
-  letter-spacing: 0.03em;
-}
-
-/* Care instructions */
-.care-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  max-width: 500px;
-}
-.care-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.8rem;
-  font-size: 0.78rem;
-  color: var(--text-mid);
-  line-height: 1.6;
-}
-.care-item .care-ico { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
-
-/* Reviews */
-.reviews-summary {
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-  padding: 2rem;
-  background: var(--cream);
-  margin-bottom: 2rem;
-  max-width: 500px;
-}
-.review-avg {
-  text-align: center;
-}
-.review-avg .avg-num {
-  font-family: var(--font-serif);
-  font-size: 4rem;
-  font-weight: 300;
-  color: var(--gold);
-  line-height: 1;
-}
-.review-avg .avg-stars { color: var(--gold-light); font-size: 0.85rem; letter-spacing: 0.1em; margin: 0.3rem 0; }
-.review-avg .avg-count { font-size: 0.65rem; color: var(--text-soft); letter-spacing: 0.1em; }
-.review-bars { flex: 1; }
-.review-bar-row {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.4rem;
-}
-.review-bar-row .bar-label { font-size: 0.65rem; color: var(--text-soft); min-width: 12px; }
-.review-bar-row .bar-track {
-  flex: 1; height: 4px;
-  background: var(--gold-pale);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.review-bar-row .bar-fill { height: 100%; background: var(--gold); border-radius: 2px; }
-
-.review-item {
-  padding: 1.5rem 0;
-  border-bottom: 1px solid var(--gold-pale);
-}
-.review-item:last-child { border-bottom: none; }
-.review-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.8rem;
-}
-.review-avatar {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--gold);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem;
-  color: var(--white);
-  font-weight: 500;
-  flex-shrink: 0;
-}
-.review-meta {}
-.review-name { font-size: 0.78rem; font-weight: 500; color: var(--brown-deep); margin-bottom: 0.15rem; }
-.review-date { font-size: 0.62rem; color: var(--text-soft); letter-spacing: 0.05em; }
-.review-stars { color: var(--gold-light); font-size: 0.75rem; letter-spacing: 0.08em; margin-left: auto; }
-.review-text {
-  font-size: 0.8rem;
-  line-height: 1.75;
-  color: var(--text-mid);
-  font-weight: 300;
-}
-
-/* RELATED */
-.related-section {
-  padding: 4rem 0 5rem;
-  background: var(--cream);
-}
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .product-layout { grid-template-columns: 1fr; gap: 2.5rem; }
-  .product-gallery { position: static; }
-  .related-grid { grid-template-columns: repeat(2, 1fr); }
-  .product-cta-row { grid-template-columns: 80px 1fr; }
-  .product-guarantees { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
-  .gallery-thumbs { grid-template-columns: repeat(4, 1fr); }
-  .tabs-nav { overflow-x: auto; }
-  .tab-btn { padding: 0.9rem 1.2rem; white-space: nowrap; }
-  .related-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-  .reviews-summary { flex-direction: column; gap: 1.5rem; }
-  .spec-grid { grid-template-columns: 1fr; }
+@media(max-width:900px) {
+  .sidebar { display:none; }
+  .main { margin-left:0; }
+  .form-layout { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr; }
+  .form-row.three { grid-template-columns:1fr 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo">Sélene Jóias</a>
-    <ul class="nav-links">
-      <li><a href="catalogo.html">Coleções</a></li>
-      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
-      <li><a href="catalogo.html?cat=colares">Colares</a></li>
-      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
-      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
-      <li><a href="sobre.html">Nossa História</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="nav-cart" onclick="openCart()">
-        Carrinho
-        <span class="cart-badge cart-count" style="display:none;">0</span>
-      </button>
-    </div>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="brand">Sélene Jóias</span>
+    <span class="tag">Painel Admin</span>
   </div>
-</nav>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">Principal</div>
+    <a class="nav-item" href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+    <a class="nav-item active" href="produto.html"><span class="icon">✦</span> Novo Produto</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Gestão</div>
+    <a class="nav-item" href="dashboard.html"><span class="icon">💍</span> Produtos</a>
+    <a class="nav-item" href="dashboard.html"><span class="icon">📦</span> Pedidos</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Configurações</div>
+    <a class="nav-item" href="../index.html" target="_blank"><span class="icon">🌐</span> Ver loja</a>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="btn-logout" onclick="logout()">Sair</button>
+  </div>
+</aside>
 
-<div class="product-page">
-
-  <!-- BREADCRUMB -->
-  <div class="breadcrumb-bar">
-    <div class="container">
-      <div class="page-breadcrumb">
-        <a href="index.html">Início</a>
-        <span>›</span>
-        <a href="catalogo.html">Coleção</a>
-        <span>›</span>
-        <span id="breadcrumb-cat">Colares</span>
-        <span>›</span>
-        <span id="breadcrumb-name">Colar Lua Dourada</span>
-      </div>
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="dashboard.html" class="back-btn">← Voltar</a>
+      <div class="topbar-title" id="page-title">Novo Produto</div>
     </div>
   </div>
 
-  <!-- PRODUCT MAIN -->
-  <div class="container">
-    <div class="product-layout">
+  <div class="content">
+    <div class="form-layout">
 
-      <!-- GALLERY -->
-      <div class="product-gallery">
-        <div class="gallery-main">
-          <div class="gallery-placeholder" id="gallery-main-display">◯</div>
-          <div class="gallery-badge" id="gallery-badge">Mais Vendido</div>
-          <div class="gallery-zoom-hint">Passe o mouse para ampliar</div>
+      <!-- LEFT -->
+      <div>
+
+        <!-- INFORMAÇÕES BÁSICAS -->
+        <div class="form-card">
+          <div class="card-title">💍 Informações do produto</div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Nome do produto <span>*</span></label>
+              <input type="text" class="form-input" id="nome" placeholder="Ex: Colar Lua Dourada"
+                oninput="updatePreview()">
+              <div class="form-error" id="err-nome">Campo obrigatório</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Descrição curta <span>*</span></label>
+              <input type="text" class="form-input" id="descricao-curta" placeholder="Ex: Disco em ouro 18k maciço com corrente veneziana"
+                oninput="updatePreview()">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Descrição completa</label>
+              <textarea class="form-input" id="descricao" placeholder="Descreva a joia em detalhes: material, inspiração, como usar..."></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Categoria <span>*</span></label>
+              <select class="form-input" id="categoria" onchange="updatePreview()">
+                <option value="">Selecione...</option>
+                <option value="Colares">Colares</option>
+                <option value="Anéis">Anéis</option>
+                <option value="Pulseiras">Pulseiras</option>
+                <option value="Brincos">Brincos</option>
+                <option value="Conjuntos">Conjuntos</option>
+              </select>
+              <div class="form-error" id="err-categoria">Selecione uma categoria</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Material</label>
+              <select class="form-input" id="material">
+                <option value="Ouro 18k">Ouro 18k</option>
+                <option value="Ouro Branco 18k">Ouro Branco 18k</option>
+                <option value="Ouro Rosé 18k">Ouro Rosé 18k</option>
+                <option value="Ouro 18k + Zircônia">Ouro 18k + Zircônia</option>
+                <option value="Ouro 18k + Esmalte">Ouro 18k + Esmalte</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <div class="gallery-thumbs" id="gallery-thumbs">
-          <div class="gallery-thumb active" onclick="selectThumb(this, '◯')">◯</div>
-          <div class="gallery-thumb" onclick="selectThumb(this, '○')">○</div>
-          <div class="gallery-thumb" onclick="selectThumb(this, '◎')">◎</div>
-          <div class="gallery-thumb" onclick="selectThumb(this, '⊛')">⊛</div>
+
+        <!-- PREÇOS -->
+        <div class="form-card">
+          <div class="card-title">💰 Preços e estoque</div>
+          <div class="form-row three">
+            <div class="form-group">
+              <label class="form-label">Preço (R$) <span>*</span></label>
+              <input type="number" class="form-input" id="preco" placeholder="289.00" step="0.01" min="0"
+                oninput="updatePreview()">
+              <div class="form-error" id="err-preco">Informe o preço</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preço original (R$)</label>
+              <input type="number" class="form-input" id="preco-original" placeholder="380.00" step="0.01" min="0">
+              <div class="form-hint">Para mostrar desconto</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estoque</label>
+              <input type="number" class="form-input" id="estoque" placeholder="10" min="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">SKU / Código</label>
+              <input type="text" class="form-input" id="sku" placeholder="SJ-COL-001">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Peso (gramas)</label>
+              <input type="number" class="form-input" id="peso" placeholder="2.8" step="0.1" min="0">
+            </div>
+          </div>
         </div>
+
+        <!-- ESPECIFICAÇÕES -->
+        <div class="form-card">
+          <div class="card-title">📋 Especificações técnicas</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Comprimento / Tamanho</label>
+              <input type="text" class="form-input" id="tamanho" placeholder="Ex: 45cm ou T16">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Acabamento</label>
+              <select class="form-input" id="acabamento">
+                <option value="Polido">Polido</option>
+                <option value="Fosco">Fosco</option>
+                <option value="Escovado">Escovado</option>
+                <option value="Diamantado">Diamantado</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Tamanhos disponíveis</label>
+              <input type="text" class="form-input" id="tamanhos" placeholder="Ex: T14, T16, T17, T18 (separados por vírgula)">
+              <div class="form-hint">Deixe vazio se não tiver variação de tamanho</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Badge / Etiqueta</label>
+              <select class="form-input" id="badge">
+                <option value="">Sem badge</option>
+                <option value="Novo">Novo</option>
+                <option value="Mais Vendido">Mais Vendido</option>
+                <option value="Exclusivo">Exclusivo</option>
+                <option value="Ed. Limitada">Ed. Limitada</option>
+                <option value="Promoção">Promoção</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- VISIBILIDADE -->
+        <div class="form-card">
+          <div class="card-title">⚙ Visibilidade</div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="t-title">Mostrar na loja</div>
+              <div class="t-desc">Produto visível para clientes no site</div>
+            </div>
+            <button class="toggle on" id="toggle-ativo" onclick="toggleBtn(this)"></button>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="t-title">Destaque na página inicial</div>
+              <div class="t-desc">Aparece na seção de destaque do site</div>
+            </div>
+            <button class="toggle" id="toggle-destaque" onclick="toggleBtn(this)"></button>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="t-title">Frete grátis</div>
+              <div class="t-desc">Este produto tem frete grátis sempre</div>
+            </div>
+            <button class="toggle" id="toggle-frete" onclick="toggleBtn(this)"></button>
+          </div>
+        </div>
+
       </div>
 
-      <!-- INFO -->
-      <div class="product-info">
-        <div class="product-info-tag" id="info-cat">Colares</div>
-        <h1 class="product-info-name" id="info-name">Colar Lua Dourada</h1>
-        <p class="product-info-subtitle" id="info-subtitle">Disco em ouro 18k maciço com corrente veneziana</p>
+      <!-- RIGHT -->
+      <div>
 
-        <div class="product-rating">
-          <div class="rating-stars">★ ★ ★ ★ ★</div>
-          <span class="rating-text">4.9 · <a href="#reviews">12 avaliações</a></span>
+        <!-- FOTOS -->
+        <div class="form-card">
+          <div class="card-title">📸 Fotos do produto</div>
+
+          <div class="upload-progress" id="upload-progress">
+            <div class="upload-progress-bar" id="upload-bar"></div>
+          </div>
+
+          <div class="photos-grid" id="photos-grid"></div>
+
+          <div class="upload-area" id="upload-area">
+            <input type="file" accept="image/*" multiple id="file-input" onchange="handleFiles(this.files)">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">
+              <strong>Clique para adicionar fotos</strong><br>
+              ou arraste e solte aqui<br>
+              <span style="font-size:0.62rem;">JPG, PNG · Máx 5MB por foto</span>
+            </div>
+          </div>
+          <div class="form-hint">Adicione até 4 fotos. A primeira será a foto principal.</div>
         </div>
 
-        <!-- PRICE -->
-        <div class="product-price-block">
-          <div class="price-main">
-            <span class="price-current" id="info-price">R$ 289,00</span>
-            <span class="price-old" id="info-old-price">R$ 380,00</span>
-            <span class="price-discount" id="info-discount">−24%</span>
-          </div>
-          <p class="price-installment" id="info-installment">ou 12× de R$ 27,08 sem juros no cartão</p>
-          <div class="price-pix" id="info-pix">
-            🟢 <span>À vista no <strong>Pix: R$ 274,55</strong> (5% de desconto)</span>
-          </div>
-        </div>
-
-        <!-- TAMANHO -->
-        <div class="option-group" id="size-group">
-          <div class="option-label">
-            Tamanho do aro
-            <a href="#" onclick="event.preventDefault();showToast('Guia de tamanhos em breve!')">Guia de tamanhos</a>
-          </div>
-          <div class="size-options" id="size-options">
-            <button class="size-btn" onclick="selectSize(this)">T14</button>
-            <button class="size-btn active" onclick="selectSize(this)">T16</button>
-            <button class="size-btn" onclick="selectSize(this)">T17</button>
-            <button class="size-btn" onclick="selectSize(this)">T18</button>
-            <button class="size-btn unavailable" onclick="event.preventDefault()">T20</button>
-          </div>
-        </div>
-
-        <!-- MATERIAL -->
-        <div class="option-group">
-          <div class="option-label">Material</div>
-          <div class="material-options">
-            <button class="material-btn active" onclick="selectMaterial(this)">
-              <div class="mat-color" style="background:linear-gradient(135deg,#C4A47A,#7C5C35);"></div>
-              Ouro 18k
-            </button>
-            <button class="material-btn" onclick="selectMaterial(this)">
-              <div class="mat-color" style="background:linear-gradient(135deg,#E8E8E8,#B0B0B0);"></div>
-              Ouro Branco
-            </button>
-            <button class="material-btn" onclick="selectMaterial(this)">
-              <div class="mat-color" style="background:linear-gradient(135deg,#E8B4A0,#C47858);"></div>
-              Ouro Rosé
-            </button>
-          </div>
-        </div>
-
-        <!-- QTY + CTA -->
-        <div class="product-cta-row">
-          <div class="qty-selector">
-            <button class="qty-btn" onclick="changeLocalQty(-1)">−</button>
-            <span class="qty-num" id="local-qty">1</span>
-            <button class="qty-btn" onclick="changeLocalQty(1)">+</button>
-          </div>
-          <button class="btn-add-cart" id="btn-add" onclick="handleAddToCart()">
-            ✦ Adicionar ao Carrinho
+        <!-- AÇÕES -->
+        <div class="action-card">
+          <div class="action-card-title">Publicar produto</div>
+          <button class="btn-save" id="btn-save" onclick="salvarProduto('ativo')">
+            <div class="spinner" id="spinner"></div>
+            <span id="btn-save-text">✦ Publicar na loja</span>
+          </button>
+          <button class="btn-draft" onclick="salvarProduto('rascunho')">
+            Salvar como rascunho
           </button>
         </div>
-        <button class="btn-buy-now" onclick="handleBuyNow()">
-          Comprar Agora
-        </button>
 
-        <!-- GUARANTEES -->
-        <div class="product-guarantees">
-          <div class="guarantee-mini"><span class="g-ico">🔒</span> Pagamento 100% seguro</div>
-          <div class="guarantee-mini"><span class="g-ico">📦</span> Embalagem especial grátis</div>
-          <div class="guarantee-mini"><span class="g-ico">🔄</span> Troca em 30 dias</div>
-          <div class="guarantee-mini"><span class="g-ico">⭐</span> Garantia de 1 ano</div>
+        <!-- PREVIEW -->
+        <div class="form-card">
+          <div class="card-title">👁 Pré-visualização</div>
+          <div class="preview-card">
+            <div class="preview-img" id="preview-img">◈</div>
+            <div class="preview-cat" id="preview-cat">Categoria</div>
+            <div class="preview-name" id="preview-name">Nome do produto</div>
+            <div class="preview-price" id="preview-price">R$ 0,00</div>
+          </div>
         </div>
 
-        <!-- ACTIONS -->
-        <div class="product-actions">
-          <button class="action-btn" onclick="toggleWishlist(this)">
-            <span>♡</span> Favoritar
-          </button>
-          <button class="action-btn" onclick="shareProduct()">
-            <span>↗</span> Compartilhar
-          </button>
-          <a href="https://wa.me/5547000000000" class="action-btn" target="_blank">
-            <span>💬</span> Tirar dúvidas
-          </a>
-        </div>
       </div>
-    </div>
-  </div>
-
-  <!-- TABS -->
-  <div class="container">
-    <div class="product-tabs">
-      <div class="tabs-nav">
-        <button class="tab-btn active" onclick="openTab('descricao', this)">Descrição</button>
-        <button class="tab-btn" onclick="openTab('especificacoes', this)">Especificações</button>
-        <button class="tab-btn" onclick="openTab('cuidados', this)">Cuidados</button>
-        <button class="tab-btn" onclick="openTab('reviews', this)" id="tab-reviews-btn">Avaliações (12)</button>
-      </div>
-
-      <!-- DESCRIÇÃO -->
-      <div class="tab-content active" id="tab-descricao">
-        <div class="tab-desc">
-          <p>O <strong>Colar Lua Dourada</strong> é uma das peças mais especiais da Sélene Jóias. O disco em ouro 18k maciço captura a luz de um jeito único — delicado durante o dia, marcante à noite.</p>
-          <p>Inspirado na serenidade e na força da lua cheia, este colar foi criado para mulheres que carregam sua elegância com leveza. O acabamento polido reflete cada detalhe com precisão, enquanto a corrente veneziana fina garante conforto durante o uso prolongado.</p>
-          <p>Cada peça é produzida artesanalmente e acompanha certificado de autenticidade do ouro e embalagem exclusiva Sélene Jóias — perfeita como presente.</p>
-        </div>
-      </div>
-
-      <!-- ESPECIFICAÇÕES -->
-      <div class="tab-content" id="tab-especificacoes">
-        <div class="spec-grid">
-          <div class="spec-row">
-            <div class="spec-key">Material</div>
-            <div class="spec-val">Ouro 18k (750‰)</div>
-          </div>
-          <div class="spec-row">
-            <div class="spec-key">Peso</div>
-            <div class="spec-val">2,8g</div>
-          </div>
-          <div class="spec-row">
-            <div class="spec-key">Comprimento</div>
-            <div class="spec-val">45cm (ajustável a 40cm)</div>
-          </div>
-          <div class="spec-row">
-            <div class="spec-key">Diâmetro disco</div>
-            <div class="spec-val">12mm</div>
-          </div>
-          <div class="spec-row">
-            <div class="spec-key">Espessura corrente</div>
-            <div class="spec-val">0,8mm</div>
-          </div>
-          <div class="spec-row">
-            <div class="spec-key">Fecho</div>
-            <div class="spec-val">Lagosta em ouro 18k</div>
-          </div>
-          <div class="spec-row">
-            <div class="spec-key">Acabamento</div>
-            <div class="spec-val">Polido</div>
-          </div>
-          <div class="spec-row">
-            <div class="spec-key">Certificado</div>
-            <div class="spec-val">Incluso</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CUIDADOS -->
-      <div class="tab-content" id="tab-cuidados">
-        <div class="care-list">
-          <div class="care-item"><span class="care-ico">✓</span> Guarde separado em caixinha ou saquinho para evitar arranhões.</div>
-          <div class="care-item"><span class="care-ico">✓</span> Evite contato com perfumes, cremes e produtos químicos — aplique-os antes de colocar a joia.</div>
-          <div class="care-item"><span class="care-ico">✓</span> Retire antes de praticar esportes, dormir ou tomar banho prolongado.</div>
-          <div class="care-item"><span class="care-ico">✓</span> Para limpar, use um pano macio e seco. Se necessário, água morna e sabão neutro.</div>
-          <div class="care-item"><span class="care-ico">✓</span> Evite exposição prolongada ao sol e piscina com cloro.</div>
-          <div class="care-item"><span class="care-ico">✓</span> Leve para polimento profissional a cada 1 ou 2 anos para manter o brilho original.</div>
-        </div>
-      </div>
-
-      <!-- AVALIAÇÕES -->
-      <div class="tab-content" id="tab-reviews" id="reviews">
-        <div class="reviews-summary">
-          <div class="review-avg">
-            <div class="avg-num">4.9</div>
-            <div class="avg-stars">★ ★ ★ ★ ★</div>
-            <div class="avg-count">12 avaliações</div>
-          </div>
-          <div class="review-bars">
-            <div class="review-bar-row">
-              <span class="bar-label">5</span>
-              <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
-            </div>
-            <div class="review-bar-row">
-              <span class="bar-label">4</span>
-              <div class="bar-track"><div class="bar-fill" style="width:8%"></div></div>
-            </div>
-            <div class="review-bar-row">
-              <span class="bar-label">3</span>
-              <div class="bar-track"><div class="bar-fill" style="width:2%"></div></div>
-            </div>
-            <div class="review-bar-row">
-              <span class="bar-label">2</span>
-              <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-            </div>
-            <div class="review-bar-row">
-              <span class="bar-label">1</span>
-              <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-            </div>
-          </div>
-        </div>
-        <div class="review-item">
-          <div class="review-header">
-            <div class="review-avatar">AM</div>
-            <div class="review-meta">
-              <div class="review-name">Ana Martins</div>
-              <div class="review-date">12 de abril de 2025</div>
-            </div>
-            <div class="review-stars">★ ★ ★ ★ ★</div>
-          </div>
-          <p class="review-text">Perfeito! Exatamente como nas fotos, muito delicado e elegante. Chegou super bem embalado. Já recebi vários elogios usando!</p>
-        </div>
-        <div class="review-item">
-          <div class="review-header">
-            <div class="review-avatar">JS</div>
-            <div class="review-meta">
-              <div class="review-name">Juliana Silva</div>
-              <div class="review-date">3 de março de 2025</div>
-            </div>
-            <div class="review-stars">★ ★ ★ ★ ★</div>
-          </div>
-          <p class="review-text">Comprei de presente para minha mãe e ela adorou! A qualidade é incrível para o preço. A embalagem é lindíssima, parece um presente de joalheria fina.</p>
-        </div>
-        <div class="review-item">
-          <div class="review-header">
-            <div class="review-avatar">CF</div>
-            <div class="review-meta">
-              <div class="review-name">Camila Ferreira</div>
-              <div class="review-date">18 de fevereiro de 2025</div>
-            </div>
-            <div class="review-stars">★ ★ ★ ★ ★</div>
-          </div>
-          <p class="review-text">Uso todos os dias há 2 meses e está impecável, sem escurecer nem nada. Vale cada centavo!</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- /product-page -->
-
-<!-- RELATED -->
-<section class="related-section">
-  <div class="container">
-    <div class="section-tag">Você também pode gostar</div>
-    <h2 class="section-title">Peças <em>relacionadas</em></h2>
-    <div class="related-grid" id="related-grid"></div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <div class="logo">Sélene Jóias</div>
-        <div class="tagline">Elegância que transforma</div>
-        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Coleções</h4>
-        <ul>
-          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
-          <li><a href="catalogo.html?cat=colares">Colares</a></li>
-          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
-          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Informações</h4>
-        <ul>
-          <li><a href="sobre.html">Sobre nós</a></li>
-          <li><a href="#">Política de entrega</a></li>
-          <li><a href="#">Trocas e devoluções</a></li>
-          <li><a href="#">FAQ</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Contato</h4>
-        <ul>
-          <li>📱 (47) 99999-9999</li>
-          <li>✉ contato@selenejoias.com.br</li>
-          <li>📍 Balneário Camboriú, SC</li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
-      <div class="social-links">
-        <a class="social-link" href="#">ig</a>
-        <a class="social-link" href="#">fb</a>
-        <a class="social-link" href="https://wa.me/5547000000000">wa</a>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<!-- CART DRAWER -->
-<div class="cart-overlay" id="cart-overlay"></div>
-<div class="cart-drawer" id="cart-drawer">
-  <div class="cart-header">
-    <h2>Seu Carrinho</h2>
-    <button class="cart-close" onclick="closeCart()">×</button>
-  </div>
-  <div class="cart-body">
-    <div class="cart-empty" id="cart-empty" style="display:flex;">
-      <div class="cart-empty-icon">◈</div>
-      <p>Seu carrinho está vazio</p>
-    </div>
-    <div id="cart-items"></div>
-  </div>
-  <div class="cart-footer" id="cart-footer" style="display:none;">
-    <div class="free-shipping-bar" id="free-shipping-bar"></div>
-    <div class="cart-totals">
-      <div class="cart-total-row">
-        <span class="label">Subtotal</span>
-        <span class="value" id="cart-subtotal">R$ 0,00</span>
-      </div>
-      <div class="cart-total-row final">
-        <span class="label">Total</span>
-        <span class="value" id="cart-total">R$ 0,00</span>
-      </div>
-    </div>
-    <div class="cart-cta">
-      <a href="checkout.html" class="btn btn-primary" style="justify-content:center;" onclick="closeCart()">Finalizar Compra</a>
-      <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
     </div>
   </div>
 </div>
@@ -969,168 +425,247 @@
 <!-- TOAST -->
 <div class="toast" id="toast">
   <span class="toast-dot"></span>
-  <span id="toast-msg">Produto adicionado!</span>
+  <span id="toast-msg"></span>
 </div>
 
-<script src="assets/js/cart.js"></script>
-<script>
-// ── PRODUTOS DATA ──
-const PRODUCTS_DB = {
-  'p1': { id:'p1', name:'Colar Lua Dourada',   cat:'Colares',   price:289, oldPrice:380, symbol:'◯', badge:'Mais Vendido', variant:'Ouro 18k · 45cm', hasSizes:false },
-  'p2': { id:'p2', name:'Anel Serpente',        cat:'Anéis',     price:199, oldPrice:null, symbol:'⊛', badge:null, variant:'Ouro 18k', hasSizes:true },
-  'p3': { id:'p3', name:'Pulseira Elos',        cat:'Pulseiras', price:349, oldPrice:420, symbol:'∞', badge:'Novo', variant:'Ouro 18k · 18cm', hasSizes:false },
-  'p4': { id:'p4', name:'Brinco Argola Média',  cat:'Brincos',   price:159, oldPrice:null, symbol:'◎', badge:null, variant:'Ouro 18k · 2cm', hasSizes:false },
-  'p5': { id:'p5', name:'Anel Minimalista',     cat:'Anéis',     price:179, oldPrice:null, symbol:'○', badge:'Exclusivo', variant:'Ouro 18k', hasSizes:true },
-  'p6': { id:'p6', name:'Colar Borboleta',      cat:'Colares',   price:299, oldPrice:360, symbol:'✦', badge:'Ed. Limitada', variant:'Ouro 18k + Esmalte', hasSizes:false },
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, getDoc, updateDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
 };
 
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+// ── AUTH ──
+onAuthStateChanged(auth, user => {
+  if (!user) window.location.href = 'index.html';
+});
+
 // ── STATE ──
-let currentProduct = PRODUCTS_DB['p1'];
-let localQty = 1;
-let selectedSize = 'T16';
-let selectedMaterial = 'Ouro 18k';
-let wishlisted = false;
+let uploadedPhotos = []; // { url, path }
+let editingId = null;
 
-// ── LOAD FROM URL ──
-function loadProduct() {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  if (id && PRODUCTS_DB[id]) currentProduct = PRODUCTS_DB[id];
-  renderProduct();
+// ── EDIT MODE: load existing product ──
+const params = new URLSearchParams(window.location.search);
+const editId = params.get('id');
+if (editId) {
+  editingId = editId;
+  document.getElementById('page-title').textContent = 'Editar Produto';
+  document.getElementById('btn-save-text').textContent = '✦ Salvar alterações';
+  loadProduct(editId);
 }
 
-function renderProduct() {
-  const p = currentProduct;
-  document.title = `${p.name} — Sélene Jóias`;
-  document.getElementById('breadcrumb-cat').textContent = p.cat;
-  document.getElementById('breadcrumb-name').textContent = p.name;
-  document.getElementById('info-cat').innerHTML = `<span style="width:20px;height:1px;background:var(--gold-light);display:inline-block;"></span> ${p.cat}`;
-  document.getElementById('info-name').textContent = p.name;
-  document.getElementById('gallery-main-display').textContent = p.symbol;
-  document.getElementById('gallery-thumbs').children[0].textContent = p.symbol;
+async function loadProduct(id) {
+  try {
+    const snap = await getDoc(doc(db,'produtos',id));
+    if (!snap.exists()) return;
+    const p = snap.data();
+    document.getElementById('nome').value = p.nome||'';
+    document.getElementById('descricao-curta').value = p.descricaoCurta||'';
+    document.getElementById('descricao').value = p.descricao||'';
+    document.getElementById('categoria').value = p.categoria||'';
+    document.getElementById('material').value = p.material||'Ouro 18k';
+    document.getElementById('preco').value = p.preco||'';
+    document.getElementById('preco-original').value = p.precoOriginal||'';
+    document.getElementById('estoque').value = p.estoque||'';
+    document.getElementById('sku').value = p.sku||'';
+    document.getElementById('peso').value = p.peso||'';
+    document.getElementById('tamanho').value = p.tamanho||'';
+    document.getElementById('tamanhos').value = (p.tamanhos||[]).join(', ');
+    document.getElementById('acabamento').value = p.acabamento||'Polido';
+    document.getElementById('badge').value = p.badge||'';
+    if (p.status !== 'ativo') document.getElementById('toggle-ativo').classList.remove('on');
+    if (p.destaque) document.getElementById('toggle-destaque').classList.add('on');
+    if (p.freteGratis) document.getElementById('toggle-frete').classList.add('on');
+    if (p.fotos?.length) {
+      uploadedPhotos = p.fotos.map(url => ({ url, path: null }));
+      renderPhotos();
+    }
+    updatePreview();
+  } catch(e) { showToast('Erro ao carregar produto'); }
+}
 
-  // Badge
-  const badge = document.getElementById('gallery-badge');
-  if (p.badge) { badge.textContent = p.badge; badge.style.display = 'block'; }
-  else badge.style.display = 'none';
+// ── TOGGLE BUTTONS ──
+window.toggleBtn = function(btn) { btn.classList.toggle('on'); };
 
-  // Price
-  const pix = (p.price * 0.95).toLocaleString('pt-BR', {minimumFractionDigits:2});
-  const install = (p.price / 12).toLocaleString('pt-BR', {minimumFractionDigits:2});
-  document.getElementById('info-price').textContent = `R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
-  document.getElementById('info-installment').textContent = `ou 12× de R$ ${install} sem juros no cartão`;
-  document.getElementById('info-pix').innerHTML = `🟢 <span>À vista no <strong>Pix: R$ ${pix}</strong> (5% de desconto)</span>`;
-
-  if (p.oldPrice) {
-    const disc = Math.round((1 - p.price/p.oldPrice)*100);
-    document.getElementById('info-old-price').textContent = `R$ ${p.oldPrice},00`;
-    document.getElementById('info-old-price').style.display = 'inline';
-    document.getElementById('info-discount').textContent = `−${disc}%`;
-    document.getElementById('info-discount').style.display = 'inline';
-  } else {
-    document.getElementById('info-old-price').style.display = 'none';
-    document.getElementById('info-discount').style.display = 'none';
+// ── PREVIEW ──
+window.updatePreview = function() {
+  document.getElementById('preview-name').textContent = document.getElementById('nome').value || 'Nome do produto';
+  document.getElementById('preview-cat').textContent = document.getElementById('categoria').value || 'Categoria';
+  const preco = parseFloat(document.getElementById('preco').value);
+  document.getElementById('preview-price').textContent = preco ? `R$ ${preco.toLocaleString('pt-BR',{minimumFractionDigits:2})}` : 'R$ 0,00';
+  if (uploadedPhotos.length > 0) {
+    document.getElementById('preview-img').innerHTML = `<img src="${uploadedPhotos[0].url}" alt="preview">`;
   }
+};
 
-  // Sizes — show only for rings
-  document.getElementById('size-group').style.display = p.hasSizes ? 'block' : 'none';
-
-  // Related
-  renderRelated();
-}
-
-// ── GALLERY ──
-function selectThumb(thumb, symbol) {
-  document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
-  thumb.classList.add('active');
-  document.getElementById('gallery-main-display').textContent = symbol;
-}
-
-// ── SIZE ──
-function selectSize(btn) {
-  if (btn.classList.contains('unavailable')) return;
-  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedSize = btn.textContent;
-}
-
-// ── MATERIAL ──
-function selectMaterial(btn) {
-  document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedMaterial = btn.textContent.trim();
-}
-
-// ── LOCAL QTY ──
-function changeLocalQty(delta) {
-  localQty = Math.max(1, localQty + delta);
-  document.getElementById('local-qty').textContent = localQty;
-}
-
-// ── ADD TO CART ──
-function handleAddToCart() {
-  const p = currentProduct;
-  const variant = `${selectedMaterial}${p.hasSizes ? ' · ' + selectedSize : ''}`;
-  for (let i = 0; i < localQty; i++) {
-    addToCart({ id: p.id, name: p.name, variant, price: p.price, symbol: p.symbol });
+// ── PHOTOS ──
+window.handleFiles = async function(files) {
+  if (uploadedPhotos.length + files.length > 4) {
+    showToast('Máximo de 4 fotos por produto'); return;
   }
-}
+  const progress = document.getElementById('upload-progress');
+  const bar = document.getElementById('upload-bar');
+  progress.style.display = 'block';
 
-function handleBuyNow() {
-  handleAddToCart();
-  setTimeout(() => { window.location.href = 'checkout.html'; }, 400);
-}
-
-// ── WISHLIST ──
-function toggleWishlist(btn) {
-  wishlisted = !wishlisted;
-  btn.innerHTML = wishlisted
-    ? '<span>♥</span> Favoritado'
-    : '<span>♡</span> Favoritar';
-  btn.style.color = wishlisted ? 'var(--gold)' : '';
-  showToast(wishlisted ? 'Adicionado aos favoritos ♥' : 'Removido dos favoritos');
-}
-
-// ── SHARE ──
-function shareProduct() {
-  if (navigator.share) {
-    navigator.share({ title: currentProduct.name, text: `Olha essa joia linda da Sélene Jóias!`, url: window.location.href });
-  } else {
-    navigator.clipboard.writeText(window.location.href);
-    showToast('Link copiado para a área de transferência!');
+  for (const file of files) {
+    if (file.size > 5 * 1024 * 1024) { showToast(`${file.name} é muito grande (máx 5MB)`); continue; }
+    const path = `produtos/${Date.now()}_${file.name.replace(/\s/g,'_')}`;
+    const storageRef = ref(storage, path);
+    const task = uploadBytesResumable(storageRef, file);
+    await new Promise((resolve, reject) => {
+      task.on('state_changed',
+        snap => { bar.style.width = `${(snap.bytesTransferred/snap.totalBytes)*100}%`; },
+        reject,
+        async () => {
+          const url = await getDownloadURL(task.snapshot.ref);
+          uploadedPhotos.push({ url, path });
+          renderPhotos();
+          updatePreview();
+          resolve();
+        }
+      );
+    });
   }
-}
+  progress.style.display = 'none';
+  bar.style.width = '0%';
+};
 
-// ── TABS ──
-function openTab(id, btn) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  btn.classList.add('active');
-}
-
-// ── RELATED ──
-function renderRelated() {
-  const others = Object.values(PRODUCTS_DB).filter(p => p.id !== currentProduct.id).slice(0, 4);
-  document.getElementById('related-grid').innerHTML = others.map(p => `
-    <div class="product-card">
-      <a href="produto.html?id=${p.id}" class="product-card-img">
-        <div class="product-card-placeholder">${p.symbol}</div>
-        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
-      </a>
-      <div class="product-card-info">
-        <div class="product-cat">${p.cat}</div>
-        <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
-        <div class="product-price-row">
-          <span class="product-price">R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
-          <button class="product-add-btn" onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}'})">+</button>
-        </div>
-      </div>
+function renderPhotos() {
+  const grid = document.getElementById('photos-grid');
+  grid.innerHTML = uploadedPhotos.map((p,i) => `
+    <div class="photo-item">
+      <img src="${p.url}" alt="foto ${i+1}">
+      <button class="photo-delete" onclick="removePhoto(${i})" title="Remover">×</button>
     </div>
   `).join('');
 }
 
-loadProduct();
+window.removePhoto = function(i) {
+  uploadedPhotos.splice(i, 1);
+  renderPhotos();
+  updatePreview();
+};
+
+// Drag and drop
+const uploadArea = document.getElementById('upload-area');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+// ── VALIDATE ──
+function validate() {
+  let ok = true;
+  const required = [
+    { id:'nome', err:'err-nome' },
+    { id:'categoria', err:'err-categoria' },
+    { id:'preco', err:'err-preco' },
+  ];
+  required.forEach(f => {
+    const el = document.getElementById(f.id);
+    const errEl = document.getElementById(f.err);
+    if (!el.value.trim()) {
+      el.classList.add('error');
+      errEl.classList.add('show');
+      ok = false;
+    } else {
+      el.classList.remove('error');
+      errEl.classList.remove('show');
+    }
+  });
+  return ok;
+}
+
+// ── SAVE ──
+window.salvarProduto = async function(status) {
+  if (!validate()) { showToast('Preencha os campos obrigatórios'); return; }
+
+  const btn = document.getElementById('btn-save');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('btn-save-text');
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  btnText.textContent = 'Salvando...';
+
+  const tamanhos = document.getElementById('tamanhos').value
+    .split(',').map(t => t.trim()).filter(Boolean);
+
+  const data = {
+    nome: document.getElementById('nome').value.trim(),
+    descricaoCurta: document.getElementById('descricao-curta').value.trim(),
+    descricao: document.getElementById('descricao').value.trim(),
+    categoria: document.getElementById('categoria').value,
+    material: document.getElementById('material').value,
+    preco: parseFloat(document.getElementById('preco').value) || 0,
+    precoOriginal: parseFloat(document.getElementById('preco-original').value) || null,
+    estoque: parseInt(document.getElementById('estoque').value) || 0,
+    sku: document.getElementById('sku').value.trim(),
+    peso: parseFloat(document.getElementById('peso').value) || null,
+    tamanho: document.getElementById('tamanho').value.trim(),
+    tamanhos,
+    acabamento: document.getElementById('acabamento').value,
+    badge: document.getElementById('badge').value || null,
+    status,
+    destaque: document.getElementById('toggle-destaque').classList.contains('on'),
+    freteGratis: document.getElementById('toggle-frete').classList.contains('on'),
+    fotos: uploadedPhotos.map(p => p.url),
+    atualizadoEm: serverTimestamp(),
+  };
+
+  try {
+    if (editingId) {
+      await updateDoc(doc(db,'produtos',editingId), data);
+      showToast('Produto atualizado com sucesso! ✦');
+    } else {
+      data.criadoEm = serverTimestamp();
+      await addDoc(collection(db,'produtos'), data);
+      showToast(status === 'ativo' ? 'Produto publicado na loja! ✦' : 'Rascunho salvo!');
+      // Limpa formulário
+      setTimeout(() => {
+        if (status === 'ativo') window.location.href = 'dashboard.html';
+      }, 1500);
+    }
+  } catch(e) {
+    showToast('Erro ao salvar. Tente novamente.');
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  spinner.style.display = 'none';
+  btnText.textContent = editingId ? '✦ Salvar alterações' : '✦ Publicar na loja';
+};
+
+// ── LOGOUT ──
+window.logout = async () => { await signOut(auth); window.location.href = 'index.html'; };
+
+// ── TOAST ──
+let toastTimer;
+window.showToast = function(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+};
 </script>
 </body>
 </html>

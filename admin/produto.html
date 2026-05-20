@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produto — Admin Sélene Jóias</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:#7C5C35; --gold-mid:#A07848; --gold-light:#C4A47A;
+  --gold-pale:#E0CEBB; --cream:#F5F0EA; --cream-d:#EDE4DA;
+  --brown:#3D2B1A; --brown-m:#5C3D28; --text:#2A1F14;
+  --text-m:#5A4030; --text-s:#9C8070; --white:#FEFCF9;
+  --sidebar:240px; --green:#2D6A4F; --red:#C53030;
+}
+body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text); display:flex; min-height:100vh; }
+
+/* SIDEBAR — same as dashboard */
+.sidebar {
+  width:var(--sidebar); background:var(--brown);
+  min-height:100vh; position:fixed; top:0; left:0;
+  display:flex; flex-direction:column; z-index:100;
+}
+.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); }
+.sidebar-logo .brand {
+  font-family:'Cormorant Garamond',serif; font-size:1.1rem;
+  font-weight:300; letter-spacing:0.25em; color:var(--gold-light);
+  text-transform:uppercase; display:block;
+}
+.sidebar-logo .tag { font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-top:0.2rem; display:block; }
+.sidebar-nav { flex:1; padding:1rem 0; }
+.nav-section-title { font-size:0.5rem; letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.2); padding:0.8rem 1.5rem 0.4rem; }
+.nav-item { display:flex; align-items:center; gap:0.8rem; padding:0.75rem 1.5rem; font-size:0.72rem; letter-spacing:0.08em; color:rgba(255,255,255,0.5); cursor:pointer; transition:all 0.2s; text-decoration:none; border-left:2px solid transparent; }
+.nav-item:hover { color:var(--gold-light); background:rgba(255,255,255,0.03); }
+.nav-item.active { color:var(--gold-light); background:rgba(196,164,122,0.08); border-left-color:var(--gold); }
+.nav-item .icon { font-size:1rem; flex-shrink:0; }
+.sidebar-footer { padding:1.2rem 1.5rem; border-top:1px solid rgba(196,164,122,0.12); }
+.btn-logout { width:100%; padding:0.55rem; background:rgba(255,255,255,0.05); border:1px solid rgba(196,164,122,0.15); color:rgba(255,255,255,0.4); font-family:'Jost',sans-serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+.btn-logout:hover { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); }
+
+/* MAIN */
+.main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; }
+.topbar { background:var(--white); border-bottom:1px solid var(--gold-pale); padding:0 2rem; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+.topbar-title { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:300; color:var(--brown); }
+.topbar-left { display:flex; align-items:center; gap:1rem; }
+.back-btn { display:flex; align-items:center; gap:0.4rem; font-size:0.62rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-s); text-decoration:none; transition:color 0.2s; }
+.back-btn:hover { color:var(--gold); }
+
+/* CONTENT */
+.content { padding:2rem; }
+.form-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; align-items:start; }
+
+/* CARD */
+.form-card { background:var(--white); border:1px solid var(--gold-pale); padding:1.8rem; margin-bottom:1.2rem; }
+.card-title { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:400; color:var(--brown); margin-bottom:1.5rem; padding-bottom:0.8rem; border-bottom:1px solid var(--gold-pale); display:flex; align-items:center; gap:0.5rem; }
+
+/* FORM */
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+.form-row.single { grid-template-columns:1fr; }
+.form-row.three { grid-template-columns:1fr 1fr 1fr; }
+.form-group { display:flex; flex-direction:column; gap:0.4rem; }
+.form-label { font-size:0.58rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-s); }
+.form-label span { color:var(--red); margin-left:2px; }
+.form-input {
+  padding:0.75rem 1rem; border:1px solid var(--gold-pale); background:var(--white);
+  font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text);
+  outline:none; transition:border-color 0.2s; width:100%;
+}
+.form-input:focus { border-color:var(--gold-light); }
+.form-input.error { border-color:var(--red); }
+textarea.form-input { resize:vertical; min-height:100px; line-height:1.6; }
+select.form-input { appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239C8070' stroke-width='1.2' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 0.8rem center; padding-right:2rem; cursor:pointer; }
+.form-hint { font-size:0.62rem; color:var(--text-s); letter-spacing:0.03em; }
+.form-error { font-size:0.62rem; color:var(--red); display:none; }
+.form-error.show { display:block; }
+
+/* TOGGLE */
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:0.8rem 0; border-bottom:1px solid var(--gold-pale); }
+.toggle-row:last-child { border-bottom:none; }
+.toggle-info {}
+.toggle-info .t-title { font-size:0.78rem; color:var(--text); font-weight:400; margin-bottom:0.15rem; }
+.toggle-info .t-desc { font-size:0.65rem; color:var(--text-s); }
+.toggle {
+  width:42px; height:22px; border-radius:11px;
+  background:var(--gold-pale); cursor:pointer;
+  position:relative; transition:background 0.2s; flex-shrink:0;
+  border:none;
+}
+.toggle.on { background:var(--gold); }
+.toggle::after {
+  content:''; position:absolute;
+  top:3px; left:3px;
+  width:16px; height:16px;
+  border-radius:50%; background:white;
+  transition:transform 0.2s;
+}
+.toggle.on::after { transform:translateX(20px); }
+
+/* IMAGE UPLOAD */
+.upload-area {
+  border:2px dashed var(--gold-pale);
+  background:var(--cream);
+  padding:2rem;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-bottom:1rem;
+  position:relative;
+}
+.upload-area:hover, .upload-area.dragover {
+  border-color:var(--gold-light);
+  background:var(--cream-d);
+}
+.upload-area input[type="file"] {
+  position:absolute; inset:0; opacity:0; cursor:pointer; width:100%;
+}
+.upload-icon { font-size:2rem; margin-bottom:0.5rem; color:var(--gold-light); }
+.upload-text { font-size:0.72rem; color:var(--text-s); line-height:1.6; }
+.upload-text strong { color:var(--gold); }
+
+.photos-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem;
+  margin-bottom:1rem;
+}
+.photo-item {
+  aspect-ratio:1; position:relative;
+  background:var(--cream); overflow:hidden;
+}
+.photo-item img { width:100%; height:100%; object-fit:cover; }
+.photo-delete {
+  position:absolute; top:4px; right:4px;
+  width:22px; height:22px; border-radius:50%;
+  background:rgba(197,48,48,0.9); color:white;
+  border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem; line-height:1;
+}
+.upload-progress {
+  width:100%; height:4px; background:var(--gold-pale);
+  margin-bottom:0.5rem; display:none; border-radius:2px; overflow:hidden;
+}
+.upload-progress-bar {
+  height:100%; background:var(--gold);
+  transition:width 0.3s ease; width:0%;
+}
+
+/* SIDEBAR CARD */
+.action-card { background:var(--white); border:1px solid var(--gold-pale); padding:1.5rem; margin-bottom:1rem; }
+.action-card-title { font-size:0.62rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold-mid); margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:1px solid var(--gold-pale); }
+
+.btn-save { width:100%; padding:0.9rem; background:var(--gold); color:white; border:none; font-family:'Jost',sans-serif; font-size:0.68rem; letter-spacing:0.25em; text-transform:uppercase; cursor:pointer; transition:background 0.2s; display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.6rem; }
+.btn-save:hover { background:var(--brown-m); }
+.btn-save:disabled { opacity:0.6; cursor:not-allowed; }
+.btn-draft { width:100%; padding:0.7rem; background:var(--white); color:var(--text-m); border:1px solid var(--gold-pale); font-family:'Jost',sans-serif; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+.btn-draft:hover { border-color:var(--gold); color:var(--gold); }
+
+.status-select { margin-top:1rem; }
+
+/* PREVIEW */
+.preview-card { background:var(--cream); border:1px solid var(--gold-pale); padding:1.2rem; }
+.preview-img { width:100%; aspect-ratio:3/4; background:var(--white); display:flex; align-items:center; justify-content:center; margin-bottom:0.8rem; font-family:'Cormorant Garamond',serif; font-size:4rem; color:var(--gold-pale); font-style:italic; overflow:hidden; }
+.preview-img img { width:100%; height:100%; object-fit:cover; }
+.preview-cat { font-size:0.55rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-s); margin-bottom:0.3rem; }
+.preview-name { font-family:'Cormorant Garamond',serif; font-size:1rem; color:var(--brown); margin-bottom:0.3rem; }
+.preview-price { font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--gold); }
+
+/* TOAST */
+.toast { position:fixed; bottom:2rem; right:2rem; background:var(--brown); color:var(--cream); padding:0.9rem 1.4rem; font-size:0.75rem; letter-spacing:0.05em; z-index:500; display:flex; align-items:center; gap:0.7rem; transform:translateY(calc(100% + 2rem)); opacity:0; transition:all 0.3s ease; max-width:320px; }
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-dot { width:7px; height:7px; border-radius:50%; background:var(--gold-light); flex-shrink:0; }
+.spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+@media(max-width:900px) {
+  .sidebar { display:none; }
+  .main { margin-left:0; }
+  .form-layout { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr; }
+  .form-row.three { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="brand">Sélene Jóias</span>
+    <span class="tag">Painel Admin</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">Principal</div>
+    <a class="nav-item" href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+    <a class="nav-item active" href="produto.html"><span class="icon">✦</span> Novo Produto</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Gestão</div>
+    <a class="nav-item" href="dashboard.html"><span class="icon">💍</span> Produtos</a>
+    <a class="nav-item" href="dashboard.html"><span class="icon">📦</span> Pedidos</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Configurações</div>
+    <a class="nav-item" href="../index.html" target="_blank"><span class="icon">🌐</span> Ver loja</a>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="btn-logout" onclick="logout()">Sair</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="dashboard.html" class="back-btn">← Voltar</a>
+      <div class="topbar-title" id="page-title">Novo Produto</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="form-layout">
+
+      <!-- LEFT -->
+      <div>
+
+        <!-- INFORMAÇÕES BÁSICAS -->
+        <div class="form-card">
+          <div class="card-title">💍 Informações do produto</div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Nome do produto <span>*</span></label>
+              <input type="text" class="form-input" id="nome" placeholder="Ex: Colar Lua Dourada"
+                oninput="updatePreview()">
+              <div class="form-error" id="err-nome">Campo obrigatório</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Descrição curta <span>*</span></label>
+              <input type="text" class="form-input" id="descricao-curta" placeholder="Ex: Disco em ouro 18k maciço com corrente veneziana"
+                oninput="updatePreview()">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Descrição completa</label>
+              <textarea class="form-input" id="descricao" placeholder="Descreva a joia em detalhes: material, inspiração, como usar..."></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Categoria <span>*</span></label>
+              <select class="form-input" id="categoria" onchange="updatePreview()">
+                <option value="">Selecione...</option>
+                <option value="Colares">Colares</option>
+                <option value="Anéis">Anéis</option>
+                <option value="Pulseiras">Pulseiras</option>
+                <option value="Brincos">Brincos</option>
+                <option value="Conjuntos">Conjuntos</option>
+              </select>
+              <div class="form-error" id="err-categoria">Selecione uma categoria</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Material</label>
+              <select class="form-input" id="material">
+                <option value="Ouro 18k">Ouro 18k</option>
+                <option value="Ouro Branco 18k">Ouro Branco 18k</option>
+                <option value="Ouro Rosé 18k">Ouro Rosé 18k</option>
+                <option value="Ouro 18k + Zircônia">Ouro 18k + Zircônia</option>
+                <option value="Ouro 18k + Esmalte">Ouro 18k + Esmalte</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- PREÇOS -->
+        <div class="form-card">
+          <div class="card-title">💰 Preços e estoque</div>
+          <div class="form-row three">
+            <div class="form-group">
+              <label class="form-label">Preço (R$) <span>*</span></label>
+              <input type="number" class="form-input" id="preco" placeholder="289.00" step="0.01" min="0"
+                oninput="updatePreview()">
+              <div class="form-error" id="err-preco">Informe o preço</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preço original (R$)</label>
+              <input type="number" class="form-input" id="preco-original" placeholder="380.00" step="0.01" min="0">
+              <div class="form-hint">Para mostrar desconto</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estoque</label>
+              <input type="number" class="form-input" id="estoque" placeholder="10" min="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">SKU / Código</label>
+              <input type="text" class="form-input" id="sku" placeholder="SJ-COL-001">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Peso (gramas)</label>
+              <input type="number" class="form-input" id="peso" placeholder="2.8" step="0.1" min="0">
+            </div>
+          </div>
+        </div>
+
+        <!-- ESPECIFICAÇÕES -->
+        <div class="form-card">
+          <div class="card-title">📋 Especificações técnicas</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Comprimento / Tamanho</label>
+              <input type="text" class="form-input" id="tamanho" placeholder="Ex: 45cm ou T16">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Acabamento</label>
+              <select class="form-input" id="acabamento">
+                <option value="Polido">Polido</option>
+                <option value="Fosco">Fosco</option>
+                <option value="Escovado">Escovado</option>
+                <option value="Diamantado">Diamantado</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Tamanhos disponíveis</label>
+              <input type="text" class="form-input" id="tamanhos" placeholder="Ex: T14, T16, T17, T18 (separados por vírgula)">
+              <div class="form-hint">Deixe vazio se não tiver variação de tamanho</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Badge / Etiqueta</label>
+              <select class="form-input" id="badge">
+                <option value="">Sem badge</option>
+                <option value="Novo">Novo</option>
+                <option value="Mais Vendido">Mais Vendido</option>
+                <option value="Exclusivo">Exclusivo</option>
+                <option value="Ed. Limitada">Ed. Limitada</option>
+                <option value="Promoção">Promoção</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- VISIBILIDADE -->
+        <div class="form-card">
+          <div class="card-title">⚙ Visibilidade</div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="t-title">Mostrar na loja</div>
+              <div class="t-desc">Produto visível para clientes no site</div>
+            </div>
+            <button class="toggle on" id="toggle-ativo" onclick="toggleBtn(this)"></button>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="t-title">Destaque na página inicial</div>
+              <div class="t-desc">Aparece na seção de destaque do site</div>
+            </div>
+            <button class="toggle" id="toggle-destaque" onclick="toggleBtn(this)"></button>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="t-title">Frete grátis</div>
+              <div class="t-desc">Este produto tem frete grátis sempre</div>
+            </div>
+            <button class="toggle" id="toggle-frete" onclick="toggleBtn(this)"></button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+
+        <!-- FOTOS -->
+        <div class="form-card">
+          <div class="card-title">📸 Fotos do produto</div>
+
+          <div class="upload-progress" id="upload-progress">
+            <div class="upload-progress-bar" id="upload-bar"></div>
+          </div>
+
+          <div class="photos-grid" id="photos-grid"></div>
+
+          <div class="upload-area" id="upload-area">
+            <input type="file" accept="image/*" multiple id="file-input" onchange="handleFiles(this.files)">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">
+              <strong>Clique para adicionar fotos</strong><br>
+              ou arraste e solte aqui<br>
+              <span style="font-size:0.62rem;">JPG, PNG · Máx 5MB por foto</span>
+            </div>
+          </div>
+          <div class="form-hint">Adicione até 4 fotos. A primeira será a foto principal.</div>
+        </div>
+
+        <!-- AÇÕES -->
+        <div class="action-card">
+          <div class="action-card-title">Publicar produto</div>
+          <button class="btn-save" id="btn-save" onclick="salvarProduto('ativo')">
+            <div class="spinner" id="spinner"></div>
+            <span id="btn-save-text">✦ Publicar na loja</span>
+          </button>
+          <button class="btn-draft" onclick="salvarProduto('rascunho')">
+            Salvar como rascunho
+          </button>
+        </div>
+
+        <!-- PREVIEW -->
+        <div class="form-card">
+          <div class="card-title">👁 Pré-visualização</div>
+          <div class="preview-card">
+            <div class="preview-img" id="preview-img">◈</div>
+            <div class="preview-cat" id="preview-cat">Categoria</div>
+            <div class="preview-name" id="preview-name">Nome do produto</div>
+            <div class="preview-price" id="preview-price">R$ 0,00</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, getDoc, updateDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+// ── AUTH ──
+onAuthStateChanged(auth, user => {
+  if (!user) window.location.href = 'index.html';
+});
+
+// ── STATE ──
+let uploadedPhotos = []; // { url, path }
+let editingId = null;
+
+// ── EDIT MODE: load existing product ──
+const params = new URLSearchParams(window.location.search);
+const editId = params.get('id');
+if (editId) {
+  editingId = editId;
+  document.getElementById('page-title').textContent = 'Editar Produto';
+  document.getElementById('btn-save-text').textContent = '✦ Salvar alterações';
+  loadProduct(editId);
+}
+
+async function loadProduct(id) {
+  try {
+    const snap = await getDoc(doc(db,'produtos',id));
+    if (!snap.exists()) return;
+    const p = snap.data();
+    document.getElementById('nome').value = p.nome||'';
+    document.getElementById('descricao-curta').value = p.descricaoCurta||'';
+    document.getElementById('descricao').value = p.descricao||'';
+    document.getElementById('categoria').value = p.categoria||'';
+    document.getElementById('material').value = p.material||'Ouro 18k';
+    document.getElementById('preco').value = p.preco||'';
+    document.getElementById('preco-original').value = p.precoOriginal||'';
+    document.getElementById('estoque').value = p.estoque||'';
+    document.getElementById('sku').value = p.sku||'';
+    document.getElementById('peso').value = p.peso||'';
+    document.getElementById('tamanho').value = p.tamanho||'';
+    document.getElementById('tamanhos').value = (p.tamanhos||[]).join(', ');
+    document.getElementById('acabamento').value = p.acabamento||'Polido';
+    document.getElementById('badge').value = p.badge||'';
+    if (p.status !== 'ativo') document.getElementById('toggle-ativo').classList.remove('on');
+    if (p.destaque) document.getElementById('toggle-destaque').classList.add('on');
+    if (p.freteGratis) document.getElementById('toggle-frete').classList.add('on');
+    if (p.fotos?.length) {
+      uploadedPhotos = p.fotos.map(url => ({ url, path: null }));
+      renderPhotos();
+    }
+    updatePreview();
+  } catch(e) { showToast('Erro ao carregar produto'); }
+}
+
+// ── TOGGLE BUTTONS ──
+window.toggleBtn = function(btn) { btn.classList.toggle('on'); };
+
+// ── PREVIEW ──
+window.updatePreview = function() {
+  document.getElementById('preview-name').textContent = document.getElementById('nome').value || 'Nome do produto';
+  document.getElementById('preview-cat').textContent = document.getElementById('categoria').value || 'Categoria';
+  const preco = parseFloat(document.getElementById('preco').value);
+  document.getElementById('preview-price').textContent = preco ? `R$ ${preco.toLocaleString('pt-BR',{minimumFractionDigits:2})}` : 'R$ 0,00';
+  if (uploadedPhotos.length > 0) {
+    document.getElementById('preview-img').innerHTML = `<img src="${uploadedPhotos[0].url}" alt="preview">`;
+  }
+};
+
+// ── PHOTOS ──
+window.handleFiles = async function(files) {
+  if (uploadedPhotos.length + files.length > 4) {
+    showToast('Máximo de 4 fotos por produto'); return;
+  }
+  const progress = document.getElementById('upload-progress');
+  const bar = document.getElementById('upload-bar');
+  progress.style.display = 'block';
+
+  for (const file of files) {
+    if (file.size > 5 * 1024 * 1024) { showToast(`${file.name} é muito grande (máx 5MB)`); continue; }
+    const path = `produtos/${Date.now()}_${file.name.replace(/\s/g,'_')}`;
+    const storageRef = ref(storage, path);
+    const task = uploadBytesResumable(storageRef, file);
+    await new Promise((resolve, reject) => {
+      task.on('state_changed',
+        snap => { bar.style.width = `${(snap.bytesTransferred/snap.totalBytes)*100}%`; },
+        reject,
+        async () => {
+          const url = await getDownloadURL(task.snapshot.ref);
+          uploadedPhotos.push({ url, path });
+          renderPhotos();
+          updatePreview();
+          resolve();
+        }
+      );
+    });
+  }
+  progress.style.display = 'none';
+  bar.style.width = '0%';
+};
+
+function renderPhotos() {
+  const grid = document.getElementById('photos-grid');
+  grid.innerHTML = uploadedPhotos.map((p,i) => `
+    <div class="photo-item">
+      <img src="${p.url}" alt="foto ${i+1}">
+      <button class="photo-delete" onclick="removePhoto(${i})" title="Remover">×</button>
+    </div>
+  `).join('');
+}
+
+window.removePhoto = function(i) {
+  uploadedPhotos.splice(i, 1);
+  renderPhotos();
+  updatePreview();
+};
+
+// Drag and drop
+const uploadArea = document.getElementById('upload-area');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+// ── VALIDATE ──
+function validate() {
+  let ok = true;
+  const required = [
+    { id:'nome', err:'err-nome' },
+    { id:'categoria', err:'err-categoria' },
+    { id:'preco', err:'err-preco' },
+  ];
+  required.forEach(f => {
+    const el = document.getElementById(f.id);
+    const errEl = document.getElementById(f.err);
+    if (!el.value.trim()) {
+      el.classList.add('error');
+      errEl.classList.add('show');
+      ok = false;
+    } else {
+      el.classList.remove('error');
+      errEl.classList.remove('show');
+    }
+  });
+  return ok;
+}
+
+// ── SAVE ──
+window.salvarProduto = async function(status) {
+  if (!validate()) { showToast('Preencha os campos obrigatórios'); return; }
+
+  const btn = document.getElementById('btn-save');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('btn-save-text');
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  btnText.textContent = 'Salvando...';
+
+  const tamanhos = document.getElementById('tamanhos').value
+    .split(',').map(t => t.trim()).filter(Boolean);
+
+  const data = {
+    nome: document.getElementById('nome').value.trim(),
+    descricaoCurta: document.getElementById('descricao-curta').value.trim(),
+    descricao: document.getElementById('descricao').value.trim(),
+    categoria: document.getElementById('categoria').value,
+    material: document.getElementById('material').value,
+    preco: parseFloat(document.getElementById('preco').value) || 0,
+    precoOriginal: parseFloat(document.getElementById('preco-original').value) || null,
+    estoque: parseInt(document.getElementById('estoque').value) || 0,
+    sku: document.getElementById('sku').value.trim(),
+    peso: parseFloat(document.getElementById('peso').value) || null,
+    tamanho: document.getElementById('tamanho').value.trim(),
+    tamanhos,
+    acabamento: document.getElementById('acabamento').value,
+    badge: document.getElementById('badge').value || null,
+    status,
+    destaque: document.getElementById('toggle-destaque').classList.contains('on'),
+    freteGratis: document.getElementById('toggle-frete').classList.contains('on'),
+    fotos: uploadedPhotos.map(p => p.url),
+    atualizadoEm: serverTimestamp(),
+  };
+
+  try {
+    if (editingId) {
+      await updateDoc(doc(db,'produtos',editingId), data);
+      showToast('Produto atualizado com sucesso! ✦');
+    } else {
+      data.criadoEm = serverTimestamp();
+      await addDoc(collection(db,'produtos'), data);
+      showToast(status === 'ativo' ? 'Produto publicado na loja! ✦' : 'Rascunho salvo!');
+      // Limpa formulário
+      setTimeout(() => {
+        if (status === 'ativo') window.location.href = 'dashboard.html';
+      }, 1500);
+    }
+  } catch(e) {
+    showToast('Erro ao salvar. Tente novamente.');
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  spinner.style.display = 'none';
+  btnText.textContent = editingId ? '✦ Salvar alterações' : '✦ Publicar na loja';
+};
+
+// ── LOGOUT ──
+window.logout = async () => { await signOut(auth); window.location.href = 'index.html'; };
+
+// ── TOAST ──
+let toastTimer;
+window.showToast = function(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+};
+</script>
+</body>
+</html>

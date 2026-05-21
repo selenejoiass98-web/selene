@@ -910,42 +910,87 @@
 </div>
 
 <script src="assets/js/cart.js"></script>
-<script>
-// ── PRODUTOS (substituir por dados reais) ──
-const PRODUCTS = [
-  { id:'p1', name:'Colar Lua Dourada',    cat:'Colares',   price:289, oldPrice:380, symbol:'◯', badge:'Mais Vendido', variant:'Ouro 18k · 45cm' },
-  { id:'p2', name:'Anel Serpente',        cat:'Anéis',     price:199, oldPrice:null, symbol:'⊛', badge:null, variant:'Ouro 18k · T16' },
-  { id:'p3', name:'Pulseira Elos',        cat:'Pulseiras', price:349, oldPrice:420, symbol:'∞', badge:'Novo', variant:'Ouro 18k · 18cm' },
-  { id:'p4', name:'Brinco Argola Média',  cat:'Brincos',   price:159, oldPrice:null, symbol:'◎', badge:null, variant:'Ouro 18k · 2cm' },
-  { id:'p5', name:'Anel Minimalista',     cat:'Anéis',     price:179, oldPrice:null, symbol:'○', badge:'Exclusivo', variant:'Ouro 18k · T17' },
-  { id:'p6', name:'Colar Borboleta',      cat:'Colares',   price:299, oldPrice:360, symbol:'✦', badge:'Ed. Limitada', variant:'Ouro 18k + Esmalte' },
-];
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where, orderBy, limit }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-function renderProducts() {
+const firebaseConfig = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ── CARREGA PRODUTOS DO FIREBASE ──
+async function renderProducts() {
   const grid = document.getElementById('products-grid');
-  grid.innerHTML = PRODUCTS.map(p => `
-    <div class="product-card">
-      <a href="produto.html?id=${p.id}" class="product-card-img">
-        <div class="product-card-placeholder">${p.symbol}</div>
-        ${p.badge ? `<span class="product-badge ${p.badge==='Novo'?'novo':''}">${p.badge}</span>` : ''}
-        <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
-      </a>
-      <div class="product-card-info">
-        <div class="product-cat">${p.cat}</div>
-        <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
-        <div class="product-price-row">
-          <div>
-            <span class="product-price">R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
-            ${p.oldPrice ? `<span class="product-old-price">R$ ${p.oldPrice},00</span>` : ''}
+
+  // Loading
+  grid.innerHTML = `
+    <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-soft);">
+      <div style="width:24px;height:24px;border:2px solid var(--gold-pale);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;"></div>
+    </div>`;
+
+  try {
+    const q = query(
+      collection(db, 'produtos'),
+      where('status', '==', 'ativo'),
+      orderBy('criadoEm', 'desc'),
+      limit(6)
+    );
+    const snap = await getDocs(q);
+    const produtos = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    if (produtos.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-soft);">
+          <p style="font-size:0.85rem;">Em breve novos produtos. Acompanhe nossas novidades!</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = produtos.map(p => `
+      <div class="product-card">
+        <a href="produto.html?id=${p.id}" class="product-card-img">
+          ${p.fotos?.[0]
+            ? `<img src="${p.fotos[0]}" alt="${p.nome}" style="width:100%;height:100%;object-fit:cover;">`
+            : `<div class="product-card-placeholder">◈</div>`
+          }
+          ${p.badge ? `<span class="product-badge ${p.badge==='Novo'?'novo':''}">${p.badge}</span>` : ''}
+          <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
+        </a>
+        <div class="product-card-info">
+          <div class="product-cat">${p.categoria || ''}</div>
+          <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
+          <div class="product-price-row">
+            <div>
+              <span class="product-price">R$ ${Number(p.preco).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+              ${p.precoOriginal ? `<span class="product-old-price">R$ ${Number(p.precoOriginal).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>` : ''}
+            </div>
+            <button class="product-add-btn"
+              onclick="addToCart({id:'${p.id}',name:'${p.nome}',variant:'${p.material||'Ouro 18k'}',price:${p.preco},symbol:'◈',image:'${p.fotos?.[0]||''}'})"
+              title="Adicionar ao carrinho">+</button>
           </div>
-          <button class="product-add-btn" onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}'})" title="Adicionar ao carrinho">+</button>
         </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+
+  } catch(e) {
+    console.error(e);
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-soft);">
+        <p style="font-size:0.78rem;">Não foi possível carregar os produtos.</p>
+      </div>`;
+  }
 }
 
-function subscribeNewsletter() {
+window.subscribeNewsletter = function() {
   const email = document.getElementById('newsletter-email').value;
   if (!email || !email.includes('@')) {
     showToast('Digite um e-mail válido');
@@ -953,7 +998,7 @@ function subscribeNewsletter() {
   }
   showToast('Obrigada! Você está na nossa lista VIP ✦');
   document.getElementById('newsletter-email').value = '';
-}
+};
 
 renderProducts();
 </script>

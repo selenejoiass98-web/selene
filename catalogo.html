@@ -592,29 +592,91 @@
 </div>
 
 <script src="assets/js/cart.js"></script>
-<script>
-// ── PRODUTOS ──
-const ALL_PRODUCTS = [
-  { id:'p1',  name:'Colar Lua Dourada',     cat:'colares',   price:289, oldPrice:380, symbol:'◯', badge:'Mais Vendido', variant:'Ouro 18k · 45cm', novo:false },
-  { id:'p2',  name:'Anel Serpente',         cat:'aneis',     price:199, oldPrice:null, symbol:'⊛', badge:null, variant:'Ouro 18k · T16', novo:false },
-  { id:'p3',  name:'Pulseira Elos',         cat:'pulseiras', price:349, oldPrice:420, symbol:'∞', badge:'Novo', variant:'Ouro 18k · 18cm', novo:true },
-  { id:'p4',  name:'Brinco Argola Média',   cat:'brincos',   price:159, oldPrice:null, symbol:'◎', badge:null, variant:'Ouro 18k · 2cm', novo:false },
-  { id:'p5',  name:'Anel Minimalista',      cat:'aneis',     price:179, oldPrice:null, symbol:'○', badge:'Exclusivo', variant:'Ouro 18k · T17', novo:false },
-  { id:'p6',  name:'Colar Borboleta',       cat:'colares',   price:299, oldPrice:360, symbol:'✦', badge:'Ed. Limitada', variant:'Ouro 18k + Esmalte', novo:true },
-  { id:'p7',  name:'Brinco Floral',         cat:'brincos',   price:189, oldPrice:null, symbol:'✿', badge:'Novo', variant:'Ouro 18k', novo:true },
-  { id:'p8',  name:'Anel Solitário',        cat:'aneis',     price:389, oldPrice:480, symbol:'◇', badge:null, variant:'Ouro 18k + Zircônia', novo:false },
-  { id:'p9',  name:'Corrente Veneziana',    cat:'colares',   price:249, oldPrice:null, symbol:'≈', badge:null, variant:'Ouro 18k · 50cm', novo:false },
-  { id:'p10', name:'Pulseira Charm',        cat:'pulseiras', price:219, oldPrice:280, symbol:'⊙', badge:'Novo', variant:'Ouro 18k · 17cm', novo:true },
-  { id:'p11', name:'Brinco Gota',           cat:'brincos',   price:229, oldPrice:null, symbol:'◉', badge:null, variant:'Ouro 18k + Citrino', novo:false },
-  { id:'p12', name:'Anel Aliança Slim',     cat:'aneis',     price:299, oldPrice:null, symbol:'⬭', badge:'Exclusivo', variant:'Ouro 18k · T18', novo:false },
-];
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where, orderBy }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // ── STATE ──
+let ALL_PRODUCTS = [];
 let currentCat = 'todos';
 let currentSort = 'default';
-let maxPrice = 800;
+let maxPrice = 9999;
 let currentPage = 1;
 const perPage = 9;
+
+// ── LOAD PRODUTOS DO FIREBASE ──
+async function loadProdutos() {
+  const grid = document.getElementById('catalog-grid');
+  grid.innerHTML = `
+    <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-soft);">
+      <div style="width:24px;height:24px;border:2px solid var(--gold-pale);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;"></div>
+      <p style="font-size:0.78rem;letter-spacing:0.05em;">Carregando produtos...</p>
+    </div>`;
+
+  try {
+    const q = query(
+      collection(db, 'produtos'),
+      where('status', '==', 'ativo'),
+      orderBy('criadoEm', 'desc')
+    );
+    const snap = await getDocs(q);
+
+    ALL_PRODUCTS = snap.docs.map(doc => {
+      const d = doc.data();
+      return {
+        id: doc.id,
+        name: d.nome || '',
+        cat: (d.categoria || '').toLowerCase()
+              .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+              .replace(/\s+/g, ''),
+        catLabel: d.categoria || '',
+        price: d.preco || 0,
+        oldPrice: d.precoOriginal || null,
+        badge: d.badge || null,
+        variant: `${d.material || 'Ouro 18k'}${d.tamanho ? ' · ' + d.tamanho : ''}`,
+        fotos: d.fotos || [],
+        symbol: '◈',
+        novo: d.badge === 'Novo',
+      };
+    });
+
+    // atualiza preço máximo do slider
+    if (ALL_PRODUCTS.length > 0) {
+      const maxP = Math.max(...ALL_PRODUCTS.map(p => p.price));
+      maxPrice = maxP + 100;
+      const slider = document.getElementById('price-range');
+      if (slider) {
+        slider.max = maxPrice;
+        slider.value = maxPrice;
+        document.getElementById('price-max-label').textContent = `R$ ${maxPrice}`;
+        document.getElementById('price-current').textContent = `R$ ${maxPrice}`;
+      }
+    }
+
+    initFromURL();
+    render();
+  } catch(e) {
+    console.error(e);
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">◈</div>
+        <p>Erro ao carregar produtos. Verifique sua conexão.</p>
+      </div>`;
+  }
+}
 
 // ── INIT: lê URL params ──
 function initFromURL() {
@@ -638,49 +700,48 @@ function getFiltered() {
   let list = [...ALL_PRODUCTS];
   if (currentCat !== 'todos') list = list.filter(p => p.cat === currentCat);
   list = list.filter(p => p.price <= maxPrice);
-  if (currentSort === 'preco-asc') list.sort((a,b) => a.price - b.price);
+  if (currentSort === 'preco-asc')   list.sort((a,b) => a.price - b.price);
   else if (currentSort === 'preco-desc') list.sort((a,b) => b.price - a.price);
-  else if (currentSort === 'novidades') list.sort((a,b) => b.novo - a.novo);
+  else if (currentSort === 'novidades')  list.sort((a,b) => b.novo - a.novo);
   return list;
 }
 
-function filterCat(cat, btn) {
+window.filterCat = function(cat, btn) {
   currentCat = cat;
   currentPage = 1;
   document.querySelectorAll('.filter-cat').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   render();
-}
+};
 
-function sortProducts(val) {
+window.sortProducts = function(val) {
   currentSort = val;
   currentPage = 1;
   render();
-}
+};
 
-function filterPrice(val) {
+window.filterPrice = function(val) {
   maxPrice = parseInt(val);
   document.getElementById('price-current').textContent = `R$ ${val}`;
   currentPage = 1;
   render();
-}
+};
 
-function toggleSidebarCat(cat, checkbox) {
-  if (checkbox.checked) filterCat(cat, document.querySelector(`[data-cat="${cat}"]`));
-  else filterCat('todos', document.querySelector('[data-cat="todos"]'));
-}
+window.toggleSidebarCat = function(cat, checkbox) {
+  if (checkbox.checked) window.filterCat(cat, document.querySelector(`[data-cat="${cat}"]`));
+  else window.filterCat('todos', document.querySelector('[data-cat="todos"]'));
+};
 
-function clearFilters() {
+window.clearFilters = function() {
   currentCat = 'todos';
   currentSort = 'default';
-  maxPrice = 800;
   currentPage = 1;
   document.querySelectorAll('.filter-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === 'todos'));
-  document.getElementById('price-range').value = 800;
-  document.getElementById('price-current').textContent = 'R$ 800';
+  const slider = document.getElementById('price-range');
+  if (slider) { slider.value = slider.max; filterPrice(slider.max); }
   document.querySelectorAll('.sidebar-option input[type="checkbox"]').forEach(cb => cb.checked = false);
   render();
-}
+};
 
 // ── RENDER ──
 function render() {
@@ -706,21 +767,28 @@ function render() {
     grid.innerHTML = paginated.map(p => `
       <div class="product-card reveal">
         <a href="produto.html?id=${p.id}" class="product-card-img">
-          <div class="product-card-placeholder">${p.symbol}</div>
-          ${p.badge ? `<span class="product-badge ${p.novo?'novo':''}">${p.badge}</span>` : ''}
+          ${p.fotos.length > 0
+            ? `<img src="${p.fotos[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`
+            : `<div class="product-card-placeholder">${p.symbol}</div>`
+          }
+          ${p.badge ? `<span class="product-badge ${p.badge==='Novo'?'novo':''}">${p.badge}</span>` : ''}
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         </a>
         <div class="product-card-info">
-          <div class="product-cat">${p.cat.charAt(0).toUpperCase()+p.cat.slice(1)}</div>
+          <div class="product-cat">${p.catLabel}</div>
           <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
           <div class="product-price-row">
             <div>
               <span class="product-price">R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
-              ${p.oldPrice ? `<span class="product-old-price">R$ ${p.oldPrice},00</span>` : ''}
+              ${p.oldPrice ? `<span class="product-old-price">R$ ${p.oldPrice.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>` : ''}
             </div>
-            <button class="product-add-btn" onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}'})" title="Adicionar ao carrinho">+</button>
+            <button class="product-add-btn"
+              onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}',image:'${p.fotos[0]||''}'})"
+              title="Adicionar ao carrinho">+</button>
           </div>
-          <div style="font-size:0.62rem;color:var(--text-soft);margin-top:0.3rem;letter-spacing:0.05em;">ou 12× de R$ ${(p.price/12).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
+          <div style="font-size:0.62rem;color:var(--text-soft);margin-top:0.3rem;letter-spacing:0.05em;">
+            ou 12× de R$ ${(p.price/12).toLocaleString('pt-BR',{minimumFractionDigits:2})}
+          </div>
         </div>
       </div>
     `).join('');
@@ -728,54 +796,48 @@ function render() {
 
   // Pagination
   const pag = document.getElementById('pagination');
-  if (pages <= 1) { pag.innerHTML = ''; return; }
-  let html = `<button class="page-btn arrow" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
-  for (let i = 1; i <= pages; i++) {
-    html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  if (pages <= 1) { pag.innerHTML = ''; }
+  else {
+    let html = `<button class="page-btn arrow" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+    for (let i = 1; i <= pages; i++) {
+      html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    }
+    html += `<button class="page-btn arrow" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
+    pag.innerHTML = html;
   }
-  html += `<button class="page-btn arrow" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
-  pag.innerHTML = html;
 
-  // Re-init reveal
   setTimeout(() => {
-    document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
-      el.classList.add('visible');
-    });
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
   }, 50);
 }
 
-function goPage(p) {
-  const filtered = getFiltered();
-  const pages = Math.ceil(filtered.length / perPage);
+window.goPage = function(p) {
+  const pages = Math.ceil(getFiltered().length / perPage);
   if (p < 1 || p > pages) return;
   currentPage = p;
   render();
   window.scrollTo({ top: 300, behavior: 'smooth' });
-}
+};
 
-// ── VIEW TOGGLE ──
-function setView(cols, btn) {
-  const grid = document.getElementById('catalog-grid');
-  grid.classList.toggle('two-col', cols === 2);
+window.setView = function(cols, btn) {
+  document.getElementById('catalog-grid').classList.toggle('two-col', cols === 2);
   document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-}
+};
 
-// ── MOBILE SIDEBAR ──
-function openSidebarDrawer() {
+window.openSidebarDrawer = function() {
   document.getElementById('sidebar-overlay').classList.add('open');
   document.getElementById('sidebar-drawer').classList.add('open');
   document.body.style.overflow = 'hidden';
-}
-function closeSidebarDrawer() {
+};
+window.closeSidebarDrawer = function() {
   document.getElementById('sidebar-overlay').classList.remove('open');
   document.getElementById('sidebar-drawer').classList.remove('open');
   document.body.style.overflow = '';
-}
+};
 
 // ── START ──
-initFromURL();
-render();
+loadProdutos();
 </script>
 </body>
 </html>

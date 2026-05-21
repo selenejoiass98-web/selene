@@ -973,57 +973,117 @@
 </div>
 
 <script src="assets/js/cart.js"></script>
-<script>
-// ── PRODUTOS DATA ──
-const PRODUCTS_DB = {
-  'p1': { id:'p1', name:'Colar Lua Dourada',   cat:'Colares',   price:289, oldPrice:380, symbol:'◯', badge:'Mais Vendido', variant:'Ouro 18k · 45cm', hasSizes:false },
-  'p2': { id:'p2', name:'Anel Serpente',        cat:'Anéis',     price:199, oldPrice:null, symbol:'⊛', badge:null, variant:'Ouro 18k', hasSizes:true },
-  'p3': { id:'p3', name:'Pulseira Elos',        cat:'Pulseiras', price:349, oldPrice:420, symbol:'∞', badge:'Novo', variant:'Ouro 18k · 18cm', hasSizes:false },
-  'p4': { id:'p4', name:'Brinco Argola Média',  cat:'Brincos',   price:159, oldPrice:null, symbol:'◎', badge:null, variant:'Ouro 18k · 2cm', hasSizes:false },
-  'p5': { id:'p5', name:'Anel Minimalista',     cat:'Anéis',     price:179, oldPrice:null, symbol:'○', badge:'Exclusivo', variant:'Ouro 18k', hasSizes:true },
-  'p6': { id:'p6', name:'Colar Borboleta',      cat:'Colares',   price:299, oldPrice:360, symbol:'✦', badge:'Ed. Limitada', variant:'Ouro 18k + Esmalte', hasSizes:false },
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, collection, getDocs }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
 };
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 // ── STATE ──
-let currentProduct = PRODUCTS_DB['p1'];
+let currentProduct = null;
+let allProducts = [];
 let localQty = 1;
-let selectedSize = 'T16';
+let selectedSize = '';
 let selectedMaterial = 'Ouro 18k';
 let wishlisted = false;
 
-// ── LOAD FROM URL ──
-function loadProduct() {
+// ── LOAD PRODUTO DO FIREBASE ──
+async function loadProduct() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
-  if (id && PRODUCTS_DB[id]) currentProduct = PRODUCTS_DB[id];
-  renderProduct();
+
+  if (!id) { window.location.href = 'catalogo.html'; return; }
+
+  try {
+    // Carrega produto principal
+    const snap = await getDoc(doc(db, 'produtos', id));
+    if (!snap.exists()) { window.location.href = 'catalogo.html'; return; }
+
+    currentProduct = { id: snap.id, ...snap.data() };
+
+    // Carrega todos para relacionados
+    const allSnap = await getDocs(collection(db, 'produtos'));
+    allProducts = allSnap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(p => p.status === 'ativo' && p.id !== id);
+
+    renderProduct();
+  } catch(e) {
+    console.error(e);
+    showToast('Erro ao carregar produto.');
+  }
 }
 
+// ── RENDER PRODUTO ──
 function renderProduct() {
   const p = currentProduct;
-  document.title = `${p.name} — Sélene Jóias`;
-  document.getElementById('breadcrumb-cat').textContent = p.cat;
-  document.getElementById('breadcrumb-name').textContent = p.name;
-  document.getElementById('info-cat').innerHTML = `<span style="width:20px;height:1px;background:var(--gold-light);display:inline-block;"></span> ${p.cat}`;
-  document.getElementById('info-name').textContent = p.name;
-  document.getElementById('gallery-main-display').textContent = p.symbol;
-  document.getElementById('gallery-thumbs').children[0].textContent = p.symbol;
+  const nome = p.nome || '';
+  const cat = p.categoria || '';
+  const preco = p.preco || 0;
+  const precoOriginal = p.precoOriginal || null;
+  const fotos = p.fotos || [];
+  const descricaoCurta = p.descricaoCurta || '';
+  const descricao = p.descricao || '';
+  const material = p.material || 'Ouro 18k';
+  const tamanhos = p.tamanhos || [];
+  const badge = p.badge || null;
+
+  // Meta
+  document.title = `${nome} — Sélene Jóias`;
+  document.getElementById('breadcrumb-cat').textContent = cat;
+  document.getElementById('breadcrumb-name').textContent = nome;
+  document.getElementById('info-cat').innerHTML =
+    `<span style="width:20px;height:1px;background:var(--gold-light);display:inline-block;margin-right:0.5rem;"></span>${cat}`;
+  document.getElementById('info-name').textContent = nome;
+  document.getElementById('info-subtitle').textContent = descricaoCurta;
+
+  // Gallery
+  const mainDisplay = document.getElementById('gallery-main-display');
+  const thumbsEl = document.getElementById('gallery-thumbs');
+
+  if (fotos.length > 0) {
+    mainDisplay.outerHTML = `<img id="gallery-main-display" src="${fotos[0]}" alt="${nome}"
+      style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;">`;
+    thumbsEl.innerHTML = fotos.map((f, i) => `
+      <div class="gallery-thumb ${i===0?'active':''}" onclick="selectThumb(this,'${f}')">
+        <img src="${f}" alt="foto ${i+1}" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+    `).join('');
+  } else {
+    mainDisplay.textContent = '◈';
+    thumbsEl.innerHTML = `<div class="gallery-thumb active">◈</div>`;
+  }
 
   // Badge
-  const badge = document.getElementById('gallery-badge');
-  if (p.badge) { badge.textContent = p.badge; badge.style.display = 'block'; }
-  else badge.style.display = 'none';
+  const badgeEl = document.getElementById('gallery-badge');
+  if (badge) { badgeEl.textContent = badge; badgeEl.style.display = 'block'; }
+  else badgeEl.style.display = 'none';
 
-  // Price
-  const pix = (p.price * 0.95).toLocaleString('pt-BR', {minimumFractionDigits:2});
-  const install = (p.price / 12).toLocaleString('pt-BR', {minimumFractionDigits:2});
-  document.getElementById('info-price').textContent = `R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
-  document.getElementById('info-installment').textContent = `ou 12× de R$ ${install} sem juros no cartão`;
-  document.getElementById('info-pix').innerHTML = `🟢 <span>À vista no <strong>Pix: R$ ${pix}</strong> (5% de desconto)</span>`;
+  // Preço
+  const pix = (preco * 0.95).toLocaleString('pt-BR', {minimumFractionDigits:2});
+  const install = (preco / 12).toLocaleString('pt-BR', {minimumFractionDigits:2});
+  document.getElementById('info-price').textContent =
+    `R$ ${preco.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+  document.getElementById('info-installment').textContent =
+    `ou 12× de R$ ${install} sem juros no cartão`;
+  document.getElementById('info-pix').innerHTML =
+    `🟢 <span>À vista no <strong>Pix: R$ ${pix}</strong> (5% de desconto)</span>`;
 
-  if (p.oldPrice) {
-    const disc = Math.round((1 - p.price/p.oldPrice)*100);
-    document.getElementById('info-old-price').textContent = `R$ ${p.oldPrice},00`;
+  if (precoOriginal) {
+    const disc = Math.round((1 - preco/precoOriginal)*100);
+    document.getElementById('info-old-price').textContent =
+      `R$ ${precoOriginal.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
     document.getElementById('info-old-price').style.display = 'inline';
     document.getElementById('info-discount').textContent = `−${disc}%`;
     document.getElementById('info-discount').style.display = 'inline';
@@ -1032,98 +1092,129 @@ function renderProduct() {
     document.getElementById('info-discount').style.display = 'none';
   }
 
-  // Sizes — show only for rings
-  document.getElementById('size-group').style.display = p.hasSizes ? 'block' : 'none';
+  // Tamanhos
+  const sizeGroup = document.getElementById('size-group');
+  if (tamanhos.length > 0) {
+    sizeGroup.style.display = 'block';
+    document.getElementById('size-options').innerHTML = tamanhos.map((t, i) => `
+      <button class="size-btn ${i===0?'active':''}" onclick="selectSize(this)">${t}</button>
+    `).join('');
+    selectedSize = tamanhos[0];
+  } else {
+    sizeGroup.style.display = 'none';
+  }
 
-  // Related
+  // Descrição nas abas
+  document.querySelector('#tab-descricao .tab-desc').innerHTML =
+    descricao
+      ? descricao.split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('')
+      : `<p>${descricaoCurta || 'Joia em ouro 18k de alta qualidade.'}</p>`;
+
+  // Especificações
+  document.querySelector('#tab-especificacoes').innerHTML = `
+    <div class="spec-grid">
+      <div class="spec-row"><div class="spec-key">Material</div><div class="spec-val">${material}</div></div>
+      <div class="spec-row"><div class="spec-key">Peso</div><div class="spec-val">${p.peso ? p.peso+'g' : '—'}</div></div>
+      <div class="spec-row"><div class="spec-key">Tamanho</div><div class="spec-val">${p.tamanho || '—'}</div></div>
+      <div class="spec-row"><div class="spec-key">Acabamento</div><div class="spec-val">${p.acabamento || 'Polido'}</div></div>
+      <div class="spec-row"><div class="spec-key">SKU</div><div class="spec-val">${p.sku || '—'}</div></div>
+      <div class="spec-row"><div class="spec-key">Certificado</div><div class="spec-val">Incluso</div></div>
+    </div>`;
+
   renderRelated();
 }
 
 // ── GALLERY ──
-function selectThumb(thumb, symbol) {
+window.selectThumb = function(thumb, src) {
   document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
   thumb.classList.add('active');
-  document.getElementById('gallery-main-display').textContent = symbol;
-}
+  const main = document.getElementById('gallery-main-display');
+  if (main) main.src = src;
+};
 
-// ── SIZE ──
-function selectSize(btn) {
+// ── SIZE / MATERIAL ──
+window.selectSize = function(btn) {
   if (btn.classList.contains('unavailable')) return;
   document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   selectedSize = btn.textContent;
-}
-
-// ── MATERIAL ──
-function selectMaterial(btn) {
+};
+window.selectMaterial = function(btn) {
   document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   selectedMaterial = btn.textContent.trim();
-}
+};
 
-// ── LOCAL QTY ──
-function changeLocalQty(delta) {
+// ── QTY ──
+window.changeLocalQty = function(delta) {
   localQty = Math.max(1, localQty + delta);
   document.getElementById('local-qty').textContent = localQty;
-}
+};
 
-// ── ADD TO CART ──
-function handleAddToCart() {
+// ── CART ──
+window.handleAddToCart = function() {
+  if (!currentProduct) return;
   const p = currentProduct;
-  const variant = `${selectedMaterial}${p.hasSizes ? ' · ' + selectedSize : ''}`;
+  const variant = `${selectedMaterial}${selectedSize ? ' · ' + selectedSize : ''}`;
+  const image = p.fotos?.[0] || '';
   for (let i = 0; i < localQty; i++) {
-    addToCart({ id: p.id, name: p.name, variant, price: p.price, symbol: p.symbol });
+    addToCart({ id: p.id, name: p.nome, variant, price: p.preco, symbol: '◈', image });
   }
-}
-
-function handleBuyNow() {
-  handleAddToCart();
+};
+window.handleBuyNow = function() {
+  window.handleAddToCart();
   setTimeout(() => { window.location.href = 'checkout.html'; }, 400);
-}
+};
 
 // ── WISHLIST ──
-function toggleWishlist(btn) {
+window.toggleWishlist = function(btn) {
   wishlisted = !wishlisted;
-  btn.innerHTML = wishlisted
-    ? '<span>♥</span> Favoritado'
-    : '<span>♡</span> Favoritar';
+  btn.innerHTML = wishlisted ? '<span>♥</span> Favoritado' : '<span>♡</span> Favoritar';
   btn.style.color = wishlisted ? 'var(--gold)' : '';
   showToast(wishlisted ? 'Adicionado aos favoritos ♥' : 'Removido dos favoritos');
-}
+};
 
 // ── SHARE ──
-function shareProduct() {
+window.shareProduct = function() {
   if (navigator.share) {
-    navigator.share({ title: currentProduct.name, text: `Olha essa joia linda da Sélene Jóias!`, url: window.location.href });
+    navigator.share({ title: currentProduct?.nome, text: 'Olha essa joia linda da Sélene Jóias!', url: window.location.href });
   } else {
     navigator.clipboard.writeText(window.location.href);
-    showToast('Link copiado para a área de transferência!');
+    showToast('Link copiado!');
   }
-}
+};
 
 // ── TABS ──
-function openTab(id, btn) {
+window.openTab = function(id, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');
   btn.classList.add('active');
-}
+};
 
-// ── RELATED ──
+// ── RELACIONADOS ──
 function renderRelated() {
-  const others = Object.values(PRODUCTS_DB).filter(p => p.id !== currentProduct.id).slice(0, 4);
-  document.getElementById('related-grid').innerHTML = others.map(p => `
+  const grid = document.getElementById('related-grid');
+  const related = allProducts.slice(0, 4);
+  if (related.length === 0) {
+    grid.closest('section')?.style.setProperty('display', 'none');
+    return;
+  }
+  grid.innerHTML = related.map(p => `
     <div class="product-card">
       <a href="produto.html?id=${p.id}" class="product-card-img">
-        <div class="product-card-placeholder">${p.symbol}</div>
+        ${p.fotos?.[0]
+          ? `<img src="${p.fotos[0]}" alt="${p.nome}" style="width:100%;height:100%;object-fit:cover;">`
+          : `<div class="product-card-placeholder">◈</div>`}
         ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
       </a>
       <div class="product-card-info">
-        <div class="product-cat">${p.cat}</div>
-        <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
+        <div class="product-cat">${p.categoria||''}</div>
+        <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
         <div class="product-price-row">
-          <span class="product-price">R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
-          <button class="product-add-btn" onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}'})">+</button>
+          <span class="product-price">R$ ${Number(p.preco).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+          <button class="product-add-btn"
+            onclick="addToCart({id:'${p.id}',name:'${p.nome}',variant:'${p.material||'Ouro 18k'}',price:${p.preco},symbol:'◈',image:'${p.fotos?.[0]||''}'})">+</button>
         </div>
       </div>
     </div>

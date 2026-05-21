@@ -594,7 +594,7 @@
 <script src="assets/js/cart.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where, orderBy }
+import { getFirestore, collection, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -627,31 +627,33 @@ async function loadProdutos() {
     </div>`;
 
   try {
-    const q = query(
-      collection(db, 'produtos'),
-      where('status', '==', 'ativo'),
-      orderBy('criadoEm', 'desc')
-    );
-    const snap = await getDocs(q);
+    // Busca todos os produtos ativos (sem orderBy para não precisar de índice)
+    const snap = await getDocs(collection(db, 'produtos'));
 
-    ALL_PRODUCTS = snap.docs.map(doc => {
-      const d = doc.data();
-      return {
-        id: doc.id,
-        name: d.nome || '',
-        cat: (d.categoria || '').toLowerCase()
-              .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-              .replace(/\s+/g, ''),
-        catLabel: d.categoria || '',
-        price: d.preco || 0,
-        oldPrice: d.precoOriginal || null,
-        badge: d.badge || null,
-        variant: `${d.material || 'Ouro 18k'}${d.tamanho ? ' · ' + d.tamanho : ''}`,
-        fotos: d.fotos || [],
-        symbol: '◈',
-        novo: d.badge === 'Novo',
-      };
-    });
+    ALL_PRODUCTS = snap.docs
+      .map(doc => {
+        const d = doc.data();
+        return {
+          id: doc.id,
+          name: d.nome || '',
+          cat: (d.categoria || '').toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/\s+/g, ''),
+          catLabel: d.categoria || '',
+          price: d.preco || 0,
+          oldPrice: d.precoOriginal || null,
+          badge: d.badge || null,
+          variant: `${d.material || 'Ouro 18k'}${d.tamanho ? ' · ' + d.tamanho : ''}`,
+          fotos: d.fotos || [],
+          symbol: '◈',
+          novo: d.badge === 'Novo',
+          status: d.status || 'inativo',
+        };
+      })
+      // Filtra só ativos no cliente
+      .filter(p => p.status === 'ativo')
+      // Ordena por mais recente
+      .reverse();
 
     // atualiza preço máximo do slider
     if (ALL_PRODUCTS.length > 0) {

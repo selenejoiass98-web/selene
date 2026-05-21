@@ -912,7 +912,7 @@
 <script src="assets/js/cart.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where, orderBy, limit }
+import { getFirestore, collection, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -938,14 +938,12 @@ async function renderProducts() {
     </div>`;
 
   try {
-    const q = query(
-      collection(db, 'produtos'),
-      where('status', '==', 'ativo'),
-      orderBy('criadoEm', 'desc'),
-      limit(6)
-    );
-    const snap = await getDocs(q);
-    const produtos = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const snap = await getDocs(collection(db, 'produtos'));
+    const produtos = snap.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(p => p.status === 'ativo')
+      .reverse()
+      .slice(0, 6);
 
     if (produtos.length === 0) {
       grid.innerHTML = `

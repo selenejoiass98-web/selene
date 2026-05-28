@@ -932,11 +932,44 @@
 </div>
 
 <script src="assets/js/cart.js"></script>
+
+<!-- Firebase para validar cupons -->
+<script type="module">
+  import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getFirestore, collection, query, where, getDocs, doc, updateDoc, increment }
+    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+    authDomain: "selene-joias.firebaseapp.com",
+    projectId: "selene-joias",
+    storageBucket: "selene-joias.firebasestorage.app",
+    messagingSenderId: "395713731584",
+    appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+  };
+
+  const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  const db = getFirestore(app);
+
+  // Expor funções globais para uso no checkout
+  window._db = db;
+  window._fbQuery = query;
+  window._fbCollection = collection;
+  window._fbWhere = where;
+  window._fbGetDocs = getDocs;
+  window._fbDoc = doc;
+  window._fbUpdateDoc = updateDoc;
+  window._fbIncrement = increment;
+</script>
+
 <script>
 // ── STATE ──
 let selectedShipping = null;
 let selectedPayment = 'pix';
-let couponDiscount = 0;
+let couponDiscount = 0;      // percentual (legado, mantido para pix)
+let couponDiscountFixed = 0; // valor fixo em R$
+let couponType = null;       // 'percentual' ou 'fixo'
+let cupomAtivoId = null;     // id do documento no Firestore
 let shippingCost = 0;
 
 // ── MASKS ──
@@ -1068,22 +1101,93 @@ function selectPayTab(type, btn) {
 }
 
 // ── COUPON ──
-const VALID_COUPONS = { 'SELENE10': 10, 'PRIMEIRA': 15, 'VIP20': 20 };
-function applyCoupon() {
+async function applyCoupon() {
   const code = document.getElementById('coupon-input').value.trim().toUpperCase();
   const msg = document.getElementById('coupon-msg');
-  if (VALID_COUPONS[code]) {
-    couponDiscount = VALID_COUPONS[code];
-    msg.textContent = `✓ Cupom aplicado! ${couponDiscount}% de desconto`;
+
+  if (!code) {
+    msg.textContent = '✕ Digite um código de cupom';
+    msg.style.color = '#E53E3E';
+    msg.style.display = 'block';
+    return;
+  }
+
+  // Aguarda Firebase carregar
+  if (!window._db) {
+    msg.textContent = '✕ Erro de conexão. Tente novamente.';
+    msg.style.color = '#E53E3E';
+    msg.style.display = 'block';
+    return;
+  }
+
+  const btn = document.querySelector('.btn-coupon');
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    const q = window._fbQuery(
+      window._fbCollection(window._db, 'cupons'),
+      window._fbWhere('codigo', '==', code)
+    );
+    const snap = await window._fbGetDocs(q);
+
+    if (snap.empty) {
+      msg.textContent = '✕ Cupom não encontrado';
+      msg.style.color = '#E53E3E';
+      msg.style.display = 'block';
+      return;
+    }
+
+    const cupomDoc = snap.docs[0];
+    const cupom = { id: cupomDoc.id, ...cupomDoc.data() };
+
+    // Validações
+    if (!cupom.ativo) {
+      msg.textContent = '✕ Este cupom não está mais ativo';
+      msg.style.color = '#E53E3E'; msg.style.display = 'block'; return;
+    }
+    if (cupom.validade) {
+      const val = cupom.validade.toDate ? cupom.validade.toDate() : new Date(cupom.validade);
+      if (val < new Date()) {
+        msg.textContent = '✕ Este cupom está vencido';
+        msg.style.color = '#E53E3E'; msg.style.display = 'block'; return;
+      }
+    }
+    if (cupom.limite && cupom.usos >= cupom.limite) {
+      msg.textContent = '✕ Este cupom atingiu o limite de usos';
+      msg.style.color = '#E53E3E'; msg.style.display = 'block'; return;
+    }
+    const subtotal = getTotal();
+    if (cupom.minimo && subtotal < cupom.minimo) {
+      msg.textContent = `✕ Pedido mínimo de R$ ${Number(cupom.minimo).toFixed(2).replace('.',',')} para usar este cupom`;
+      msg.style.color = '#E53E3E'; msg.style.display = 'block'; return;
+    }
+
+    // Cupom válido!
+    cupomAtivoId = cupom.id;
+    cupomType = cupom.tipo;
+    if (cupom.tipo === 'percentual') {
+      couponDiscount = cupom.valor;
+      couponDiscountFixed = 0;
+      msg.textContent = `✓ Cupom aplicado! ${cupom.valor}% de desconto`;
+    } else {
+      couponDiscount = 0;
+      couponDiscountFixed = cupom.valor;
+      msg.textContent = `✓ Cupom aplicado! R$ ${Number(cupom.valor).toFixed(2).replace('.',',')} de desconto`;
+    }
     msg.style.color = '#2D6A4F';
     msg.style.display = 'block';
     document.getElementById('s-coupon-row').style.display = 'flex';
     updateSummary();
-    showToast(`Cupom ${code} aplicado! −${couponDiscount}%`);
-  } else {
-    msg.textContent = '✕ Cupom inválido ou expirado';
-    msg.style.color = '#E53E3E';
-    msg.style.display = 'block';
+    showToast(`Cupom ${code} aplicado!`);
+
+  } catch(err) {
+    console.error(err);
+    msg.textContent = '✕ Erro ao validar cupom. Tente novamente.';
+    msg.style.color = '#E53E3E'; msg.style.display = 'block';
+  } finally {
+    btn.textContent = 'Aplicar';
+    btn.disabled = false;
   }
 }
 
@@ -1105,9 +1209,11 @@ function updateInstallments(total) {
 function updateSummary() {
   const subtotal = getTotal();
   const pixDisc = selectedPayment === 'pix' ? subtotal * 0.05 : 0;
-  const couponDisc = subtotal * (couponDiscount / 100);
+  const couponDisc = couponType === 'fixo'
+    ? Math.min(couponDiscountFixed, subtotal)
+    : subtotal * (couponDiscount / 100);
   const frete = shippingCost;
-  const total = subtotal - pixDisc - couponDisc + frete;
+  const total = Math.max(0, subtotal - pixDisc - couponDisc + frete);
 
   document.getElementById('s-subtotal').textContent = `R$ ${subtotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
   document.getElementById('s-discount').textContent = `−R$ ${pixDisc.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
@@ -1180,12 +1286,22 @@ function validateForm() {
 }
 
 // ── FINALIZAR ──
-function finalizarPedido() {
+async function finalizarPedido() {
   if (!validateForm()) return;
 
   const btn = document.getElementById('btn-finalizar');
   btn.disabled = true;
   btn.textContent = 'Processando...';
+
+  // Registrar uso do cupom no Firebase
+  if (cupomAtivoId && window._db) {
+    try {
+      await window._fbUpdateDoc(
+        window._fbDoc(window._db, 'cupons', cupomAtivoId),
+        { usos: window._fbIncrement(1) }
+      );
+    } catch(e) { console.error('Erro ao registrar cupom:', e); }
+  }
 
   // Simula processamento (integrar Mercado Pago aqui)
   setTimeout(() => {

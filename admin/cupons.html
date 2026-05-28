@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cupons de Desconto — Admin Sélene Jóias</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold:        #7C5C35;
+      --gold-mid:    #A07848;
+      --gold-light:  #C4A47A;
+      --gold-pale:   #E0CEBB;
+      --cream:       #F5F0EA;
+      --cream-dark:  #EDE4DA;
+      --brown-deep:  #3D2B1A;
+      --brown-mid:   #5C3D28;
+      --text:        #2A1F14;
+      --text-mid:    #5A4030;
+      --text-soft:   #9C8070;
+      --white:       #FEFCF9;
+      --success:     #2d7a4f;
+      --success-bg:  #e8f5ee;
+      --error:       #a0392a;
+      --error-bg:    #fdf0ee;
+      --warning:     #8a6820;
+      --warning-bg:  #fdf6e3;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR (igual ao dashboard) ── */
+    .admin-layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 240px;
+      background: var(--brown-deep);
+      padding: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      text-align: center;
+      padding: 0 1.5rem 2rem;
+      border-bottom: 1px solid rgba(196,164,122,0.15);
+    }
+
+    .sidebar-logo span {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--gold-light);
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .sidebar-logo small {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--text-soft);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    .sidebar nav { padding: 1.5rem 0; flex: 1; }
+
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      color: var(--gold-pale);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: rgba(196,164,122,0.1);
+      color: var(--gold-light);
+    }
+
+    .sidebar nav a.active { border-left: 2px solid var(--gold-light); }
+
+    .sidebar nav a .icon { font-size: 1rem; width: 18px; text-align: center; }
+
+    .sidebar-footer {
+      padding: 1.5rem;
+      border-top: 1px solid rgba(196,164,122,0.15);
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: 1px solid rgba(196,164,122,0.3);
+      color: var(--gold-pale);
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover { background: rgba(196,164,122,0.1); }
+
+    /* ── MAIN CONTENT ── */
+    .main { flex: 1; overflow-x: hidden; }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--gold-pale);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--brown-deep);
+    }
+
+    .topbar h1 small {
+      display: block;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--text-soft);
+      letter-spacing: 0.05em;
+    }
+
+    .content { padding: 2rem; max-width: 1100px; }
+
+    /* ── STATS CARDS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--gold-pale);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-card .stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--gold);
+    }
+
+    .stat-card .stat-sub {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      margin-top: 0.2rem;
+    }
+
+    /* ── TWO COLUMNS ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--gold-pale);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--gold-pale);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--brown-deep);
+    }
+
+    .card-body { padding: 1.5rem; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 1rem; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 1px solid var(--gold-pale);
+      border-radius: 7px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--cream);
+      transition: border 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--gold); background: var(--white); }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+    .form-group input[type="text"] { text-transform: uppercase; }
+    .form-group input[type="text"]::placeholder { text-transform: none; }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-top: 1px solid var(--gold-pale);
+      margin-top: 0.5rem;
+    }
+
+    .toggle-row span {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+    }
+
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--gold-pale);
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.25s;
+    }
+
+    .toggle input:checked + .toggle-slider { background: var(--gold); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1.2rem;
+      border-radius: 7px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: white;
+      width: 100%;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary:hover { background: var(--brown-mid); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--gold-light);
+      color: var(--gold);
+    }
+
+    .btn-outline:hover { background: var(--cream); }
+
+    .btn-ghost {
+      background: transparent;
+      border: none;
+      color: var(--text-soft);
+      padding: 0.4rem 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-ghost:hover { color: var(--error); }
+
+    .btn-icon-edit { color: var(--gold-mid); }
+    .btn-icon-edit:hover { color: var(--gold); }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--gold-pale);
+      background: var(--cream);
+      font-weight: 500;
+    }
+
+    tbody td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--cream-dark);
+      color: var(--text-mid);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--cream); }
+
+    .coupon-code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--gold);
+      background: var(--cream-dark);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-active { background: var(--success-bg); color: var(--success); }
+    .badge-inactive { background: var(--cream-dark); color: var(--text-soft); }
+    .badge-percent { background: #e8eef8; color: #3a5a9a; }
+    .badge-fixed { background: #f3ede8; color: var(--gold); }
+    .badge-expired { background: var(--error-bg); color: var(--error); }
+
+    /* ── PROGRESS BAR ── */
+    .usage-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .progress {
+      flex: 1;
+      height: 5px;
+      background: var(--gold-pale);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .usage-text {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    /* ── RANKING ── */
+    .ranking-list { list-style: none; }
+
+    .ranking-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--cream-dark);
+    }
+
+    .ranking-list li:last-child { border-bottom: none; }
+
+    .rank-pos {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--cream-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      flex-shrink: 0;
+    }
+
+    .rank-pos.gold { background: var(--gold); color: white; }
+    .rank-pos.silver { background: #b0b0b0; color: white; }
+    .rank-pos.bronze { background: #c87941; color: white; }
+
+    .rank-info { flex: 1; }
+    .rank-code { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+    .rank-desc { font-size: 0.72rem; color: var(--text-soft); margin-top: 0.1rem; }
+    .rank-count { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--gold); font-weight: 500; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 0.9rem 1.3rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      z-index: 9999;
+      transform: translateY(4rem);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--success-bg); color: var(--success); border: 1px solid #a3d4bc; }
+    .toast.error { background: var(--error-bg); color: var(--error); border: 1px solid #e8b4aa; }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-soft);
+    }
+
+    .empty .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .empty p { font-size: 0.875rem; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 380px;
+      width: 90%;
+    }
+
+    .modal h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--brown-deep);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal p { font-size: 0.85rem; color: var(--text-mid); margin-bottom: 1.5rem; }
+
+    .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+
+    .btn-danger {
+      background: var(--error);
+      color: white;
+      border: none;
+    }
+
+    .btn-danger:hover { background: #8a2c1e; }
+
+    /* ── LOADING ── */
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--gold-pale);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 2rem auto;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span>Sélene Jóias</span>
+      <small>Painel Admin</small>
+    </div>
+    <nav>
+      <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
+      <a href="produto.html"><span class="icon">💍</span> Produtos</a>
+      <a href="dashboard.html#pedidos"><span class="icon">📦</span> Pedidos</a>
+      <a href="cupons.html" class="active"><span class="icon">🏷️</span> Cupons</a>
+      <a href="dashboard.html#clientes"><span class="icon">👤</span> Clientes</a>
+      <a href="../index.html" target="_blank"><span class="icon">🌐</span> Ver Loja</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logout()">
+        <span>↩</span> Sair
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <h1>
+        Cupons de Desconto
+        <small>Gerenciar, criar e acompanhar desempenho</small>
+      </h1>
+      <button class="btn btn-outline" onclick="limparFormulario()">
+        ＋ Novo Cupom
+      </button>
+    </div>
+
+    <div class="content">
+
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total de Cupons</div>
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-sub">criados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Cupons Ativos</div>
+          <div class="stat-value" id="stat-ativos">—</div>
+          <div class="stat-sub">disponíveis</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total de Usos</div>
+          <div class="stat-value" id="stat-usos">—</div>
+          <div class="stat-sub">vezes aplicados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Mais Usado</div>
+          <div class="stat-value" id="stat-top" style="font-size:1.2rem; padding-top:0.4rem;">—</div>
+          <div class="stat-sub">campão</div>
+        </div>
+      </div>
+
+      <!-- TWO COL -->
+      <div class="two-col">
+
+        <!-- FORM -->
+        <div class="card" id="form-card">
+          <div class="card-header">
+            <h2 id="form-titulo">Novo Cupom</h2>
+          </div>
+          <div class="card-body">
+            <input type="hidden" id="editando-id" />
+
+            <div class="form-group">
+              <label>Código do Cupom</label>
+              <input type="text" id="campo-codigo" placeholder="ex: VERAO10"
+                oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+                maxlength="20" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tipo de Desconto</label>
+                <select id="campo-tipo" onchange="atualizarLabelValor()">
+                  <option value="percentual">Percentual (%)</option>
+                  <option value="fixo">Valor Fixo (R$)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label id="label-valor">Desconto (%)</label>
+                <input type="number" id="campo-valor" placeholder="10" min="1" max="100" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Pedido Mínimo (R$)</label>
+                <input type="number" id="campo-minimo" placeholder="0" min="0" step="0.01" />
+              </div>
+              <div class="form-group">
+                <label>Limite de Usos</label>
+                <input type="number" id="campo-limite" placeholder="∞ ilimitado" min="1" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Validade (opcional)</label>
+              <input type="date" id="campo-validade" />
+            </div>
+
+            <div class="form-group">
+              <label>Descrição interna</label>
+              <input type="text" id="campo-descricao" placeholder="ex: Campanha Verão 2025"
+                style="text-transform:none" />
+            </div>
+
+            <div class="toggle-row">
+              <span>Cupom Ativo</span>
+              <label class="toggle">
+                <input type="checkbox" id="campo-ativo" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <button class="btn btn-primary" onclick="salvarCupom()">
+              <span id="btn-texto">💾 Salvar Cupom</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+          <!-- RANKING -->
+          <div class="card">
+            <div class="card-header">
+              <h2>🏆 Ranking de Uso</h2>
+            </div>
+            <div class="card-body" style="padding:1rem 1.5rem">
+              <ul class="ranking-list" id="ranking-lista">
+                <div class="spinner"></div>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="card" style="margin-top:1.5rem;">
+        <div class="card-header">
+          <h2>Todos os Cupons</h2>
+          <span id="contagem-cupons" style="font-size:0.8rem; color:var(--text-soft)"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Desconto</th>
+                <th>Mín.</th>
+                <th>Usos</th>
+                <th>Validade</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-cupons">
+              <tr>
+                <td colspan="7">
+                  <div class="spinner"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL EXCLUSÃO -->
+<div class="modal-overlay" id="modal-excluir">
+  <div class="modal">
+    <h3>Excluir Cupom?</h3>
+    <p>O cupom <strong id="modal-codigo"></strong> será removido permanentemente. Esta ação não pode ser desfeita.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarExclusao()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut }
+    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import {
+    getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc,
+    doc, orderBy, query, serverTimestamp, Timestamp
+  } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+    authDomain: "selene-joias.firebaseapp.com",
+    projectId: "selene-joias",
+    storageBucket: "selene-joias.firebasestorage.app",
+    messagingSenderId: "395713731584",
+    appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let cuponsData = [];
+  let excluindoId = null;
+
+  // AUTH GUARD
+  onAuthStateChanged(auth, user => {
+    if (!user) { window.location.href = 'index.html'; return; }
+    carregarCupons();
+  });
+
+  window.logout = async () => {
+    await signOut(auth);
+    window.location.href = 'index.html';
+  };
+
+  // ── LOAD ──
+  async function carregarCupons() {
+    const q = query(collection(db, 'cupons'), orderBy('criadoEm', 'desc'));
+    const snap = await getDocs(q);
+    cuponsData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderTabela();
+    renderStats();
+    renderRanking();
+  }
+
+  // ── RENDER TABLE ──
+  function renderTabela() {
+    const tbody = document.getElementById('tabela-cupons');
+    document.getElementById('contagem-cupons').textContent = `${cuponsData.length} cupom${cuponsData.length !== 1 ? 's' : ''}`;
+
+    if (!cuponsData.length) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty">
+        <div class="empty-icon">🏷️</div>
+        <p>Nenhum cupom criado ainda.</p>
+      </div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = cuponsData.map(c => {
+      const hoje = new Date(); hoje.setHours(0,0,0,0);
+      let vencido = false;
+      let validadeStr = '—';
+
+      if (c.validade) {
+        const valDate = c.validade.toDate ? c.validade.toDate() : new Date(c.validade);
+        vencido = valDate < hoje;
+        validadeStr = valDate.toLocaleDateString('pt-BR');
+      }
+
+      const esgotado = c.limite && c.usos >= c.limite;
+      const pct = c.limite ? Math.min(100, Math.round((c.usos / c.limite) * 100)) : null;
+
+      let badge;
+      if (vencido) badge = `<span class="badge badge-expired">⚠ Vencido</span>`;
+      else if (esgotado) badge = `<span class="badge badge-expired">Esgotado</span>`;
+      else if (!c.ativo) badge = `<span class="badge badge-inactive">Inativo</span>`;
+      else badge = `<span class="badge badge-active">● Ativo</span>`;
+
+      const desconto = c.tipo === 'percentual'
+        ? `<span class="badge badge-percent">${c.valor}% off</span>`
+        : `<span class="badge badge-fixed">R$ ${Number(c.valor).toFixed(2)}</span>`;
+
+      const usosHtml = pct !== null
+        ? `<div class="usage-bar">
+             <div class="progress"><div class="progress-fill" style="width:${pct}%"></div></div>
+             <span class="usage-text">${c.usos}/${c.limite}</span>
+           </div>`
+        : `<span style="color:var(--text-soft)">${c.usos || 0}×</span>`;
+
+      return `<tr>
+        <td><span class="coupon-code">${c.codigo}</span>
+            ${c.descricao ? `<br><small style="color:var(--text-soft);font-size:0.72rem">${c.descricao}</small>` : ''}
+        </td>
+        <td>${desconto}</td>
+        <td style="color:var(--text-soft)">${c.minimo ? 'R$'+Number(c.minimo).toFixed(2) : '—'}</td>
+        <td>${usosHtml}</td>
+        <td style="color:${vencido?'var(--error)':'var(--text-soft)'};font-size:0.82rem">${validadeStr}</td>
+        <td>${badge}</td>
+        <td>
+          <button class="btn btn-ghost btn-icon-edit" onclick="editarCupom('${c.id}')" title="Editar">✏️</button>
+          <button class="btn btn-ghost" onclick="abrirModalExclusao('${c.id}','${c.codigo}')" title="Excluir">🗑️</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── STATS ──
+  function renderStats() {
+    const total = cuponsData.length;
+    const ativos = cuponsData.filter(c => c.ativo).length;
+    const usos = cuponsData.reduce((s, c) => s + (c.usos || 0), 0);
+    const top = [...cuponsData].sort((a,b) => (b.usos||0) - (a.usos||0))[0];
+
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-ativos').textContent = ativos;
+    document.getElementById('stat-usos').textContent = usos;
+    document.getElementById('stat-top').textContent = top ? top.codigo : '—';
+  }
+
+  // ── RANKING ──
+  function renderRanking() {
+    const sorted = [...cuponsData]
+      .filter(c => c.usos > 0)
+      .sort((a,b) => (b.usos||0) - (a.usos||0))
+      .slice(0, 5);
+
+    const el = document.getElementById('ranking-lista');
+
+    if (!sorted.length) {
+      el.innerHTML = `<div class="empty"><div class="empty-icon">📊</div><p>Nenhum cupom usado ainda.</p></div>`;
+      return;
+    }
+
+    const medalhas = ['gold','silver','bronze'];
+    el.innerHTML = sorted.map((c, i) => `
+      <li>
+        <div class="rank-pos ${medalhas[i]||''}">${i+1}</div>
+        <div class="rank-info">
+          <div class="rank-code">${c.codigo}</div>
+          <div class="rank-desc">${c.tipo === 'percentual' ? c.valor+'%' : 'R$'+c.valor} off${c.descricao ? ' · '+c.descricao : ''}</div>
+        </div>
+        <div class="rank-count">${c.usos}×</div>
+      </li>
+    `).join('');
+  }
+
+  // ── SAVE ──
+  window.salvarCupom = async function() {
+    const id = document.getElementById('editando-id').value;
+    const codigo = document.getElementById('campo-codigo').value.trim().toUpperCase();
+    const tipo = document.getElementById('campo-tipo').value;
+    const valor = parseFloat(document.getElementById('campo-valor').value);
+    const minimo = parseFloat(document.getElementById('campo-minimo').value) || 0;
+    const limite = parseInt(document.getElementById('campo-limite').value) || null;
+    const validadeInput = document.getElementById('campo-validade').value;
+    const descricao = document.getElementById('campo-descricao').value.trim();
+    const ativo = document.getElementById('campo-ativo').checked;
+
+    if (!codigo) return mostrarToast('Informe o código do cupom', 'error');
+    if (!valor || valor <= 0) return mostrarToast('Informe um valor de desconto válido', 'error');
+    if (tipo === 'percentual' && valor > 100) return mostrarToast('Percentual não pode passar de 100%', 'error');
+
+    // check duplicidade
+    const duplicado = cuponsData.find(c => c.codigo === codigo && c.id !== id);
+    if (duplicado) return mostrarToast('Já existe um cupom com esse código', 'error');
+
+    const btn = document.getElementById('btn-texto');
+    btn.textContent = 'Salvando...';
+
+    const dados = {
+      codigo,
+      tipo,
+      valor,
+      minimo,
+      ativo,
+      descricao,
+      ...(limite && { limite }),
+      ...(validadeInput && { validade: Timestamp.fromDate(new Date(validadeInput + 'T23:59:59')) })
+    };
+
+    try {
+      if (id) {
+        await updateDoc(doc(db, 'cupons', id), dados);
+        mostrarToast('✅ Cupom atualizado com sucesso!', 'success');
+      } else {
+        dados.usos = 0;
+        dados.criadoEm = serverTimestamp();
+        await addDoc(collection(db, 'cupons'), dados);
+        mostrarToast('✅ Cupom criado com sucesso!', 'success');
+      }
+      limparFormulario();
+      await carregarCupons();
+    } catch (err) {
+      console.error(err);
+      mostrarToast('Erro ao salvar cupom', 'error');
+    } finally {
+      btn.textContent = '💾 Salvar Cupom';
+    }
+  };
+
+  // ── EDIT ──
+  window.editarCupom = function(id) {
+    const c = cuponsData.find(x => x.id === id);
+    if (!c) return;
+
+    document.getElementById('editando-id').value = id;
+    document.getElementById('campo-codigo').value = c.codigo;
+    document.getElementById('campo-tipo').value = c.tipo;
+    document.getElementById('campo-valor').value = c.valor;
+    document.getElementById('campo-minimo').value = c.minimo || '';
+    document.getElementById('campo-limite').value = c.limite || '';
+    document.getElementById('campo-descricao').value = c.descricao || '';
+    document.getElementById('campo-ativo').checked = c.ativo;
+
+    if (c.validade) {
+      const d = c.validade.toDate ? c.validade.toDate() : new Date(c.validade);
+      document.getElementById('campo-validade').value = d.toISOString().split('T')[0];
+    }
+
+    atualizarLabelValor();
+    document.getElementById('form-titulo').textContent = `Editar: ${c.codigo}`;
+    document.getElementById('btn-texto').textContent = '💾 Salvar Alterações';
+    document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // ── DELETE ──
+  window.abrirModalExclusao = function(id, codigo) {
+    excluindoId = id;
+    document.getElementById('modal-codigo').textContent = codigo;
+    document.getElementById('modal-excluir').classList.add('open');
+  };
+
+  window.fecharModal = function() {
+    excluindoId = null;
+    document.getElementById('modal-excluir').classList.remove('open');
+  };
+
+  window.confirmarExclusao = async function() {
+    if (!excluindoId) return;
+    try {
+      await deleteDoc(doc(db, 'cupons', excluindoId));
+      mostrarToast('Cupom excluído', 'success');
+      fecharModal();
+      await carregarCupons();
+    } catch(err) {
+      mostrarToast('Erro ao excluir', 'error');
+    }
+  };
+
+  // ── HELPERS ──
+  window.limparFormulario = function() {
+    document.getElementById('editando-id').value = '';
+    ['campo-codigo','campo-valor','campo-minimo','campo-limite','campo-validade','campo-descricao']
+      .forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('campo-tipo').value = 'percentual';
+    document.getElementById('campo-ativo').checked = true;
+    document.getElementById('form-titulo').textContent = 'Novo Cupom';
+    document.getElementById('btn-texto').textContent = '💾 Salvar Cupom';
+    atualizarLabelValor();
+  };
+
+  window.atualizarLabelValor = function() {
+    const tipo = document.getElementById('campo-tipo').value;
+    document.getElementById('label-valor').textContent =
+      tipo === 'percentual' ? 'Desconto (%)' : 'Desconto (R$)';
+    document.getElementById('campo-valor').placeholder = tipo === 'percentual' ? '10' : '20.00';
+    document.getElementById('campo-valor').max = tipo === 'percentual' ? '100' : '9999';
+  };
+
+  function mostrarToast(msg, tipo = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${tipo} show`;
+    setTimeout(() => { t.className = 'toast'; }, 3500);
+  }
+</script>
+</body>
+</html>

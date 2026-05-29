@@ -7,6 +7,7 @@
     { "src": "/", "dest": "/index.html" },
     { "src": "/catalogo", "dest": "/catalogo.html" },
     { "src": "/produto", "dest": "/produto.html" },
+    { "src": "/produto/(.*)", "dest": "/produto.html" },
     { "src": "/checkout", "dest": "/checkout.html" },
     { "src": "/rastreio", "dest": "/rastreio.html" },
     { "src": "/sobre", "dest": "/sobre.html" },
@@ -14,6 +15,7 @@
     { "src": "/admin/", "dest": "/admin/index.html" },
     { "src": "/admin/dashboard", "dest": "/admin/dashboard.html" },
     { "src": "/admin/produto", "dest": "/admin/produto.html" },
+    { "src": "/admin/cupons", "dest": "/admin/cupons.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [

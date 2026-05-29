@@ -96,7 +96,7 @@
 .hero-visual-main {
   width: 100%;
   height: 70%;
-  background: linear-gradient(160deg, #D4B896 0%, #A87E5A 45%, #6B4F3A 100%) center/cover no-repeat;
+  background: linear-gradient(160deg, #D4B896 0%, #A87E5A 45%, #6B4F3A 100%);
   position: relative;
   display: flex;
   align-items: center;
@@ -107,7 +107,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.05) 0%, transparent 60%);
+  background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 50%);
+  z-index: 1;
+  pointer-events: none;
 }
 .hero-visual-overlay {
   position: absolute;
@@ -152,12 +154,10 @@
   font-style: italic;
 }
 .hero-sub-panel:first-child {
-  background: linear-gradient(135deg, #C4A882, #8B6B3D);
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(135deg, #C4A882, #8B6B3D) center/cover no-repeat;
 }
 .hero-sub-panel:last-child {
-  background: linear-gradient(135deg, #EDE4DA, #C4A47A);
+  background: linear-gradient(135deg, #EDE4DA, #C4A47A) center/cover no-repeat;
   color: rgba(0,0,0,0.1);
 }
 .hero-scroll-hint {
@@ -946,38 +946,40 @@ async function carregarConfigs() {
     if (d.hero?.subtitulo) setText('hero-subtitle', d.hero.subtitulo);
     if (d.hero?.btn)       setText('hero-btn', d.hero.btn);
 
-    // Hero imagem principal (caixa 1 grande)
-    const imgPrincipal = d.box1?.img || d.hero?.img;
-    if (imgPrincipal) {
+    // Hero imagem principal
+    if (d.hero?.img) {
       const main = document.getElementById('hero-visual-main');
       if (main) {
-        main.style.background = `url(${imgPrincipal}) center/cover no-repeat`;
+        main.style.backgroundImage = `url(${d.hero.img})`;
+        main.style.backgroundSize = 'cover';
+        main.style.backgroundPosition = 'center';
         const glyph = document.getElementById('hero-glyph');
         if (glyph) glyph.style.display = 'none';
       }
     }
 
-    // Caixa 1 — overlay textos
+    // Caixa 1 — overlay
     if (d.box1?.label) setText('box1-label', d.box1.label);
     if (d.box1?.nome)  setText('box1-nome', d.box1.nome);
+    if (d.box1?.img) {
+      const main = document.getElementById('hero-visual-main');
+      if (main) { main.style.backgroundImage = `url(${d.box1.img})`; main.style.backgroundSize='cover'; main.style.backgroundPosition='center'; const g=document.getElementById('hero-glyph'); if(g) g.style.display='none'; }
+    }
 
     // Caixa 2
     if (d.box2?.img) {
       const p2 = document.getElementById('box2-panel');
-      if (p2) {
-        p2.style.background = `url(${d.box2.img}) center/cover no-repeat`;
-        p2.textContent = '';
-      }
+      if (p2) { p2.style.backgroundImage=`url(${d.box2.img})`; p2.style.backgroundSize='cover'; p2.style.backgroundPosition='center'; p2.textContent=''; }
+    }
+    if (d.box2?.nome) {
+      const p2 = document.getElementById('box2-panel');
+      if (p2) p2.setAttribute('data-nome', d.box2.nome);
     }
 
     // Caixa 3
     if (d.box3?.img) {
       const p3 = document.getElementById('box3-panel');
-      if (p3) {
-        p3.style.background = `url(${d.box3.img}) center/cover no-repeat`;
-        p3.textContent = '';
-        p3.style.color = 'transparent';
-      }
+      if (p3) { p3.style.backgroundImage=`url(${d.box3.img})`; p3.style.backgroundSize='cover'; p3.style.backgroundPosition='center'; p3.textContent=''; p3.style.color='transparent'; }
     }
 
     // Stats

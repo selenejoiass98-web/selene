@@ -593,47 +593,39 @@
 <!-- ── HERO ── -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-tag">Nova Coleção · Primavera 2025</div>
-    <h1 class="hero-title">
-      Joias que<br>
-      contam sua<br>
-      <em>história</em>
-    </h1>
-    <p class="hero-subtitle">
-      Peças criadas com ouro 18k e pedras selecionadas, 
-      inspiradas na elegância e sofisticação feminina. 
-      Cada joia é única — como você.
-    </p>
+    <div class="hero-tag" id="hero-tag">Nova Coleção · Primavera 2025</div>
+    <h1 class="hero-title" id="hero-title">Joias que<br>contam sua<br><em id="hero-title-em">história</em></h1>
+    <p class="hero-subtitle" id="hero-subtitle">Peças criadas com ouro 18k e pedras selecionadas, inspiradas na elegância e sofisticação feminina. Cada joia é única — como você.</p>
     <div class="hero-actions">
-      <a href="catalogo.html" class="btn btn-primary">Ver Coleção</a>
+      <a href="catalogo.html" class="btn btn-primary" id="hero-btn">Ver Coleção</a>
       <a href="sobre.html" class="btn btn-ghost">Nossa história</a>
     </div>
     <div class="hero-stats">
       <div class="hero-stat">
-        <div class="num">18k</div>
-        <div class="lbl">Ouro garantido</div>
+        <div class="num" id="stat1-num">18k</div>
+        <div class="lbl" id="stat1-lbl">Ouro garantido</div>
       </div>
       <div class="hero-stat">
-        <div class="num">500+</div>
-        <div class="lbl">Clientes felizes</div>
+        <div class="num" id="stat2-num">500+</div>
+        <div class="lbl" id="stat2-lbl">Clientes felizes</div>
       </div>
       <div class="hero-stat">
-        <div class="num">1 ano</div>
-        <div class="lbl">De garantia</div>
+        <div class="num" id="stat3-num">1 ano</div>
+        <div class="lbl" id="stat3-lbl">De garantia</div>
       </div>
     </div>
   </div>
   <div class="hero-visual">
-    <div class="hero-visual-main">
-      <div class="hero-visual-glyph">◈</div>
+    <div class="hero-visual-main" id="hero-visual-main">
+      <div class="hero-visual-glyph" id="hero-glyph">◈</div>
       <div class="hero-visual-overlay">
-        <div class="feat-label">Destaque da coleção</div>
-        <div class="feat-name">Colar Lua Dourada</div>
+        <div class="feat-label" id="box1-label">Destaque da coleção</div>
+        <div class="feat-name" id="box1-nome">Colar Lua Dourada</div>
       </div>
     </div>
     <div class="hero-visual-bottom">
-      <div class="hero-sub-panel">✦</div>
-      <div class="hero-sub-panel" style="color:rgba(90,60,30,0.12);">⊛</div>
+      <div class="hero-sub-panel" id="box2-panel">✦</div>
+      <div class="hero-sub-panel" id="box3-panel" style="color:rgba(90,60,30,0.12);">⊛</div>
     </div>
     <div class="hero-scroll-hint">Explorar</div>
   </div>
@@ -921,7 +913,7 @@
 <script src="assets/js/cart.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs }
+import { getFirestore, collection, getDocs, doc, getDoc }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -935,6 +927,76 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// ── CARREGAR CONFIGURAÇÕES ──
+async function carregarConfigs() {
+  try {
+    const snap = await getDoc(doc(db, 'configuracoes', 'loja'));
+    if (!snap.exists()) return;
+    const d = snap.data();
+
+    // Hero textos
+    if (d.hero?.label)     setText('hero-tag', d.hero.label);
+    if (d.hero?.titulo1 && d.hero?.titulo2) {
+      const t = document.getElementById('hero-title');
+      if (t) t.innerHTML = d.hero.titulo1 + '<br><em>' + d.hero.titulo2 + '</em>';
+    }
+    if (d.hero?.subtitulo) setText('hero-subtitle', d.hero.subtitulo);
+    if (d.hero?.btn)       setText('hero-btn', d.hero.btn);
+
+    // Hero imagem principal
+    if (d.hero?.img) {
+      const main = document.getElementById('hero-visual-main');
+      if (main) {
+        main.style.backgroundImage = `url(${d.hero.img})`;
+        main.style.backgroundSize = 'cover';
+        main.style.backgroundPosition = 'center';
+        const glyph = document.getElementById('hero-glyph');
+        if (glyph) glyph.style.display = 'none';
+      }
+    }
+
+    // Caixa 1 — overlay
+    if (d.box1?.label) setText('box1-label', d.box1.label);
+    if (d.box1?.nome)  setText('box1-nome', d.box1.nome);
+    if (d.box1?.img) {
+      const main = document.getElementById('hero-visual-main');
+      if (main) { main.style.backgroundImage = `url(${d.box1.img})`; main.style.backgroundSize='cover'; main.style.backgroundPosition='center'; const g=document.getElementById('hero-glyph'); if(g) g.style.display='none'; }
+    }
+
+    // Caixa 2
+    if (d.box2?.img) {
+      const p2 = document.getElementById('box2-panel');
+      if (p2) { p2.style.backgroundImage=`url(${d.box2.img})`; p2.style.backgroundSize='cover'; p2.style.backgroundPosition='center'; p2.textContent=''; }
+    }
+    if (d.box2?.nome) {
+      const p2 = document.getElementById('box2-panel');
+      if (p2) p2.setAttribute('data-nome', d.box2.nome);
+    }
+
+    // Caixa 3
+    if (d.box3?.img) {
+      const p3 = document.getElementById('box3-panel');
+      if (p3) { p3.style.backgroundImage=`url(${d.box3.img})`; p3.style.backgroundSize='cover'; p3.style.backgroundPosition='center'; p3.textContent=''; p3.style.color='transparent'; }
+    }
+
+    // Stats
+    if (d.stats?.s1num)   setText('stat1-num', d.stats.s1num);
+    if (d.stats?.s1label) setText('stat1-lbl', d.stats.s1label);
+    if (d.stats?.s2num)   setText('stat2-num', d.stats.s2num);
+    if (d.stats?.s2label) setText('stat2-lbl', d.stats.s2label);
+    if (d.stats?.s3num)   setText('stat3-num', d.stats.s3num);
+    if (d.stats?.s3label) setText('stat3-lbl', d.stats.s3label);
+
+  } catch(e) { console.error('Configs:', e); }
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el && val) el.textContent = val;
+}
+
+carregarConfigs();
 
 // ── CARREGA PRODUTOS DO FIREBASE ──
 async function renderProducts() {

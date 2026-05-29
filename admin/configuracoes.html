@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurações — Elenice Collection</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:#7C5C35; --gold-mid:#A07848; --gold-light:#C4A47A;
+  --gold-pale:#E0CEBB; --cream:#F5F0EA; --cream-d:#EDE4DA;
+  --brown:#3D2B1A; --brown-m:#5C3D28; --text:#2A1F14;
+  --text-m:#5A4030; --text-s:#9C8070; --white:#FEFCF9;
+  --sidebar:240px; --green:#2D6A4F; --green-l:#E8F5F0;
+  --red:#C53030; --red-l:#FFF5F5;
+}
+body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text); display:flex; min-height:100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar { width:var(--sidebar); background:var(--brown); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; }
+.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); }
+.sidebar-logo .tag { font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-top:0.2rem; display:block; }
+.sidebar-nav { flex:1; padding:1rem 0; overflow-y:auto; }
+.nav-section-title { font-size:0.5rem; letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.2); padding:0.8rem 1.5rem 0.4rem; }
+.nav-item { display:flex; align-items:center; gap:0.8rem; padding:0.75rem 1.5rem; font-size:0.72rem; letter-spacing:0.08em; color:rgba(255,255,255,0.5); cursor:pointer; transition:all 0.2s; text-decoration:none; border-left:2px solid transparent; }
+.nav-item:hover { color:var(--gold-light); background:rgba(255,255,255,0.03); }
+.nav-item.active { color:var(--gold-light); background:rgba(196,164,122,0.08); border-left-color:var(--gold); }
+.nav-item .icon { font-size:1rem; flex-shrink:0; }
+.sidebar-footer { padding:1.2rem 1.5rem; border-top:1px solid rgba(196,164,122,0.12); }
+.user-info { display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem; }
+.user-avatar { width:34px; height:34px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:0.9rem; color:var(--white); font-style:italic; flex-shrink:0; }
+.user-name { font-size:0.72rem; color:var(--gold-light); }
+.user-email { font-size:0.58rem; color:rgba(255,255,255,0.25); margin-top:0.1rem; }
+.btn-logout { width:100%; padding:0.55rem; background:rgba(255,255,255,0.05); border:1px solid rgba(196,164,122,0.15); color:rgba(255,255,255,0.4); font-family:'Jost',sans-serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+.btn-logout:hover { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); }
+
+/* ── MAIN ── */
+.main { margin-left:var(--sidebar); flex:1; }
+.topbar { background:var(--white); border-bottom:1px solid var(--gold-pale); padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+.topbar-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300; color:var(--brown); }
+.content { padding:2rem; max-width:900px; }
+
+/* ── CARDS ── */
+.config-card { background:var(--white); border:1px solid var(--gold-pale); border-radius:10px; margin-bottom:1.5rem; overflow:hidden; }
+.config-card-header { padding:1.2rem 1.5rem; border-bottom:1px solid var(--gold-pale); display:flex; align-items:center; gap:0.75rem; }
+.config-card-header h2 { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:400; color:var(--brown); }
+.config-card-header .icon { font-size:1.1rem; }
+.config-card-body { padding:1.5rem; }
+
+/* ── FORM ── */
+.form-group { margin-bottom:1.1rem; }
+.form-group label { display:block; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-s); margin-bottom:0.4rem; }
+.form-group input, .form-group textarea { width:100%; padding:0.7rem 0.9rem; border:1px solid var(--gold-pale); border-radius:7px; font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--text); background:var(--cream); outline:none; transition:border 0.2s; }
+.form-group input:focus, .form-group textarea:focus { border-color:var(--gold); background:var(--white); }
+.form-group textarea { resize:vertical; min-height:80px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+@media(max-width:600px){ .form-row { grid-template-columns:1fr; } }
+
+/* ── IMAGE UPLOAD ── */
+.img-upload-area { border:1.5px dashed var(--gold-pale); border-radius:8px; padding:1.2rem; text-align:center; cursor:pointer; transition:border-color 0.2s; background:var(--cream); position:relative; }
+.img-upload-area:hover { border-color:var(--gold-light); }
+.img-upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+.img-upload-area .upload-icon { font-size:1.5rem; margin-bottom:0.4rem; }
+.img-upload-area p { font-size:0.75rem; color:var(--text-s); }
+.img-upload-area .img-preview { width:100%; max-height:160px; object-fit:cover; border-radius:6px; margin-top:0.5rem; display:none; }
+
+/* ── DESTAQUE BOXES ── */
+.boxes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+@media(max-width:700px){ .boxes-grid { grid-template-columns:1fr; } }
+.box-item { border:1px solid var(--gold-pale); border-radius:8px; padding:1rem; background:var(--cream); }
+.box-item h4 { font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-s); margin-bottom:0.75rem; }
+
+/* ── BUTTONS ── */
+.btn-save { display:inline-flex; align-items:center; gap:0.4rem; padding:0.75rem 1.5rem; background:var(--gold); color:var(--white); border:none; border-radius:7px; font-family:'Jost',sans-serif; font-size:0.78rem; letter-spacing:0.08em; cursor:pointer; transition:background 0.2s; }
+.btn-save:hover { background:var(--brown-m); }
+.btn-save:disabled { opacity:0.6; cursor:not-allowed; }
+
+/* ── TOAST ── */
+.toast { position:fixed; bottom:2rem; right:2rem; padding:0.9rem 1.3rem; border-radius:8px; font-size:0.82rem; display:flex; align-items:center; gap:0.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.12); z-index:9999; transform:translateY(4rem); opacity:0; transition:all 0.3s; }
+.toast.show { transform:translateY(0); opacity:1; }
+.toast.ok { background:var(--green-l); color:var(--green); border:1px solid #a3d4bc; }
+.toast.err { background:var(--red-l); color:var(--red); border:1px solid #fed7d7; }
+
+/* ── SPINNER ── */
+.spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="../assets/img/logo.png" alt="Elenice Collection" style="height:55px;object-fit:contain;filter:brightness(0) invert(1) sepia(1) saturate(0.5) brightness(1.5);" />
+    <span class="tag">Painel Admin</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">Principal</div>
+    <a class="nav-item" href="/admin/dashboard"><span class="icon">📊</span> Dashboard</a>
+    <a class="nav-item" href="/admin/produto"><span class="icon">✦</span> Novo Produto</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Gestão</div>
+    <a class="nav-item" href="dashboard.html"><span class="icon">💍</span> Produtos</a>
+    <a class="nav-item" href="dashboard.html"><span class="icon">📦</span> Pedidos</a>
+    <a class="nav-item" href="cupons.html"><span class="icon">🏷️</span> Cupons</a>
+    <a class="nav-item" href="dashboard.html"><span class="icon">👤</span> Clientes</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Configurações</div>
+    <a class="nav-item" href="../index.html" target="_blank"><span class="icon">🌐</span> Ver loja</a>
+    <a class="nav-item active" href="configuracoes.html"><span class="icon">⚙</span> Configurações</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar">E</div>
+      <div>
+        <div class="user-name">Elenice Collection</div>
+        <div class="user-email" id="user-email-display">—</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">Sair</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Configurações da Loja</div>
+    <button class="btn-save" onclick="salvarTudo()" id="btn-salvar">
+      <span id="btn-txt">💾 Salvar tudo</span>
+    </button>
+  </div>
+
+  <div class="content">
+
+    <!-- HERO -->
+    <div class="config-card">
+      <div class="config-card-header">
+        <span class="icon">🖼️</span>
+        <h2>Banner Principal (Hero)</h2>
+      </div>
+      <div class="config-card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Título linha 1</label>
+            <input type="text" id="hero-titulo1" placeholder="Joias que contam sua" />
+          </div>
+          <div class="form-group">
+            <label>Título linha 2 (itálico dourado)</label>
+            <input type="text" id="hero-titulo2" placeholder="história" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subtítulo</label>
+          <textarea id="hero-subtitulo" placeholder="Peças criadas com ouro 18k..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Texto do botão principal</label>
+            <input type="text" id="hero-btn" placeholder="Ver Coleção" />
+          </div>
+          <div class="form-group">
+            <label>Etiqueta acima do título</label>
+            <input type="text" id="hero-label" placeholder="Nova Coleção · Primavera 2025" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Imagem principal (foto grande da direita)</label>
+          <div class="img-upload-area" id="area-hero">
+            <input type="file" accept="image/*" onchange="previewImg(this,'prev-hero','area-hero','hero-img-url')" />
+            <div class="upload-icon">📷</div>
+            <p>Clique para escolher a foto<br><small>Recomendado: 800×1000px</small></p>
+            <img id="prev-hero" class="img-preview" />
+          </div>
+          <input type="hidden" id="hero-img-url" />
+        </div>
+      </div>
+    </div>
+
+    <!-- CAIXAS DESTAQUE -->
+    <div class="config-card">
+      <div class="config-card-header">
+        <span class="icon">◻️</span>
+        <h2>Caixas de Destaque (3 fotos ao lado do Hero)</h2>
+      </div>
+      <div class="config-card-body">
+        <div class="boxes-grid">
+
+          <div class="box-item">
+            <h4>Caixa 1 — Grande</h4>
+            <div class="form-group">
+              <label>Etiqueta</label>
+              <input type="text" id="box1-label" placeholder="Destaque da Coleção" />
+            </div>
+            <div class="form-group">
+              <label>Nome da peça</label>
+              <input type="text" id="box1-nome" placeholder="Colar Lua Dourada" />
+            </div>
+            <div class="form-group">
+              <label>Foto</label>
+              <div class="img-upload-area">
+                <input type="file" accept="image/*" onchange="previewImg(this,'prev-box1','','box1-img-url')" />
+                <div class="upload-icon">📷</div>
+                <p>Escolher foto</p>
+                <img id="prev-box1" class="img-preview" />
+              </div>
+              <input type="hidden" id="box1-img-url" />
+            </div>
+          </div>
+
+          <div class="box-item">
+            <h4>Caixa 2 — Pequena esquerda</h4>
+            <div class="form-group">
+              <label>Nome da peça</label>
+              <input type="text" id="box2-nome" placeholder="Anel Solitário" />
+            </div>
+            <div class="form-group">
+              <label>Foto</label>
+              <div class="img-upload-area">
+                <input type="file" accept="image/*" onchange="previewImg(this,'prev-box2','','box2-img-url')" />
+                <div class="upload-icon">📷</div>
+                <p>Escolher foto</p>
+                <img id="prev-box2" class="img-preview" />
+              </div>
+              <input type="hidden" id="box2-img-url" />
+            </div>
+          </div>
+
+          <div class="box-item">
+            <h4>Caixa 3 — Pequena direita</h4>
+            <div class="form-group">
+              <label>Nome da peça</label>
+              <input type="text" id="box3-nome" placeholder="Pulseira Delicada" />
+            </div>
+            <div class="form-group">
+              <label>Foto</label>
+              <div class="img-upload-area">
+                <input type="file" accept="image/*" onchange="previewImg(this,'prev-box3','','box3-img-url')" />
+                <div class="upload-icon">📷</div>
+                <p>Escolher foto</p>
+                <img id="prev-box3" class="img-preview" />
+              </div>
+              <input type="hidden" id="box3-img-url" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- INFORMAÇÕES GERAIS -->
+    <div class="config-card">
+      <div class="config-card-header">
+        <span class="icon">📋</span>
+        <h2>Informações Gerais</h2>
+      </div>
+      <div class="config-card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>WhatsApp (só números, com DDD)</label>
+            <input type="text" id="cfg-whatsapp" placeholder="5547999999999" />
+          </div>
+          <div class="form-group">
+            <label>E-mail de contato</label>
+            <input type="text" id="cfg-email" placeholder="contato@elenicecollection.com.br" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Frete grátis acima de (R$)</label>
+            <input type="number" id="cfg-frete-gratis" placeholder="299" />
+          </div>
+          <div class="form-group">
+            <label>Desconto Pix (%)</label>
+            <input type="number" id="cfg-pix-desc" placeholder="5" min="0" max="30" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Aviso no topo do site (deixe vazio para ocultar)</label>
+          <input type="text" id="cfg-aviso" placeholder="🎁 Frete grátis acima de R$ 299 | Parcele em até 12x" />
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTADORES HERO -->
+    <div class="config-card">
+      <div class="config-card-header">
+        <span class="icon">📊</span>
+        <h2>Números de Credibilidade (abaixo do hero)</h2>
+      </div>
+      <div class="config-card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Número 1 (ex: 18k)</label>
+            <input type="text" id="stat1-num" placeholder="18k" />
+          </div>
+          <div class="form-group">
+            <label>Legenda 1</label>
+            <input type="text" id="stat1-label" placeholder="Ouro Garantido" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Número 2</label>
+            <input type="text" id="stat2-num" placeholder="500+" />
+          </div>
+          <div class="form-group">
+            <label>Legenda 2</label>
+            <input type="text" id="stat2-label" placeholder="Clientes Felizes" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Número 3</label>
+            <input type="text" id="stat3-num" placeholder="1 ano" />
+          </div>
+          <div class="form-group">
+            <label>Legenda 3</label>
+            <input type="text" id="stat3-label" placeholder="de Garantia" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const CLOUDINARY_CLOUD = 'ddmxyguk0';
+const CLOUDINARY_PRESET = 'selene-joias';
+
+// AUTH
+onAuthStateChanged(auth, user => {
+  if (!user) { window.location.href = 'index.html'; return; }
+  document.getElementById('user-email-display').textContent = user.email;
+  carregarConfigs();
+});
+
+window.logout = async () => { await signOut(auth); window.location.href = 'index.html'; };
+
+// ── CARREGAR ──
+async function carregarConfigs() {
+  try {
+    const snap = await getDoc(doc(db, 'configuracoes', 'loja'));
+    if (!snap.exists()) return;
+    const d = snap.data();
+
+    // Hero
+    setVal('hero-titulo1', d.hero?.titulo1);
+    setVal('hero-titulo2', d.hero?.titulo2);
+    setVal('hero-subtitulo', d.hero?.subtitulo);
+    setVal('hero-btn', d.hero?.btn);
+    setVal('hero-label', d.hero?.label);
+    if (d.hero?.img) showPreview('prev-hero', d.hero.img, 'hero-img-url');
+
+    // Boxes
+    ['box1','box2','box3'].forEach(b => {
+      setVal(`${b}-label`, d[b]?.label);
+      setVal(`${b}-nome`, d[b]?.nome);
+      if (d[b]?.img) showPreview(`prev-${b}`, d[b].img, `${b}-img-url`);
+    });
+
+    // Geral
+    setVal('cfg-whatsapp', d.geral?.whatsapp);
+    setVal('cfg-email', d.geral?.email);
+    setVal('cfg-frete-gratis', d.geral?.freteGratis);
+    setVal('cfg-pix-desc', d.geral?.pixDesconto);
+    setVal('cfg-aviso', d.geral?.aviso);
+
+    // Stats
+    setVal('stat1-num', d.stats?.s1num); setVal('stat1-label', d.stats?.s1label);
+    setVal('stat2-num', d.stats?.s2num); setVal('stat2-label', d.stats?.s2label);
+    setVal('stat3-num', d.stats?.s3num); setVal('stat3-label', d.stats?.s3label);
+
+  } catch(e) { console.error(e); }
+}
+
+// ── SALVAR ──
+window.salvarTudo = async function() {
+  const btn = document.getElementById('btn-salvar');
+  const txt = document.getElementById('btn-txt');
+  btn.disabled = true;
+  txt.innerHTML = '<div class="spinner"></div> Salvando...';
+
+  try {
+    // Upload imagens pendentes
+    await uploadPendentes();
+
+    const dados = {
+      hero: {
+        titulo1:   getVal('hero-titulo1'),
+        titulo2:   getVal('hero-titulo2'),
+        subtitulo: getVal('hero-subtitulo'),
+        btn:       getVal('hero-btn'),
+        label:     getVal('hero-label'),
+        img:       getVal('hero-img-url'),
+      },
+      box1: { label: getVal('box1-label'), nome: getVal('box1-nome'), img: getVal('box1-img-url') },
+      box2: { nome: getVal('box2-nome'), img: getVal('box2-img-url') },
+      box3: { nome: getVal('box3-nome'), img: getVal('box3-img-url') },
+      geral: {
+        whatsapp:     getVal('cfg-whatsapp'),
+        email:        getVal('cfg-email'),
+        freteGratis:  Number(getVal('cfg-frete-gratis')) || 299,
+        pixDesconto:  Number(getVal('cfg-pix-desc')) || 5,
+        aviso:        getVal('cfg-aviso'),
+      },
+      stats: {
+        s1num: getVal('stat1-num'), s1label: getVal('stat1-label'),
+        s2num: getVal('stat2-num'), s2label: getVal('stat2-label'),
+        s3num: getVal('stat3-num'), s3label: getVal('stat3-label'),
+      },
+      atualizadoEm: new Date().toISOString()
+    };
+
+    await setDoc(doc(db, 'configuracoes', 'loja'), dados, { merge: true });
+    toast('✅ Configurações salvas!', 'ok');
+
+  } catch(e) {
+    console.error(e);
+    toast('Erro ao salvar. Tente novamente.', 'err');
+  } finally {
+    btn.disabled = false;
+    txt.textContent = '💾 Salvar tudo';
+  }
+};
+
+// ── UPLOAD CLOUDINARY ──
+const uploadQueue = {}; // fieldId → File
+
+window.previewImg = function(input, previewId, areaId, fieldId) {
+  const file = input.files[0];
+  if (!file) return;
+  uploadQueue[fieldId] = file;
+  const url = URL.createObjectURL(file);
+  showPreview(previewId, url, fieldId);
+};
+
+function showPreview(previewId, url, fieldId) {
+  const img = document.getElementById(previewId);
+  if (!img) return;
+  img.src = url;
+  img.style.display = 'block';
+  const field = document.getElementById(fieldId);
+  if (field && url.startsWith('http')) field.value = url;
+}
+
+async function uploadPendentes() {
+  for (const [fieldId, file] of Object.entries(uploadQueue)) {
+    const url = await uploadCloudinary(file);
+    if (url) {
+      document.getElementById(fieldId).value = url;
+      delete uploadQueue[fieldId];
+    }
+  }
+}
+
+async function uploadCloudinary(file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CLOUDINARY_PRESET);
+  fd.append('folder', 'elenice-collection/config');
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method:'POST', body:fd });
+  const data = await res.json();
+  return data.secure_url || null;
+}
+
+// ── HELPERS ──
+function getVal(id) { return document.getElementById(id)?.value?.trim() || ''; }
+function setVal(id, val) { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; }
+
+function toast(msg, tipo) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${tipo} show`;
+  setTimeout(() => t.className = 'toast', 3500);
+}
+</script>
+</body>
+</html>

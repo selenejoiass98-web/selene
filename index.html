@@ -96,7 +96,7 @@
 .hero-visual-main {
   width: 100%;
   height: 70%;
-  background: linear-gradient(160deg, #D4B896 0%, #A87E5A 45%, #6B4F3A 100%);
+  background: linear-gradient(160deg, #D4B896 0%, #A87E5A 45%, #6B4F3A 100%) center/cover no-repeat;
   position: relative;
   display: flex;
   align-items: center;
@@ -107,7 +107,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.05) 0%, transparent 60%);
 }
 .hero-visual-overlay {
   position: absolute;
@@ -153,6 +153,8 @@
 }
 .hero-sub-panel:first-child {
   background: linear-gradient(135deg, #C4A882, #8B6B3D);
+  background-size: cover;
+  background-position: center;
 }
 .hero-sub-panel:last-child {
   background: linear-gradient(135deg, #EDE4DA, #C4A47A);
@@ -944,40 +946,38 @@ async function carregarConfigs() {
     if (d.hero?.subtitulo) setText('hero-subtitle', d.hero.subtitulo);
     if (d.hero?.btn)       setText('hero-btn', d.hero.btn);
 
-    // Hero imagem principal
-    if (d.hero?.img) {
+    // Hero imagem principal (caixa 1 grande)
+    const imgPrincipal = d.box1?.img || d.hero?.img;
+    if (imgPrincipal) {
       const main = document.getElementById('hero-visual-main');
       if (main) {
-        main.style.backgroundImage = `url(${d.hero.img})`;
-        main.style.backgroundSize = 'cover';
-        main.style.backgroundPosition = 'center';
+        main.style.background = `url(${imgPrincipal}) center/cover no-repeat`;
         const glyph = document.getElementById('hero-glyph');
         if (glyph) glyph.style.display = 'none';
       }
     }
 
-    // Caixa 1 — overlay
+    // Caixa 1 — overlay textos
     if (d.box1?.label) setText('box1-label', d.box1.label);
     if (d.box1?.nome)  setText('box1-nome', d.box1.nome);
-    if (d.box1?.img) {
-      const main = document.getElementById('hero-visual-main');
-      if (main) { main.style.backgroundImage = `url(${d.box1.img})`; main.style.backgroundSize='cover'; main.style.backgroundPosition='center'; const g=document.getElementById('hero-glyph'); if(g) g.style.display='none'; }
-    }
 
     // Caixa 2
     if (d.box2?.img) {
       const p2 = document.getElementById('box2-panel');
-      if (p2) { p2.style.backgroundImage=`url(${d.box2.img})`; p2.style.backgroundSize='cover'; p2.style.backgroundPosition='center'; p2.textContent=''; }
-    }
-    if (d.box2?.nome) {
-      const p2 = document.getElementById('box2-panel');
-      if (p2) p2.setAttribute('data-nome', d.box2.nome);
+      if (p2) {
+        p2.style.background = `url(${d.box2.img}) center/cover no-repeat`;
+        p2.textContent = '';
+      }
     }
 
     // Caixa 3
     if (d.box3?.img) {
       const p3 = document.getElementById('box3-panel');
-      if (p3) { p3.style.backgroundImage=`url(${d.box3.img})`; p3.style.backgroundSize='cover'; p3.style.backgroundPosition='center'; p3.textContent=''; p3.style.color='transparent'; }
+      if (p3) {
+        p3.style.background = `url(${d.box3.img}) center/cover no-repeat`;
+        p3.textContent = '';
+        p3.style.color = 'transparent';
+      }
     }
 
     // Stats

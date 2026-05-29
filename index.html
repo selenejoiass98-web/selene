@@ -977,7 +977,7 @@ async function renderProducts() {
           <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
           <div class="product-price-row">
             <div>
-              <span class="product-price">12× de R$ ${(Number(p.preco)/12).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+              <span class="product-price">12× de R$ ${(Number(p.preco)/12).toFixed(2).replace('.',',')}</span>
               <span class="product-old-price" style="display:block;text-decoration:none;margin-top:2px;">ou R$ ${Number(p.preco).toLocaleString('pt-BR',{minimumFractionDigits:2})} à vista${p.precoOriginal ? ' · <s>era R$ ' + String(Number(p.precoOriginal).toLocaleString('pt-BR',{minimumFractionDigits:2})) + '<\/s>' : ''}</span>
             </div>
             <button class="product-add-btn"

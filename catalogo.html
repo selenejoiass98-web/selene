@@ -790,15 +790,12 @@ function render() {
           <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
           <div class="product-price-row">
             <div>
-              <span class="product-price">R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
-              ${p.oldPrice ? `<span class="product-old-price">R$ ${p.oldPrice.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>` : ''}
+              <span class="product-price">12× de R$ ${(p.price/12).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+              <span class="product-old-price" style="display:block;text-decoration:none;margin-top:2px;">ou R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})} à vista${p.oldPrice ? ' · <s>era R$ ' + p.oldPrice.toLocaleString('pt-BR',{minimumFractionDigits:2}) + '</s>' : ''}</span>
             </div>
             <button class="product-add-btn"
               onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}',image:'${p.fotos[0]||''}'})"
               title="Adicionar ao carrinho">+</button>
-          </div>
-          <div style="font-size:0.62rem;color:var(--text-soft);margin-top:0.3rem;letter-spacing:0.05em;">
-            ou 12× de R$ ${(p.price/12).toLocaleString('pt-BR',{minimumFractionDigits:2})}
           </div>
         </div>
       </div>

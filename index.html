@@ -183,8 +183,11 @@
 /* BRAND BAR */
 .brand-bar {
   background: var(--brown-deep);
-  padding: 1.1rem 0;
+  padding: 0.65rem 0;
   overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 101;
 }
 .brand-bar-track {
   display: flex;
@@ -201,7 +204,7 @@
   font-size: 0.6rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(224,206,187,0.55);
+  color: rgba(255,255,255,0.92);
   flex-shrink: 0;
 }
 .brand-bar-dot {

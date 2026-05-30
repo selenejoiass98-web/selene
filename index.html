@@ -572,6 +572,39 @@
 <body>
 
 <!-- ── NAV ── -->
+<div class="brand-bar">
+  <div class="brand-bar-track" id="bar-track">
+    <span class="brand-bar-item">Ouro 18k Certificado</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Frete Grátis acima de R$299</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Garantia de 1 Ano</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Certificado de Autenticidade</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Embalagem Especial Inclusa</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Parcele em até 12x</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Pix com 5% de Desconto</span>
+    <span class="brand-bar-dot"></span>
+    <!-- duplicado para loop contínuo -->
+    <span class="brand-bar-item">Ouro 18k Certificado</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Frete Grátis acima de R$299</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Garantia de 1 Ano</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Certificado de Autenticidade</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Embalagem Especial Inclusa</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Parcele em até 12x</span>
+    <span class="brand-bar-dot"></span>
+    <span class="brand-bar-item">Pix com 5% de Desconto</span>
+    <span class="brand-bar-dot"></span>
+  </div>
+</div>
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="Elenice Collection" style="height:44px;object-fit:contain;"></a>
@@ -634,40 +667,6 @@
 </section>
 
 <!-- ── BRAND BAR ── -->
-<div class="brand-bar">
-  <div class="brand-bar-track" id="bar-track">
-    <span class="brand-bar-item">Ouro 18k Certificado</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Frete Grátis acima de R$299</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Garantia de 1 Ano</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Certificado de Autenticidade</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Embalagem Especial Inclusa</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Parcele em até 12x</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Pix com 5% de Desconto</span>
-    <span class="brand-bar-dot"></span>
-    <!-- duplicado para loop contínuo -->
-    <span class="brand-bar-item">Ouro 18k Certificado</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Frete Grátis acima de R$299</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Garantia de 1 Ano</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Certificado de Autenticidade</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Embalagem Especial Inclusa</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Parcele em até 12x</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Pix com 5% de Desconto</span>
-    <span class="brand-bar-dot"></span>
-  </div>
-</div>
-
 <!-- ── COLEÇÕES ── -->
 <section class="collections" id="colecoes">
   <div class="container">
@@ -980,6 +979,18 @@ async function carregarConfigs() {
     if (d.box3?.img) {
       const p3 = document.getElementById('box3-panel');
       if (p3) { p3.style.backgroundImage=`url(${d.box3.img})`; p3.style.backgroundSize='cover'; p3.style.backgroundPosition='center'; p3.textContent=''; p3.style.color='transparent'; }
+    }
+
+    // Faixa / brand-bar
+    if (d.faixa && Array.isArray(d.faixa) && d.faixa.length > 0) {
+      const track = document.getElementById('bar-track');
+      if (track) {
+        const items = d.faixa;
+        const doubled = [...items, ...items]; // loop duplicado
+        track.innerHTML = doubled.map(txt =>
+          `<span class="brand-bar-item">${txt}</span><span class="brand-bar-dot"></span>`
+        ).join('');
+      }
     }
 
     // Stats

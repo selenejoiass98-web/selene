@@ -246,6 +246,25 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
       </div>
     </div>
 
+
+    <!-- FAIXA SUPERIOR -->
+    <div class="config-card">
+      <div class="config-card-header">
+        <span class="icon">📢</span>
+        <h2>Faixa de Avisos (passa no topo do site)</h2>
+      </div>
+      <div class="config-card-body">
+        <p style="font-size:0.78rem;color:var(--text-s);margin-bottom:1rem;">
+          Separe cada aviso em uma linha. Máximo recomendado: 7 itens.
+        </p>
+        <div class="form-group">
+          <label>Itens da faixa (um por linha)</label>
+          <textarea id="faixa-itens" placeholder="Ouro 18k Certificado&#10;Frete Grátis acima de R$299&#10;Garantia de 1 Ano&#10;Parcele em até 12x&#10;Pix com 5% de Desconto" style="min-height:140px;font-size:0.85rem;line-height:1.7;"></textarea>
+        </div>
+        <p style="font-size:0.72rem;color:var(--text-s);">✦ Fundo marrom escuro · Texto branco · Passa automaticamente</p>
+      </div>
+    </div>
+
     <!-- INFORMAÇÕES GERAIS -->
     <div class="config-card">
       <div class="config-card-header">
@@ -372,6 +391,11 @@ async function carregarConfigs() {
     setVal('hero-label', d.hero?.label);
     if (d.hero?.img) showPreview('prev-hero', d.hero.img, 'hero-img-url');
 
+    // Faixa
+    if (d.faixa && Array.isArray(d.faixa)) {
+      setVal('faixa-itens', d.faixa.join('\n'));
+    }
+
     // Boxes
     ['box1','box2','box3'].forEach(b => {
       setVal(`${b}-label`, d[b]?.label);
@@ -417,6 +441,8 @@ window.salvarTudo = async function() {
       box1: { label: getVal('box1-label'), nome: getVal('box1-nome'), img: getVal('box1-img-url') },
       box2: { nome: getVal('box2-nome'), img: getVal('box2-img-url') },
       box3: { nome: getVal('box3-nome'), img: getVal('box3-img-url') },
+      faixa: getVal('faixa-itens').split('\n').map(s => s.trim()).filter(Boolean),
+
       geral: {
         whatsapp:     getVal('cfg-whatsapp'),
         email:        getVal('cfg-email'),

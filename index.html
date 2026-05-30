@@ -561,6 +561,52 @@
   .hero-stats { gap: 1.5rem; }
   .about-pillars { grid-template-columns: 1fr; }
 }
+
+/* ── OCASIOES ── */
+.ocasioes { padding: 5rem 0; background: var(--white); }
+.section-sub { font-size: 0.85rem; color: var(--text-soft); margin-top: 0.5rem; letter-spacing: 0.05em; }
+.ocasioes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+.ocasiao-card {
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  border: 1px solid rgba(196,164,122,0.2);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  display: block;
+}
+.ocasiao-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(196,164,122,0.55);
+  box-shadow: 0 12px 32px rgba(60,35,15,0.12);
+}
+.ocasiao-img {
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+.ocasiao-glyph { font-size: 2.5rem; filter: brightness(2); opacity: 0.7; }
+.ocasiao-info { padding: 1rem 1.1rem; background: var(--white); }
+.ocasiao-title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--brown-deep);
+  font-weight: 400;
+  margin-bottom: 0.2rem;
+}
+.ocasiao-sub { font-size: 0.72rem; color: var(--text-soft); letter-spacing: 0.03em; }
+@media(max-width:768px){ .ocasioes-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:480px){ .ocasioes-grid { grid-template-columns: 1fr; } }
+
 </style>
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NB5Q5NEEG6"></script>
@@ -684,6 +730,74 @@
   </div>
 </section>
 
+<!-- ── COMPRE PELA OCASIÃO ── -->
+<section class="ocasioes" id="ocasioes">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Para cada momento</div>
+      <h2 class="section-title">Compre pela <em>ocasião</em></h2>
+      <p class="section-sub">Escolha pelo sentimento, não pela categoria</p>
+    </div>
+    <div class="ocasioes-grid" id="ocasioes-grid">
+      <a href="catalogo.html?ocasiao=presente" class="ocasiao-card reveal">
+        <div class="ocasiao-img" style="background:linear-gradient(135deg,#7C5C35,#3D2B1A);">
+          <div class="ocasiao-glyph">🎁</div>
+        </div>
+        <div class="ocasiao-info">
+          <div class="ocasiao-title">Presentes Inesquecíveis</div>
+          <div class="ocasiao-sub">Aniversários, namoro e datas especiais</div>
+        </div>
+      </a>
+      <a href="catalogo.html?ocasiao=dia-a-dia" class="ocasiao-card reveal reveal-delay-1">
+        <div class="ocasiao-img" style="background:linear-gradient(135deg,#A07848,#7C5C35);">
+          <div class="ocasiao-glyph">✦</div>
+        </div>
+        <div class="ocasiao-info">
+          <div class="ocasiao-title">Elegância no Dia a Dia</div>
+          <div class="ocasiao-sub">Peças minimalistas e versáteis</div>
+        </div>
+      </a>
+      <a href="catalogo.html?ocasiao=romantica" class="ocasiao-card reveal reveal-delay-2">
+        <div class="ocasiao-img" style="background:linear-gradient(135deg,#C4A47A,#A07848);">
+          <div class="ocasiao-glyph">♡</div>
+        </div>
+        <div class="ocasiao-info">
+          <div class="ocasiao-title">Coleção Romântica</div>
+          <div class="ocasiao-sub">Peças delicadas para presentear</div>
+        </div>
+      </a>
+      <a href="catalogo.html?ocasiao=luxo" class="ocasiao-card reveal reveal-delay-3">
+        <div class="ocasiao-img" style="background:linear-gradient(135deg,#3D2B1A,#1a120a);">
+          <div class="ocasiao-glyph">◈</div>
+        </div>
+        <div class="ocasiao-info">
+          <div class="ocasiao-title">Luxo Atemporal</div>
+          <div class="ocasiao-sub">Peças premium e sofisticadas</div>
+        </div>
+      </a>
+      <a href="catalogo.html?ordem=mais-vendidos" class="ocasiao-card reveal">
+        <div class="ocasiao-img" style="background:linear-gradient(135deg,#5C3D28,#3D2B1A);">
+          <div class="ocasiao-glyph">⭐</div>
+        </div>
+        <div class="ocasiao-info">
+          <div class="ocasiao-title">Mais Vendidos</div>
+          <div class="ocasiao-sub">Escolhas das nossas clientes</div>
+        </div>
+      </a>
+      <a href="catalogo.html?preco=ate299" class="ocasiao-card reveal reveal-delay-1">
+        <div class="ocasiao-img" style="background:linear-gradient(135deg,#C4A47A,#E0CEBB);">
+          <div class="ocasiao-glyph" style="color:#3D2B1A;">💛</div>
+        </div>
+        <div class="ocasiao-info">
+          <div class="ocasiao-title">Até R$ 299</div>
+          <div class="ocasiao-sub">Entrada para novas clientes</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
 <!-- ── DESTAQUE ── -->
 <section class="featured-strip reveal">
   <div class="featured-strip-inner">
@@ -757,13 +871,14 @@
 </section>
 
 <!-- ── DEPOIMENTOS ── -->
-<section class="testimonials">
+<section class="testimonials" id="depoimentos">
   <div class="container">
     <div class="reveal">
       <div class="section-tag">Depoimentos</div>
       <h2 class="section-title">O que nossas<br>clientes <em>dizem</em></h2>
     </div>
-    <div class="testimonials-grid">
+    <div class="testimonials-grid" id="testimonials-grid">
+      <!-- carregado do Firebase -->
       <div class="testimonial reveal reveal-delay-1">
         <div class="testimonial-stars">★ ★ ★ ★ ★</div>
         <p class="testimonial-text">"Recebi o colar de aniversário e fiquei encantada. A embalagem é linda, a peça é impecável. Com certeza voltarei a comprar!"</p>
@@ -996,6 +1111,30 @@ async function carregarConfigs() {
       }
     }
 
+    // Depoimentos dinâmicos
+    if (d.depoimentos && Array.isArray(d.depoimentos) && d.depoimentos.length > 0) {
+      const grid = document.getElementById('testimonials-grid');
+      if (grid) {
+        const delays = ['reveal-delay-1','reveal-delay-2','reveal-delay-3'];
+        grid.innerHTML = d.depoimentos.slice(0, 6).map((dep, i) => {
+          const stars = '★ '.repeat(dep.estrelas || 5).trim();
+          const initials = (dep.nome || 'EC').split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+          return `
+            <div class="testimonial reveal ${delays[i%3]}">
+              <div class="testimonial-stars">${stars}</div>
+              <p class="testimonial-text">"${dep.texto}"</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">${initials}</div>
+                <div>
+                  <div class="author-name">${dep.nome}</div>
+                  <div class="author-city">${dep.cidade || ''}</div>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+      }
+    }
+
     // Stats
     if (d.stats?.s1num)   setText('stat1-num', d.stats.s1num);
     if (d.stats?.s1label) setText('stat1-lbl', d.stats.s1label);
@@ -1048,6 +1187,7 @@ async function renderProducts() {
             : `<div class="product-card-placeholder">◈</div>`
           }
           ${p.badge ? `<span class="product-badge ${p.badge==='Novo'?'novo':''}">${p.badge}</span>` : ''}
+          ${p.estoque > 0 && p.estoque <= 5 ? `<span class="product-badge" style="background:#8B2500;color:#fff;top:auto;bottom:0.75rem;left:0.75rem;z-index:2;">Últimas ${p.estoque} und.</span>` : ''}
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         </a>
         <div class="product-card-info">

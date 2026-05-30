@@ -247,6 +247,22 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     </div>
 
 
+
+    <!-- DEPOIMENTOS -->
+    <div class="config-card">
+      <div class="config-card-header">
+        <span class="icon">⭐</span>
+        <h2>Depoimentos das Clientes</h2>
+      </div>
+      <div class="config-card-body">
+        <p style="font-size:0.78rem;color:var(--text-s);margin-bottom:1.25rem;">Até 6 depoimentos. Eles aparecem na página inicial da loja.</p>
+        <div id="depoimentos-lista"></div>
+        <button class="btn-save" onclick="adicionarDepoimento()" style="background:var(--cream-d);color:var(--gold);border:1px solid var(--gold-pale);margin-top:0.5rem;">
+          + Adicionar depoimento
+        </button>
+      </div>
+    </div>
+
     <!-- FAIXA SUPERIOR -->
     <div class="config-card">
       <div class="config-card-header">
@@ -391,6 +407,12 @@ async function carregarConfigs() {
     setVal('hero-label', d.hero?.label);
     if (d.hero?.img) showPreview('prev-hero', d.hero.img, 'hero-img-url');
 
+    // Depoimentos
+    if (d.depoimentos && Array.isArray(d.depoimentos) && d.depoimentos.length > 0) {
+      depoimentos = d.depoimentos;
+    }
+    renderDepoimentosAdmin();
+
     // Faixa
     if (d.faixa && Array.isArray(d.faixa)) {
       setVal('faixa-itens', d.faixa.join('\n'));
@@ -442,6 +464,7 @@ window.salvarTudo = async function() {
       box2: { nome: getVal('box2-nome'), img: getVal('box2-img-url') },
       box3: { nome: getVal('box3-nome'), img: getVal('box3-img-url') },
       faixa: getVal('faixa-itens').split('\n').map(s => s.trim()).filter(Boolean),
+      depoimentos: depoimentos.filter(d => d.nome && d.texto),
 
       geral: {
         whatsapp:     getVal('cfg-whatsapp'),
@@ -520,6 +543,56 @@ function toast(msg, tipo) {
   t.className = `toast ${tipo} show`;
   setTimeout(() => t.className = 'toast', 3500);
 }
+
+// ── DEPOIMENTOS ──
+let depoimentos = [
+  { nome: 'Ana Martins', cidade: 'Florianópolis, SC', texto: 'Recebi o colar de aniversário e fiquei encantada. A embalagem é linda, a peça é impecável. Com certeza voltarei a comprar!', estrelas: 5 },
+  { nome: 'Juliana Silva', cidade: 'Balneário Camboriú, SC', texto: 'Comprei o anel personalizado e ficou perfeito. O atendimento foi incrível, super atencioso do início ao fim. Recomendo demais!', estrelas: 5 },
+  { nome: 'Camila Ferreira', cidade: 'Itajaí, SC', texto: 'Presente perfeito para minha mãe. Ela amou o conjunto de brincos. Qualidade incrível, superou todas as expectativas!', estrelas: 5 },
+];
+
+function renderDepoimentosAdmin() {
+  const lista = document.getElementById('depoimentos-lista');
+  if (!lista) return;
+  lista.innerHTML = depoimentos.map((d, i) => `
+    <div style="border:1px solid var(--gold-pale);border-radius:8px;padding:1rem;margin-bottom:0.75rem;background:var(--cream);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+        <span style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-s);">Depoimento ${i+1}</span>
+        <button onclick="removerDepoimento(${i})" style="background:none;border:none;cursor:pointer;color:var(--text-s);font-size:1rem;">🗑</button>
+      </div>
+      <div class="form-row" style="margin-bottom:0.5rem;">
+        <div class="form-group" style="margin:0;">
+          <label>Nome</label>
+          <input type="text" value="${d.nome}" oninput="depoimentos[${i}].nome=this.value" />
+        </div>
+        <div class="form-group" style="margin:0;">
+          <label>Cidade</label>
+          <input type="text" value="${d.cidade}" oninput="depoimentos[${i}].cidade=this.value" />
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:0.5rem;">
+        <label>Depoimento</label>
+        <textarea oninput="depoimentos[${i}].texto=this.value" style="min-height:60px;">${d.texto}</textarea>
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label>Estrelas (1-5)</label>
+        <input type="number" min="1" max="5" value="${d.estrelas}" oninput="depoimentos[${i}].estrelas=Number(this.value)" style="width:80px;" />
+      </div>
+    </div>
+  `).join('');
+}
+
+window.adicionarDepoimento = function() {
+  if (depoimentos.length >= 6) { toast('Máximo de 6 depoimentos', 'err'); return; }
+  depoimentos.push({ nome: '', cidade: '', texto: '', estrelas: 5 });
+  renderDepoimentosAdmin();
+};
+
+window.removerDepoimento = function(i) {
+  depoimentos.splice(i, 1);
+  renderDepoimentosAdmin();
+};
+
 </script>
 </body>
 </html>

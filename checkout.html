@@ -624,7 +624,9 @@
   gtag('js', new Date());
   gtag('config', 'G-NB5Q5NEEG6');
 </script>
-<script src="../../assets/js/tracking.js"></script>
+<script src="assets/js/tracking.js"></script>
+<!-- Mercado Pago SDK -->
+<script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
 <body>
 
@@ -807,37 +809,28 @@
           <div class="pix-panel">
             <div class="pix-discount-badge">🎉 5% de desconto no Pix</div>
             <div class="pix-amount" id="pix-amount">R$ 0,00</div>
-            <p class="pix-info">Após confirmar o pedido, você receberá o QR Code e a chave Pix.<br>O pagamento é confirmado em até 5 minutos.</p>
-            <div class="pix-qr">QR Code<br>após pedido</div>
+            <p class="pix-info">Após confirmar o pedido, o QR Code e o código copia-e-cola serão gerados automaticamente.<br>O pagamento é confirmado em até 5 minutos.</p>
+            <div class="pix-qr" id="pix-qr-placeholder">QR Code<br>após pedido</div>
+          </div>
+          <!-- QR Code real do MP — aparece após finalizar -->
+          <div id="pix-result" style="display:none;text-align:center;margin-top:1rem;">
+            <img id="pix-qr-img" src="" alt="QR Code Pix" style="width:200px;height:200px;border:1px solid var(--gold-pale);padding:8px;background:#fff;">
+            <p style="font-size:0.7rem;color:var(--text-soft);margin:0.8rem 0 0.4rem;">Ou use o código copia-e-cola:</p>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <input type="text" id="pix-copia-cola" readonly style="flex:1;padding:0.6rem;font-size:0.65rem;border:1px solid var(--gold-pale);background:var(--cream);color:var(--text);font-family:monospace;">
+              <button onclick="copiarPix()" style="padding:0.6rem 1rem;background:var(--gold);color:#fff;border:none;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;">Copiar</button>
+            </div>
+            <p style="font-size:0.65rem;color:var(--text-soft);margin-top:0.6rem;">⏱ O QR Code expira em 30 minutos</p>
           </div>
         </div>
 
-        <!-- CARTÃO -->
+        <!-- CARTÃO — MP Card Form -->
         <div class="payment-panel" id="panel-cartao">
-          <div class="form-row single">
-            <div class="form-group card-number-row">
-              <label class="form-label">Número do cartão *</label>
-              <input type="text" class="form-input" id="card-num" placeholder="0000 0000 0000 0000" maxlength="19" oninput="maskCard(this)">
-              <span class="card-brand-icon" id="card-brand">💳</span>
-            </div>
+          <div id="mp-card-form">
+            <!-- MP Bricks injeta o formulário aqui -->
+            <div id="cardPaymentBrick_container"></div>
           </div>
-          <div class="form-row single">
-            <div class="form-group">
-              <label class="form-label">Nome impresso no cartão *</label>
-              <input type="text" class="form-input" id="card-name" placeholder="NOME SOBRENOME" style="text-transform:uppercase;">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Validade *</label>
-              <input type="text" class="form-input" id="card-exp" placeholder="MM/AA" maxlength="5" oninput="maskExp(this)">
-            </div>
-            <div class="form-group">
-              <label class="form-label">CVV *</label>
-              <input type="text" class="form-input" id="card-cvv" placeholder="000" maxlength="4">
-            </div>
-          </div>
-          <div class="form-group" style="margin-top:0.5rem;">
+          <div class="form-group" style="margin-top:1rem;">
             <label class="form-label">Parcelamento</label>
             <select class="installment-select" id="installment-select"></select>
           </div>
@@ -851,6 +844,11 @@
               <p>⏱ Prazo de vencimento: <strong>3 dias úteis</strong></p>
               <p>📦 O pedido será processado após a compensação do pagamento (1–2 dias úteis).</p>
             </div>
+          </div>
+          <!-- Boleto result -->
+          <div id="boleto-result" style="display:none;margin-top:1rem;text-align:center;">
+            <a id="boleto-link" href="#" target="_blank" style="display:inline-block;padding:0.8rem 2rem;background:var(--brown-deep);color:var(--white);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;">📄 Abrir boleto</a>
+            <p style="font-size:0.65rem;color:var(--text-soft);margin-top:0.6rem;">O boleto também foi enviado para seu e-mail.</p>
           </div>
         </div>
 
@@ -1285,15 +1283,76 @@ function validateForm() {
   return valid;
 }
 
+// ── MERCADO PAGO ──
+const MP_PUBLIC_KEY = 'APP_USR-35df1778-8cf4-4a1a-98de-92e9d8b5f4e7';
+
+// Calcula total final com descontos
+function calcularTotalFinal() {
+  const subtotal = getTotal();
+  const pixDisc = selectedPayment === 'pix' ? subtotal * 0.05 : 0;
+  const couponDisc = couponType === 'fixo'
+    ? Math.min(couponDiscountFixed, subtotal)
+    : subtotal * (couponDiscount / 100);
+  return Math.max(0, subtotal - pixDisc - couponDisc + shippingCost);
+}
+
+function copiarPix() {
+  const input = document.getElementById('pix-copia-cola');
+  input.select();
+  document.execCommand('copy');
+  showToast('Código Pix copiado!');
+}
+
+// Salva pedido no Firestore
+async function salvarPedidoFirebase(orderNum, paymentData) {
+  if (!window._db) return;
+  try {
+    const { addDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await addDoc(window._fbCollection(window._db, 'pedidos'), {
+      numeroPedido: orderNum,
+      cliente: {
+        nome: document.getElementById('nome').value,
+        email: document.getElementById('email').value,
+        telefone: document.getElementById('telefone').value,
+        cpf: document.getElementById('cpf').value,
+      },
+      endereco: {
+        cep: document.getElementById('cep').value,
+        logradouro: document.getElementById('logradouro').value,
+        numero: document.getElementById('numero').value,
+        complemento: document.getElementById('complemento').value || '',
+        bairro: document.getElementById('bairro').value,
+        cidade: document.getElementById('cidade').value,
+        estado: document.getElementById('estado').value,
+      },
+      itens: cart.map(i => ({ id: i.id, nome: i.name, variante: i.variant, preco: i.price, qty: i.qty })),
+      frete: selectedShipping,
+      pagamento: selectedPayment,
+      total: calcularTotalFinal(),
+      cupom: cupomAtivoId || null,
+      mercadoPago: paymentData || null,
+      status: 'novo',
+      criadoEm: new Date().toISOString(),
+    });
+  } catch(e) { console.error('Erro ao salvar pedido:', e); }
+}
+
+function mostrarSucesso(orderNum) {
+  document.getElementById('success-name').textContent = document.getElementById('nome').value.split(' ')[0];
+  document.getElementById('success-order-num').textContent = orderNum;
+  document.getElementById('success-overlay').classList.add('open');
+  cart = []; saveCart(); updateCartUI();
+}
+
 // ── FINALIZAR ──
 async function finalizarPedido() {
   if (!validateForm()) return;
 
   const btn = document.getElementById('btn-finalizar');
   btn.disabled = true;
-  btn.textContent = 'Processando...';
+  btn.innerHTML = '<span class="spinner" style="border-color:rgba(255,255,255,0.3);border-top-color:#fff;"></span> Processando...';
 
-  // Registrar uso do cupom no Firebase
+  // Registrar uso do cupom
   if (cupomAtivoId && window._db) {
     try {
       await window._fbUpdateDoc(
@@ -1303,17 +1362,148 @@ async function finalizarPedido() {
     } catch(e) { console.error('Erro ao registrar cupom:', e); }
   }
 
-  // Simula processamento (integrar Mercado Pago aqui)
-  setTimeout(() => {
-    const orderNum = '#SJ-' + String(Math.floor(Math.random()*90000)+10000);
-    document.getElementById('success-name').textContent = document.getElementById('nome').value.split(' ')[0];
-    document.getElementById('success-order-num').textContent = orderNum;
-    document.getElementById('success-overlay').classList.add('open');
-    // Limpa carrinho
-    cart = [];
-    saveCart();
-    updateCartUI();
-  }, 2000);
+  const orderNum = '#EC-' + String(Math.floor(Math.random()*90000)+10000);
+  const total = calcularTotalFinal();
+  const nome = document.getElementById('nome').value;
+  const email = document.getElementById('email').value;
+  const cpf = document.getElementById('cpf').value.replace(/\D/g,'');
+
+  try {
+    if (selectedPayment === 'pix') {
+      await processarPix(orderNum, total, nome, email, cpf);
+    } else if (selectedPayment === 'cartao') {
+      await processarCartao(orderNum, total, nome, email, cpf);
+    } else if (selectedPayment === 'boleto') {
+      await processarBoleto(orderNum, total, nome, email, cpf);
+    }
+  } catch(err) {
+    console.error('Erro MP:', err);
+    showToast('Erro ao processar pagamento. Tente novamente.');
+    btn.disabled = false;
+    btn.innerHTML = '🔒 Finalizar Pedido';
+  }
+}
+
+async function processarPix(orderNum, total, nome, email, cpf) {
+  const res = await fetch('https://api.mercadopago.com/v1/payments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer APP_USR-3269223910858397-052414-411fa144fa12607f57dd789855356590-3125094936',
+      'X-Idempotency-Key': orderNum + '-pix',
+    },
+    body: JSON.stringify({
+      transaction_amount: total,
+      description: 'Elenice Collection — Pedido ' + orderNum,
+      payment_method_id: 'pix',
+      payer: { email, first_name: nome.split(' ')[0], last_name: nome.split(' ').slice(1).join(' ') || '-',
+        identification: { type: 'CPF', number: cpf } },
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+
+  // Mostra QR Code
+  const qrCode = data.point_of_interaction?.transaction_data?.qr_code;
+  const qrBase64 = data.point_of_interaction?.transaction_data?.qr_code_base64;
+  document.getElementById('pix-qr-placeholder').style.display = 'none';
+  document.getElementById('pix-result').style.display = 'block';
+  if (qrBase64) document.getElementById('pix-qr-img').src = 'data:image/png;base64,' + qrBase64;
+  if (qrCode) document.getElementById('pix-copia-cola').value = qrCode;
+
+  await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'pix' });
+
+  // Scroll para QR Code
+  document.getElementById('panel-pix').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  showToast('QR Code gerado! Pague em até 30 minutos.');
+
+  document.getElementById('btn-finalizar').innerHTML = '✓ Aguardando pagamento Pix';
+  document.getElementById('btn-finalizar').disabled = true;
+}
+
+async function processarCartao(orderNum, total, nome, email, cpf) {
+  // Para cartão usamos MP Bricks — precisa do token gerado pelo formulário MP
+  // O token é obtido via window._mpCardToken (definido pelo Brick)
+  const token = window._mpCardToken;
+  if (!token) {
+    showToast('Preencha os dados do cartão corretamente.');
+    document.getElementById('btn-finalizar').disabled = false;
+    document.getElementById('btn-finalizar').innerHTML = '🔒 Finalizar Pedido';
+    return;
+  }
+  const installments = parseInt(document.getElementById('installment-select')?.value || '1');
+  const res = await fetch('https://api.mercadopago.com/v1/payments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer APP_USR-3269223910858397-052414-411fa144fa12607f57dd789855356590-3125094936',
+      'X-Idempotency-Key': orderNum + '-card',
+    },
+    body: JSON.stringify({
+      transaction_amount: total,
+      token,
+      description: 'Elenice Collection — Pedido ' + orderNum,
+      installments,
+      payment_method_id: window._mpPaymentMethodId || 'visa',
+      payer: { email, identification: { type: 'CPF', number: cpf } },
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.message || data.error);
+
+  await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'cartao' });
+
+  if (data.status === 'approved') {
+    mostrarSucesso(orderNum);
+  } else if (data.status === 'in_process') {
+    showToast('Pagamento em análise. Você receberá um e-mail de confirmação.');
+    mostrarSucesso(orderNum);
+  } else {
+    throw new Error('Pagamento não aprovado: ' + data.status_detail);
+  }
+}
+
+async function processarBoleto(orderNum, total, nome, email, cpf) {
+  const endereco = {
+    zip_code: document.getElementById('cep').value.replace(/\D/g,''),
+    street_name: document.getElementById('logradouro').value,
+    street_number: document.getElementById('numero').value,
+    neighborhood: document.getElementById('bairro').value,
+    city: document.getElementById('cidade').value,
+    federal_unit: document.getElementById('estado').value,
+  };
+  const res = await fetch('https://api.mercadopago.com/v1/payments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer APP_USR-3269223910858397-052414-411fa144fa12607f57dd789855356590-3125094936',
+      'X-Idempotency-Key': orderNum + '-boleto',
+    },
+    body: JSON.stringify({
+      transaction_amount: total,
+      description: 'Elenice Collection — Pedido ' + orderNum,
+      payment_method_id: 'bolbradesco',
+      payer: {
+        email,
+        first_name: nome.split(' ')[0],
+        last_name: nome.split(' ').slice(1).join(' ') || '-',
+        identification: { type: 'CPF', number: cpf },
+        address: endereco,
+      },
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+
+  const boletoUrl = data.transaction_details?.external_resource_url;
+  if (boletoUrl) {
+    document.getElementById('boleto-result').style.display = 'block';
+    document.getElementById('boleto-link').href = boletoUrl;
+    window.open(boletoUrl, '_blank');
+  }
+
+  await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'boleto', url: boletoUrl });
+  mostrarSucesso(orderNum);
 }
 
 // ── INIT ──
@@ -1323,6 +1513,41 @@ document.addEventListener('DOMContentLoaded', () => {
     // window.location.href = 'catalogo.html';
   }
   updateSummary();
+
+  // Inicializa MP Bricks para cartão
+  if (window.MercadoPago) {
+    const mp = new MercadoPago('APP_USR-35df1778-8cf4-4a1a-98de-92e9d8b5f4e7', { locale: 'pt-BR' });
+    const bricks = mp.bricks();
+    bricks.create('cardPayment', 'cardPaymentBrick_container', {
+      initialization: {
+        amount: calcularTotalFinal() || 1,
+      },
+      customization: {
+        visual: {
+          style: {
+            theme: 'flat',
+            customVariables: {
+              baseColor: '#7C5C35',
+              baseColorFirstVariant: '#A07848',
+              baseColorSecondVariant: '#C4A47A',
+              fontSizeSmall: '12px',
+            }
+          },
+          hideFormTitle: true,
+          hidePaymentButton: true,
+        },
+        paymentMethods: { maxInstallments: 12 },
+      },
+      callbacks: {
+        onReady: () => {},
+        onSubmit: (cardFormData) => {
+          window._mpCardToken = cardFormData.token;
+          window._mpPaymentMethodId = cardFormData.payment_method_id;
+        },
+        onError: (err) => console.error('MP Brick error:', err),
+      }
+    }).catch(e => console.warn('MP Bricks:', e));
+  }
 });
 </script>
 </body>

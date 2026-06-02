@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Elenice Collection — Joias em ouro 18k criadas para mulheres que valorizam elegância, qualidade e significado. Balneário Camboriú, SC.">
-<title>Elenice Collection — Beleza que transforma</title>
+<meta name="description" content="Sélene Jóias — Joias em ouro 18k criadas para mulheres que valorizam elegância, qualidade e significado. Balneário Camboriú, SC.">
+<title>Sélene Jóias — Elegância que transforma</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
 /* ── PAGE-SPECIFIC: INDEX ── */
@@ -107,9 +107,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 50%);
-  z-index: 1;
-  pointer-events: none;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
 }
 .hero-visual-overlay {
   position: absolute;
@@ -154,10 +152,10 @@
   font-style: italic;
 }
 .hero-sub-panel:first-child {
-  background: linear-gradient(135deg, #C4A882, #8B6B3D) center/cover no-repeat;
+  background: linear-gradient(135deg, #C4A882, #8B6B3D);
 }
 .hero-sub-panel:last-child {
-  background: linear-gradient(135deg, #EDE4DA, #C4A47A) center/cover no-repeat;
+  background: linear-gradient(135deg, #EDE4DA, #C4A47A);
   color: rgba(0,0,0,0.1);
 }
 .hero-scroll-hint {
@@ -183,10 +181,8 @@
 /* BRAND BAR */
 .brand-bar {
   background: var(--brown-deep);
-  padding: 0.65rem 0;
+  padding: 1.1rem 0;
   overflow: hidden;
-  position: relative;
-  z-index: 1;
 }
 .brand-bar-track {
   display: flex;
@@ -203,7 +199,7 @@
   font-size: 0.6rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.92);
+  color: rgba(224,206,187,0.55);
   flex-shrink: 0;
 }
 .brand-bar-dot {
@@ -560,66 +556,81 @@
   .hero-stats { gap: 1.5rem; }
   .about-pillars { grid-template-columns: 1fr; }
 }
-
-/* ── OCASIOES ── */
-.ocasioes { padding: 5rem 0; background: var(--white); }
-.section-sub { font-size: 0.85rem; color: var(--text-soft); margin-top: 0.5rem; letter-spacing: 0.05em; }
-.ocasioes-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-  margin-top: 2.5rem;
-}
-.ocasiao-card {
-  border-radius: 12px;
-  overflow: hidden;
-  text-decoration: none;
-  border: 1px solid rgba(196,164,122,0.2);
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-  display: block;
-}
-.ocasiao-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(196,164,122,0.55);
-  box-shadow: 0 12px 32px rgba(60,35,15,0.12);
-}
-.ocasiao-img {
-  aspect-ratio: 16/9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  background-size: cover;
-  background-position: center;
-}
-.ocasiao-glyph { font-size: 2.5rem; filter: brightness(2); opacity: 0.7; }
-.ocasiao-info { padding: 1rem 1.1rem; background: var(--white); }
-.ocasiao-title {
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  color: var(--brown-deep);
-  font-weight: 400;
-  margin-bottom: 0.2rem;
-}
-.ocasiao-sub { font-size: 0.72rem; color: var(--text-soft); letter-spacing: 0.03em; }
-@media(max-width:768px){ .ocasioes-grid { grid-template-columns: 1fr 1fr; } }
-@media(max-width:480px){ .ocasioes-grid { grid-template-columns: 1fr; } }
-
 </style>
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NB5Q5NEEG6"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-NB5Q5NEEG6');
-</script>
-<script src="../../assets/js/tracking.js"></script>
 </head>
 <body>
 
 <!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Sélene Jóias</a>
+    <ul class="nav-links">
+      <li><a href="catalogo.html">Coleções</a></li>
+      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="sobre.html">Nossa História</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-cart" onclick="openCart()">
+        Carrinho
+        <span class="cart-badge cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Nova Coleção · Primavera 2025</div>
+    <h1 class="hero-title">
+      Joias que<br>
+      contam sua<br>
+      <em>história</em>
+    </h1>
+    <p class="hero-subtitle">
+      Peças criadas com ouro 18k e pedras selecionadas, 
+      inspiradas na elegância e sofisticação feminina. 
+      Cada joia é única — como você.
+    </p>
+    <div class="hero-actions">
+      <a href="catalogo.html" class="btn btn-primary">Ver Coleção</a>
+      <a href="sobre.html" class="btn btn-ghost">Nossa história</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="num">18k</div>
+        <div class="lbl">Ouro garantido</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">500+</div>
+        <div class="lbl">Clientes felizes</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">1 ano</div>
+        <div class="lbl">De garantia</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-visual-main">
+      <div class="hero-visual-glyph">◈</div>
+      <div class="hero-visual-overlay">
+        <div class="feat-label">Destaque da coleção</div>
+        <div class="feat-name">Colar Lua Dourada</div>
+      </div>
+    </div>
+    <div class="hero-visual-bottom">
+      <div class="hero-sub-panel">✦</div>
+      <div class="hero-sub-panel" style="color:rgba(90,60,30,0.12);">⊛</div>
+    </div>
+    <div class="hero-scroll-hint">Explorar</div>
+  </div>
+</section>
+
+<!-- ── BRAND BAR ── -->
 <div class="brand-bar">
   <div class="brand-bar-track" id="bar-track">
     <span class="brand-bar-item">Ouro 18k Certificado</span>
@@ -653,68 +664,7 @@
     <span class="brand-bar-dot"></span>
   </div>
 </div>
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="Elenice Collection" style="height:44px;object-fit:contain;"></a>
-    <ul class="nav-links">
-      <li><a href="catalogo.html">Coleções</a></li>
-      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
-      <li><a href="catalogo.html?cat=colares">Colares</a></li>
-      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
-      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
-      <li><a href="sobre.html">Nossa História</a></li>
-    </ul>
-    <div class="nav-actions">
-      <button class="nav-cart" onclick="openCart()">
-        Carrinho
-        <span class="cart-badge cart-count" style="display:none;">0</span>
-      </button>
-    </div>
-  </div>
-</nav>
 
-<!-- ── HERO ── -->
-<section class="hero">
-  <div class="hero-content">
-    <div class="hero-tag" id="hero-tag">Nova Coleção · Primavera 2025</div>
-    <h1 class="hero-title" id="hero-title">Joias que<br>contam sua<br><em id="hero-title-em">história</em></h1>
-    <p class="hero-subtitle" id="hero-subtitle">Peças criadas com ouro 18k e pedras selecionadas, inspiradas na elegância e sofisticação feminina. Cada joia é única — como você.</p>
-    <div class="hero-actions">
-      <a href="catalogo.html" class="btn btn-primary" id="hero-btn">Ver Coleção</a>
-      <a href="sobre.html" class="btn btn-ghost">Nossa história</a>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="num" id="stat1-num">18k</div>
-        <div class="lbl" id="stat1-lbl">Ouro garantido</div>
-      </div>
-      <div class="hero-stat">
-        <div class="num" id="stat2-num">500+</div>
-        <div class="lbl" id="stat2-lbl">Clientes felizes</div>
-      </div>
-      <div class="hero-stat">
-        <div class="num" id="stat3-num">1 ano</div>
-        <div class="lbl" id="stat3-lbl">De garantia</div>
-      </div>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="hero-visual-main" id="hero-visual-main">
-      <div class="hero-visual-glyph" id="hero-glyph">◈</div>
-      <div class="hero-visual-overlay">
-        <div class="feat-label" id="box1-label">Destaque da coleção</div>
-        <div class="feat-name" id="box1-nome">Colar Lua Dourada</div>
-      </div>
-    </div>
-    <div class="hero-visual-bottom">
-      <div class="hero-sub-panel" id="box2-panel">✦</div>
-      <div class="hero-sub-panel" id="box3-panel" style="color:rgba(90,60,30,0.12);">⊛</div>
-    </div>
-    <div class="hero-scroll-hint">Explorar</div>
-  </div>
-</section>
-
-<!-- ── BRAND BAR ── -->
 <!-- ── COLEÇÕES ── -->
 <section class="collections" id="colecoes">
   <div class="container">
@@ -728,74 +678,6 @@
     <div class="products-grid" id="products-grid"></div>
   </div>
 </section>
-
-<!-- ── COMPRE PELA OCASIÃO ── -->
-<section class="ocasioes" id="ocasioes">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-tag">Para cada momento</div>
-      <h2 class="section-title">Compre pela <em>ocasião</em></h2>
-      <p class="section-sub">Escolha pelo sentimento, não pela categoria</p>
-    </div>
-    <div class="ocasioes-grid" id="ocasioes-grid">
-      <a href="catalogo.html?ocasiao=presente" class="ocasiao-card reveal">
-        <div class="ocasiao-img" style="background:linear-gradient(135deg,#7C5C35,#3D2B1A);">
-          <div class="ocasiao-glyph">🎁</div>
-        </div>
-        <div class="ocasiao-info">
-          <div class="ocasiao-title">Presentes Inesquecíveis</div>
-          <div class="ocasiao-sub">Aniversários, namoro e datas especiais</div>
-        </div>
-      </a>
-      <a href="catalogo.html?ocasiao=dia-a-dia" class="ocasiao-card reveal reveal-delay-1">
-        <div class="ocasiao-img" style="background:linear-gradient(135deg,#A07848,#7C5C35);">
-          <div class="ocasiao-glyph">✦</div>
-        </div>
-        <div class="ocasiao-info">
-          <div class="ocasiao-title">Elegância no Dia a Dia</div>
-          <div class="ocasiao-sub">Peças minimalistas e versáteis</div>
-        </div>
-      </a>
-      <a href="catalogo.html?ocasiao=romantica" class="ocasiao-card reveal reveal-delay-2">
-        <div class="ocasiao-img" style="background:linear-gradient(135deg,#C4A47A,#A07848);">
-          <div class="ocasiao-glyph">♡</div>
-        </div>
-        <div class="ocasiao-info">
-          <div class="ocasiao-title">Coleção Romântica</div>
-          <div class="ocasiao-sub">Peças delicadas para presentear</div>
-        </div>
-      </a>
-      <a href="catalogo.html?ocasiao=luxo" class="ocasiao-card reveal reveal-delay-3">
-        <div class="ocasiao-img" style="background:linear-gradient(135deg,#3D2B1A,#1a120a);">
-          <div class="ocasiao-glyph">◈</div>
-        </div>
-        <div class="ocasiao-info">
-          <div class="ocasiao-title">Luxo Atemporal</div>
-          <div class="ocasiao-sub">Peças premium e sofisticadas</div>
-        </div>
-      </a>
-      <a href="catalogo.html?ordem=mais-vendidos" class="ocasiao-card reveal">
-        <div class="ocasiao-img" style="background:linear-gradient(135deg,#5C3D28,#3D2B1A);">
-          <div class="ocasiao-glyph">⭐</div>
-        </div>
-        <div class="ocasiao-info">
-          <div class="ocasiao-title">Mais Vendidos</div>
-          <div class="ocasiao-sub">Escolhas das nossas clientes</div>
-        </div>
-      </a>
-      <a href="catalogo.html?preco=ate299" class="ocasiao-card reveal reveal-delay-1">
-        <div class="ocasiao-img" style="background:linear-gradient(135deg,#C4A47A,#E0CEBB);">
-          <div class="ocasiao-glyph" style="color:#3D2B1A;">💛</div>
-        </div>
-        <div class="ocasiao-info">
-          <div class="ocasiao-title">Até R$ 299</div>
-          <div class="ocasiao-sub">Entrada para novas clientes</div>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
 
 <!-- ── DESTAQUE ── -->
 <section class="featured-strip reveal">
@@ -839,7 +721,7 @@
       <div class="about-text reveal reveal-delay-2">
         <div class="section-tag">Nossa história</div>
         <h2 class="section-title">Feitas com<br><em>paixão</em></h2>
-        <p>A Elenice Collection nasceu do desejo de criar peças que vão além da beleza — joias que carregam significado, que marcam momentos e que se tornam parte da história de quem as usa.</p>
+        <p>A Sélene Jóias nasceu do desejo de criar peças que vão além da beleza — joias que carregam significado, que marcam momentos e que se tornam parte da história de quem as usa.</p>
         <p>Trabalhamos com ouro 18k e pedras cuidadosamente selecionadas. Cada peça passa por um rigoroso processo do design ao acabamento final, garantindo qualidade e exclusividade.</p>
         <a href="sobre.html" class="btn btn-ghost" style="margin-top:0.5rem;">Conhecer nossa história</a>
         <div class="about-pillars">
@@ -870,14 +752,13 @@
 </section>
 
 <!-- ── DEPOIMENTOS ── -->
-<section class="testimonials" id="depoimentos">
+<section class="testimonials">
   <div class="container">
     <div class="reveal">
       <div class="section-tag">Depoimentos</div>
       <h2 class="section-title">O que nossas<br>clientes <em>dizem</em></h2>
     </div>
-    <div class="testimonials-grid" id="testimonials-grid">
-      <!-- carregado do Firebase -->
+    <div class="testimonials-grid">
       <div class="testimonial reveal reveal-delay-1">
         <div class="testimonial-stars">★ ★ ★ ★ ★</div>
         <p class="testimonial-text">"Recebi o colar de aniversário e fiquei encantada. A embalagem é linda, a peça é impecável. Com certeza voltarei a comprar!"</p>
@@ -936,7 +817,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="logo"><img src="assets/img/logo.png" alt="Elenice Collection" style="height:60px;object-fit:contain;filter:brightness(0) invert(1) sepia(1) saturate(0.3) brightness(1.4);"></div>
+        <div class="logo">Sélene Jóias</div>
         <div class="tagline">Elegância que transforma</div>
         <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado. Baseada em Balneário Camboriú, entregamos para todo o Brasil.</p>
       </div>
@@ -973,7 +854,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Elenice Collection. Todos os direitos reservados.</p>
+      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
       <div class="social-links">
         <a class="social-link" href="#" title="Instagram">ig</a>
         <a class="social-link" href="#" title="Facebook">fb</a>
@@ -1031,7 +912,7 @@
 <script src="assets/js/cart.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, getDoc }
+import { getFirestore, collection, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1045,112 +926,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-// ── CARREGAR CONFIGURAÇÕES ──
-async function carregarConfigs() {
-  try {
-    const snap = await getDoc(doc(db, 'configuracoes', 'loja'));
-    if (!snap.exists()) return;
-    const d = snap.data();
-
-    // Hero textos
-    if (d.hero?.label)     setText('hero-tag', d.hero.label);
-    if (d.hero?.titulo1 && d.hero?.titulo2) {
-      const t = document.getElementById('hero-title');
-      if (t) t.innerHTML = d.hero.titulo1 + '<br><em>' + d.hero.titulo2 + '</em>';
-    }
-    if (d.hero?.subtitulo) setText('hero-subtitle', d.hero.subtitulo);
-    if (d.hero?.btn)       setText('hero-btn', d.hero.btn);
-
-    // Hero imagem principal
-    if (d.hero?.img) {
-      const main = document.getElementById('hero-visual-main');
-      if (main) {
-        main.style.backgroundImage = `url(${d.hero.img})`;
-        main.style.backgroundSize = 'cover';
-        main.style.backgroundPosition = 'center';
-        const glyph = document.getElementById('hero-glyph');
-        if (glyph) glyph.style.display = 'none';
-      }
-    }
-
-    // Caixa 1 — overlay
-    if (d.box1?.label) setText('box1-label', d.box1.label);
-    if (d.box1?.nome)  setText('box1-nome', d.box1.nome);
-    if (d.box1?.img) {
-      const main = document.getElementById('hero-visual-main');
-      if (main) { main.style.backgroundImage = `url(${d.box1.img})`; main.style.backgroundSize='cover'; main.style.backgroundPosition='center'; const g=document.getElementById('hero-glyph'); if(g) g.style.display='none'; }
-    }
-
-    // Caixa 2
-    if (d.box2?.img) {
-      const p2 = document.getElementById('box2-panel');
-      if (p2) { p2.style.backgroundImage=`url(${d.box2.img})`; p2.style.backgroundSize='cover'; p2.style.backgroundPosition='center'; p2.textContent=''; }
-    }
-    if (d.box2?.nome) {
-      const p2 = document.getElementById('box2-panel');
-      if (p2) p2.setAttribute('data-nome', d.box2.nome);
-    }
-
-    // Caixa 3
-    if (d.box3?.img) {
-      const p3 = document.getElementById('box3-panel');
-      if (p3) { p3.style.backgroundImage=`url(${d.box3.img})`; p3.style.backgroundSize='cover'; p3.style.backgroundPosition='center'; p3.textContent=''; p3.style.color='transparent'; }
-    }
-
-    // Faixa / brand-bar
-    if (d.faixa && Array.isArray(d.faixa) && d.faixa.length > 0) {
-      const track = document.getElementById('bar-track');
-      if (track) {
-        const items = d.faixa;
-        const doubled = [...items, ...items]; // loop duplicado
-        track.innerHTML = doubled.map(txt =>
-          `<span class="brand-bar-item">${txt}</span><span class="brand-bar-dot"></span>`
-        ).join('');
-      }
-    }
-
-    // Depoimentos dinâmicos
-    if (d.depoimentos && Array.isArray(d.depoimentos) && d.depoimentos.length > 0) {
-      const grid = document.getElementById('testimonials-grid');
-      if (grid) {
-        const delays = ['reveal-delay-1','reveal-delay-2','reveal-delay-3'];
-        grid.innerHTML = d.depoimentos.slice(0, 6).map((dep, i) => {
-          const stars = '★ '.repeat(dep.estrelas || 5).trim();
-          const initials = (dep.nome || 'EC').split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
-          return `
-            <div class="testimonial reveal ${delays[i%3]}">
-              <div class="testimonial-stars">${stars}</div>
-              <p class="testimonial-text">"${dep.texto}"</p>
-              <div class="testimonial-author">
-                <div class="author-avatar">${initials}</div>
-                <div>
-                  <div class="author-name">${dep.nome}</div>
-                  <div class="author-city">${dep.cidade || ''}</div>
-                </div>
-              </div>
-            </div>`;
-        }).join('');
-      }
-    }
-
-    // Stats
-    if (d.stats?.s1num)   setText('stat1-num', d.stats.s1num);
-    if (d.stats?.s1label) setText('stat1-lbl', d.stats.s1label);
-    if (d.stats?.s2num)   setText('stat2-num', d.stats.s2num);
-    if (d.stats?.s2label) setText('stat2-lbl', d.stats.s2label);
-    if (d.stats?.s3num)   setText('stat3-num', d.stats.s3num);
-    if (d.stats?.s3label) setText('stat3-lbl', d.stats.s3label);
-
-  } catch(e) { console.error('Configs:', e); }
-}
-
-function setText(id, val) {
-  const el = document.getElementById(id);
-  if (el && val) el.textContent = val;
-}
-
-carregarConfigs();
 
 // ── CARREGA PRODUTOS DO FIREBASE ──
 async function renderProducts() {
@@ -1186,7 +961,6 @@ async function renderProducts() {
             : `<div class="product-card-placeholder">◈</div>`
           }
           ${p.badge ? `<span class="product-badge ${p.badge==='Novo'?'novo':''}">${p.badge}</span>` : ''}
-          ${p.estoque > 0 && p.estoque <= 5 ? `<span class="product-badge" style="background:#8B2500;color:#fff;top:auto;bottom:0.75rem;left:0.75rem;z-index:2;">Últimas ${p.estoque} und.</span>` : ''}
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         </a>
         <div class="product-card-info">
@@ -1194,8 +968,8 @@ async function renderProducts() {
           <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
           <div class="product-price-row">
             <div>
-              <span class="product-price">12× de R$ ${(Number(p.preco)/12).toFixed(2).replace('.',',')}</span>
-              <span class="product-old-price" style="display:block;text-decoration:none;margin-top:2px;">ou R$ ${Number(p.preco).toLocaleString('pt-BR',{minimumFractionDigits:2})} à vista${p.precoOriginal ? ' · <s>era R$ ' + String(Number(p.precoOriginal).toLocaleString('pt-BR',{minimumFractionDigits:2})) + '<\/s>' : ''}</span>
+              <span class="product-price">R$ ${Number(p.preco).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+              ${p.precoOriginal ? `<span class="product-old-price">R$ ${Number(p.precoOriginal).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>` : ''}
             </div>
             <button class="product-add-btn"
               onclick="addToCart({id:'${p.id}',name:'${p.nome}',variant:'${p.material||'Ouro 18k'}',price:${p.preco},symbol:'◈',image:'${p.fotos?.[0]||''}'})"

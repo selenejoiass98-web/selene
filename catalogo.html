@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Elenice Collection — Explore nossa coleção completa de joias em ouro 18k. Anéis, colares, pulseiras e brincos.">
-<title>Coleção — Elenice Collection</title>
+<meta name="description" content="Catálogo Sélene Jóias — Explore nossa coleção completa de joias em ouro 18k. Anéis, colares, pulseiras e brincos.">
+<title>Coleção — Sélene Jóias</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
 /* ── CATALOG PAGE ── */
@@ -337,22 +337,13 @@
   .filter-bar-inner { justify-content: flex-end; }
 }
 </style>
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NB5Q5NEEG6"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-NB5Q5NEEG6');
-</script>
-<script src="../../assets/js/tracking.js"></script>
 </head>
 <body>
 
 <!-- ── NAV ── -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo"><img src="assets/img/logo.png" alt="Elenice Collection" style="height:44px;object-fit:contain;"></a>
+    <a href="index.html" class="nav-logo">Sélene Jóias</a>
     <ul class="nav-links">
       <li><a href="catalogo.html" style="color:var(--gold);">Coleções</a></li>
       <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
@@ -494,7 +485,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="logo"><img src="assets/img/logo.png" alt="Elenice Collection" style="height:60px;object-fit:contain;filter:brightness(0) invert(1) sepia(1) saturate(0.3) brightness(1.4);"></div>
+        <div class="logo">Sélene Jóias</div>
         <div class="tagline">Elegância que transforma</div>
         <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
       </div>
@@ -526,7 +517,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Elenice Collection. Todos os direitos reservados.</p>
+      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
       <div class="social-links">
         <a class="social-link" href="#">ig</a>
         <a class="social-link" href="#">fb</a>
@@ -790,12 +781,15 @@ function render() {
           <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
           <div class="product-price-row">
             <div>
-              <span class="product-price">12× de R$ ${(p.price/12).toFixed(2).replace('.',',')}</span>
-              <span class="product-old-price" style="display:block;text-decoration:none;margin-top:2px;">ou R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})} à vista${p.oldPrice ? ' · <s style="text-decoration:line-through">era R$ ' + p.oldPrice.toLocaleString('pt-BR',{minimumFractionDigits:2}) + '</s>' : ''}</span>
+              <span class="product-price">R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+              ${p.oldPrice ? `<span class="product-old-price">R$ ${p.oldPrice.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>` : ''}
             </div>
             <button class="product-add-btn"
               onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}',image:'${p.fotos[0]||''}'})"
               title="Adicionar ao carrinho">+</button>
+          </div>
+          <div style="font-size:0.62rem;color:var(--text-soft);margin-top:0.3rem;letter-spacing:0.05em;">
+            ou 12× de R$ ${(p.price/12).toLocaleString('pt-BR',{minimumFractionDigits:2})}
           </div>
         </div>
       </div>

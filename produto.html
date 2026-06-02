@@ -580,143 +580,6 @@
   .reviews-summary { flex-direction: column; gap: 1.5rem; }
   .spec-grid { grid-template-columns: 1fr; }
 }
-
-/* ── URGENCY ── */
-.urgency-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.65rem 0.9rem;
-  background: #fff5f0;
-  border: 1px solid #f0c4b0;
-  border-radius: 7px;
-  margin-bottom: 1rem;
-  font-size: 0.78rem;
-  color: #8B2500;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-.urgency-bar .urgency-icon { font-size: 1rem; }
-
-/* ── COMPLETE SEU VISUAL ── */
-.complete-section {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--gold-pale);
-}
-.complete-section .section-tag { margin-bottom: 0.4rem; }
-.complete-section h3 {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: var(--brown-deep);
-  margin-bottom: 0.3rem;
-}
-.complete-section p {
-  font-size: 0.8rem;
-  color: var(--text-soft);
-  margin-bottom: 1.5rem;
-}
-.complete-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-.complete-card {
-  border: 1px solid rgba(196,164,122,0.28);
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: border-color 0.2s, transform 0.2s;
-  text-decoration: none;
-  display: block;
-}
-.complete-card:hover { border-color: rgba(160,120,72,0.55); transform: translateY(-2px); }
-.complete-card-img {
-  aspect-ratio: 1/1;
-  background: var(--cream);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  color: var(--gold-pale);
-  font-family: var(--font-serif);
-  overflow: hidden;
-}
-.complete-card-img img { width:100%; height:100%; object-fit:cover; }
-.complete-card-info { padding: 0.75rem; }
-.complete-card-name {
-  font-size: 0.8rem;
-  color: var(--text);
-  margin-bottom: 0.2rem;
-  font-weight: 400;
-}
-.complete-card-price {
-  font-family: var(--font-serif);
-  font-size: 0.9rem;
-  color: var(--gold);
-}
-.complete-card-add {
-  width: 100%;
-  margin-top: 0.6rem;
-  padding: 0.5rem;
-  background: var(--cream);
-  border: 1px solid var(--gold-pale);
-  border-radius: 6px;
-  font-family: var(--font-serif);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  color: var(--gold);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.complete-card-add:hover { background: var(--gold); color: var(--white); border-color: var(--gold); }
-.complete-add-all {
-  margin-top: 1rem;
-  width: 100%;
-  padding: 0.85rem;
-  background: var(--gold);
-  color: var(--white);
-  border: none;
-  border-radius: 8px;
-  font-family: var(--font-serif);
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.complete-add-all:hover { background: var(--brown-mid); }
-
-/* ── CART UPSELL POPUP ── */
-.upsell-popup {
-  position: fixed;
-  bottom: 6rem;
-  right: 1.5rem;
-  background: var(--white);
-  border: 1px solid var(--gold-pale);
-  border-radius: 12px;
-  padding: 1.2rem;
-  max-width: 300px;
-  z-index: 500;
-  box-shadow: 0 8px 32px rgba(60,35,15,0.15);
-  transform: translateY(2rem);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.35s ease;
-}
-.upsell-popup.show { transform: translateY(0); opacity: 1; pointer-events: all; }
-.upsell-popup-close { position:absolute; top:0.6rem; right:0.75rem; background:none; border:none; cursor:pointer; color:var(--text-soft); font-size:1.1rem; }
-.upsell-popup h4 { font-family: var(--font-serif); font-size: 1rem; color: var(--brown-deep); margin-bottom: 0.3rem; }
-.upsell-popup p { font-size: 0.72rem; color: var(--text-soft); margin-bottom: 0.9rem; }
-.upsell-products { display: flex; gap: 0.6rem; margin-bottom: 0.8rem; }
-.upsell-item { flex: 1; text-align: center; }
-.upsell-item-img { aspect-ratio: 1; background: var(--cream); border-radius: 6px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; overflow:hidden; margin-bottom: 0.3rem; }
-.upsell-item-img img { width:100%; height:100%; object-fit:cover; border-radius:6px; }
-.upsell-item-name { font-size: 0.65rem; color: var(--text-mid); }
-.upsell-item-price { font-family: var(--font-serif); font-size: 0.75rem; color: var(--gold); }
-.upsell-btn { width:100%; padding:0.65rem; background:var(--gold); color:white; border:none; border-radius:7px; font-family:var(--font-serif); font-size:0.75rem; letter-spacing:0.08em; cursor:pointer; transition:background 0.2s; }
-.upsell-btn:hover { background: var(--brown-mid); }
-@media(max-width:480px) { .complete-grid { grid-template-columns: 1fr 1fr; } }
 </style>
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NB5Q5NEEG6"></script>
@@ -726,7 +589,7 @@
   gtag('js', new Date());
   gtag('config', 'G-NB5Q5NEEG6');
 </script>
-<script src="assets/js/tracking.js"></script>
+<script src="../../assets/js/tracking.js"></script>
 </head>
 <body>
 
@@ -809,13 +672,6 @@
           <div class="price-pix" id="info-pix">
             🟢 <span>À vista no <strong>Pix: R$ 274,55</strong> (5% de desconto)</span>
           </div>
-        </div>
-
-
-        <!-- URGÊNCIA -->
-        <div id="urgency-bar" class="urgency-bar" style="display:none;">
-          <span class="urgency-icon">🔥</span>
-          <span id="urgency-text">Últimas unidades disponíveis</span>
         </div>
 
         <!-- TAMANHO -->
@@ -1029,20 +885,6 @@
   </div>
 
 </div><!-- /product-page -->
-
-
-<!-- COMPLETE SEU VISUAL -->
-<section class="container">
-  <div class="complete-section" id="complete-section" style="display:none;">
-    <div class="section-tag">Conjunto perfeito</div>
-    <h3>Complete seu <em style="font-style:italic;color:var(--gold-mid);">visual</em></h3>
-    <p>Essas peças combinam perfeitamente com o que você escolheu</p>
-    <div class="complete-grid" id="complete-grid"></div>
-    <button class="complete-add-all" id="complete-add-all" style="display:none;" onclick="adicionarConjunto()">
-      + Adicionar conjunto completo
-    </button>
-  </div>
-</section>
 
 <!-- RELATED -->
 <section class="related-section">
@@ -1289,129 +1131,7 @@ function renderProduct() {
     </div>`;
 
   renderRelated();
-  renderCompleteVisual();
-  renderUrgency();
 }
-
-// ── URGÊNCIA DE ESTOQUE ──
-function renderUrgency() {
-  const p = currentProduct;
-  const estoque = p.estoque || p.stock || 0;
-  const bar = document.getElementById('urgency-bar');
-  const txt = document.getElementById('urgency-text');
-  if (!bar) return;
-  if (estoque > 0 && estoque <= 5) {
-    txt.textContent = `🔥 Apenas ${estoque} unidade${estoque>1?'s':''} disponível${estoque>1?'is':''}! Garanta a sua.`;
-    bar.style.display = 'flex';
-  } else if (estoque === 0) {
-    txt.textContent = '⚠️ Este produto está esgotado no momento.';
-    bar.style.background = '#f5f0ea';
-    bar.style.borderColor = '#e0cebb';
-    bar.style.color = '#9C8070';
-    bar.style.display = 'flex';
-  }
-}
-
-// ── COMPLETE SEU VISUAL ──
-function renderCompleteVisual() {
-  const p = currentProduct;
-  const cat = (p.categoria || '').toLowerCase();
-  const section = document.getElementById('complete-section');
-  const grid = document.getElementById('complete-grid');
-  if (!section || !grid || !allProducts.length) return;
-
-  // Pega peças de OUTRAS categorias que combinam
-  const catMap = {
-    'colares': ['brincos', 'pulseiras'],
-    'brincos': ['colares', 'pulseiras'],
-    'anéis': ['colares', 'brincos'],
-    'pulseiras': ['colares', 'brincos'],
-    'conjuntos': ['anéis', 'colares'],
-  };
-  const targets = catMap[cat] || ['brincos', 'colares'];
-
-  const suggestions = allProducts
-    .filter(q => targets.some(t => (q.categoria||'').toLowerCase().includes(t)))
-    .slice(0, 3);
-
-  if (suggestions.length === 0) return;
-
-  section.style.display = 'block';
-  window._completeSuggestions = suggestions;
-
-  grid.innerHTML = suggestions.map(q => `
-    <a href="produto.html?id=${q.id}" class="complete-card" onclick="event.preventDefault();adicionarPecaCompleto('${q.id}')">
-      <div class="complete-card-img">
-        ${q.fotos?.[0] ? `<img src="${q.fotos[0]}" alt="${q.nome}">` : '◈'}
-      </div>
-      <div class="complete-card-info">
-        <div class="complete-card-name">${q.nome}</div>
-        <div class="complete-card-price">R$ ${Number(q.preco).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
-        <button class="complete-card-add" onclick="event.stopPropagation();adicionarPecaCompleto('${q.id}')">+ Adicionar</button>
-      </div>
-    </a>
-  `).join('');
-
-  if (suggestions.length >= 2) {
-    document.getElementById('complete-add-all').style.display = 'block';
-    const totalExtra = suggestions.reduce((s, q) => s + Number(q.preco), 0);
-    document.getElementById('complete-add-all').textContent =
-      `✦ Adicionar conjunto completo — R$ ${totalExtra.toLocaleString('pt-BR',{minimumFractionDigits:2})} a mais`;
-  }
-}
-
-window.adicionarPecaCompleto = function(qid) {
-  const q = allProducts.find(x => x.id === qid);
-  if (!q) return;
-  addToCart({ id: q.id, name: q.nome, variant: q.material || 'Ouro 18k', price: q.preco, symbol: '◈', image: q.fotos?.[0] || '' });
-};
-
-window.adicionarConjunto = function() {
-  const sugs = window._completeSuggestions || [];
-  sugs.forEach(q => adicionarPecaCompleto(q.id));
-  showToast('✦ Conjunto adicionado ao carrinho!');
-};
-
-// ── UPSELL POPUP (aparece ao adicionar ao carrinho) ──
-const _origAddToCart = window.addToCart;
-let upsellTimer;
-function mostrarUpsell(produto) {
-  const cat = (produto.categoria || produto.variant || '').toLowerCase();
-  const sugs = (window._completeSuggestions || allProducts || [])
-    .filter(q => q.id !== produto.id)
-    .slice(0, 2);
-
-  if (!sugs.length) return;
-
-  const popup = document.getElementById('upsell-popup');
-  const msg = document.getElementById('upsell-msg');
-  const productsEl = document.getElementById('upsell-products');
-  if (!popup) return;
-
-  msg.textContent = 'Combine com estas peças e complete o visual:';
-  window._upsellItems = sugs;
-  productsEl.innerHTML = sugs.map(q => `
-    <div class="upsell-item">
-      <div class="upsell-item-img">${q.fotos?.[0] ? `<img src="${q.fotos[0]}">` : '◈'}</div>
-      <div class="upsell-item-name">${q.nome}</div>
-      <div class="upsell-item-price">R$ ${Number(q.preco).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
-    </div>
-  `).join('');
-
-  popup.classList.add('show');
-  clearTimeout(upsellTimer);
-  upsellTimer = setTimeout(() => popup.classList.remove('show'), 8000);
-}
-
-window.fecharUpsell = function() {
-  document.getElementById('upsell-popup')?.classList.remove('show');
-};
-
-window.adicionarUpsell = function() {
-  (window._upsellItems || []).forEach(q => adicionarPecaCompleto(q.id));
-  fecharUpsell();
-  showToast('Peças adicionadas ao carrinho ✦');
-};
 
 // ── GALLERY ──
 window.selectThumb = function(thumb, src) {
@@ -1512,15 +1232,5 @@ function renderRelated() {
 
 loadProduct();
 </script>
-
-<!-- UPSELL POPUP -->
-<div class="upsell-popup" id="upsell-popup">
-  <button class="upsell-popup-close" onclick="fecharUpsell()">×</button>
-  <h4>✨ Combine e economize!</h4>
-  <p id="upsell-msg">Clientes que compraram este produto também levaram:</p>
-  <div class="upsell-products" id="upsell-products"></div>
-  <button class="upsell-btn" onclick="adicionarUpsell()">Adicionar ao carrinho</button>
-</div>
-
 </body>
 </html>

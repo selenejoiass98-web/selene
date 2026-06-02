@@ -345,7 +345,7 @@
   gtag('js', new Date());
   gtag('config', 'G-NB5Q5NEEG6');
 </script>
-<script src="assets/js/tracking.js"></script>
+<script src="../../assets/js/tracking.js"></script>
 </head>
 <body>
 
@@ -783,7 +783,6 @@ function render() {
             : `<div class="product-card-placeholder">${p.symbol}</div>`
           }
           ${p.badge ? `<span class="product-badge ${p.badge==='Novo'?'novo':''}">${p.badge}</span>` : ''}
-          ${p.stock > 0 && p.stock <= 5 ? `<span class="product-badge" style="background:#8B2500;color:#fff;top:auto;bottom:0.75rem;left:0.75rem;font-size:0.48rem;">🔥 Últimas ${p.stock}</span>` : ''}
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         </a>
         <div class="product-card-info">

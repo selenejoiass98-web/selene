@@ -1,21 +1,20 @@
 {
   "version": 2,
-  "name": "elenice-collection",
+  "name": "selene-joias",
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    { "source": "/api/payment", "destination": "/api/payment.js" },
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/catalogo", "destination": "/catalogo.html" },
-    { "source": "/produto", "destination": "/produto.html" },
-    { "source": "/checkout", "destination": "/checkout.html" },
-    { "source": "/rastreio", "destination": "/rastreio.html" },
-    { "source": "/sobre", "destination": "/sobre.html" },
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/admin/dashboard", "destination": "/admin/dashboard.html" },
-    { "source": "/admin/produto", "destination": "/admin/produto.html" },
-    { "source": "/admin/configuracoes", "destination": "/admin/configuracoes.html" },
-    { "source": "/admin/cupons", "destination": "/admin/cupons.html" }
+  "routes": [
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/catalogo", "dest": "/catalogo.html" },
+    { "src": "/produto", "dest": "/produto.html" },
+    { "src": "/checkout", "dest": "/checkout.html" },
+    { "src": "/rastreio", "dest": "/rastreio.html" },
+    { "src": "/sobre", "dest": "/sobre.html" },
+    { "src": "/admin", "dest": "/admin/index.html" },
+    { "src": "/admin/", "dest": "/admin/index.html" },
+    { "src": "/admin/dashboard", "dest": "/admin/dashboard.html" },
+    { "src": "/admin/produto", "dest": "/admin/produto.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [
     {

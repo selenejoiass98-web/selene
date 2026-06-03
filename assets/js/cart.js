@@ -1,15 +1,15 @@
 /* ═══════════════════════════════════════════════
-   SÉLENE JÓIAS — Cart System
+   ELENICE COLLECTION — Cart System
    ═══════════════════════════════════════════════ */
 
 const WHATSAPP_NUMBER = '5547000000000'; // ← trocar pelo número real
 const FREE_SHIPPING_THRESHOLD = 299;
 
 // ── STATE ──
-let cart = JSON.parse(localStorage.getItem('selene_cart') || '[]');
+let cart = JSON.parse(localStorage.getItem('elenice_cart') || '[]');
 
 function saveCart() {
-  localStorage.setItem('selene_cart', JSON.stringify(cart));
+  localStorage.setItem('elenice_cart', JSON.stringify(cart));
 }
 
 function getTotal() {

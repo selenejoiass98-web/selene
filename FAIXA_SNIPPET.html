@@ -1,0 +1,110 @@
+<!-- ═══════════════════════════════════════════════
+     FAIXA DE AVISOS — colar ANTES do <nav class="nav">
+     em todas as páginas da loja:
+     index.html, catalogo.html, produto.html,
+     checkout.html, sobre.html, rastreio.html
+     ═══════════════════════════════════════════════ -->
+
+<!-- 1. ESTILO DA FAIXA — colar dentro do <style> da página, ou no style.css -->
+<style>
+/* ── FAIXA DE AVISOS ── */
+.faixa-bar {
+  background: var(--brown-deep, #3D2B1A);
+  color: #fff;
+  height: 36px;
+  overflow: hidden;
+  position: relative;
+  z-index: 200;
+  width: 100%;
+}
+.faixa-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+  animation: faixaScroll 28s linear infinite;
+  will-change: transform;
+}
+.faixa-track:hover { animation-play-state: paused; }
+.faixa-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2.5rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.92;
+}
+.faixa-item::after {
+  content: '◆';
+  font-size: 0.35rem;
+  opacity: 0.4;
+  margin-left: 2.5rem;
+}
+.faixa-item:last-child::after { display: none; }
+@keyframes faixaScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Ajuste: nav fica logo abaixo da faixa */
+.nav { top: 36px !important; }
+body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
+</style>
+
+<!-- 2. HTML DA FAIXA — colar imediatamente ANTES do <nav class="nav"> -->
+<div class="faixa-bar" id="faixa-bar" style="display:none;">
+  <div class="faixa-track" id="faixa-track"></div>
+</div>
+
+<!-- 3. SCRIPT — colar antes do </body>, junto com os outros scripts Firebase -->
+<!-- ATENÇÃO: este bloco já usa o mesmo `app` e `db` inicializados na página.
+     Se a página ainda não tiver Firebase Firestore importado, adicione:
+     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+-->
+<script type="module">
+// ── Importar apenas se esta página ainda não importou Firestore ──
+// (Se já importou, remova as 3 linhas abaixo e use o `db` existente)
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const _fbCfg = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
+const _db  = getFirestore(_app);
+
+(async () => {
+  try {
+    const snap = await getDoc(doc(_db, 'configuracoes', 'loja'));
+    const faixa = snap.exists() && snap.data().faixa;
+    if (!faixa || !faixa.length) return;
+
+    const track = document.getElementById('faixa-track');
+    const bar   = document.getElementById('faixa-bar');
+    if (!track || !bar) return;
+
+    // Duplica os itens para o loop contínuo ser perfeito
+    const items = [...faixa, ...faixa];
+    track.innerHTML = items
+      .map(txt => `<span class="faixa-item">${txt}</span>`)
+      .join('');
+
+    bar.style.display = 'block';
+
+    // Ajusta velocidade proporcional ao número de itens
+    const duration = Math.max(18, faixa.length * 4);
+    track.style.animationDuration = duration + 's';
+  } catch(e) {
+    console.warn('Faixa: erro ao carregar configurações', e);
+  }
+})();
+</script>

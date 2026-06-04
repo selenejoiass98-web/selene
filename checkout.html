@@ -615,6 +615,52 @@
   .checkout-card { padding: 1.5rem; }
   .form-row.three { grid-template-columns: 1fr; }
 }
+
+/* ── FAIXA DE AVISOS ── */
+.faixa-bar {
+  background: var(--brown-deep, #3D2B1A);
+  color: #fff;
+  height: 36px;
+  overflow: hidden;
+  position: relative;
+  z-index: 200;
+  width: 100%;
+}
+.faixa-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+  animation: faixaScroll 28s linear infinite;
+  will-change: transform;
+}
+.faixa-track:hover { animation-play-state: paused; }
+.faixa-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2.5rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.92;
+}
+.faixa-item::after {
+  content: '◆';
+  font-size: 0.35rem;
+  opacity: 0.4;
+  margin-left: 2.5rem;
+}
+.faixa-item:last-child::after { display: none; }
+@keyframes faixaScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.checkout-nav { top: 36px !important; }
+body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
+
 </style>
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NB5Q5NEEG6"></script>
@@ -631,6 +677,10 @@
 <body>
 
 <!-- CHECKOUT NAV -->
+<div class="faixa-bar" id="faixa-bar" style="display:none;">
+  <div class="faixa-track" id="faixa-track"></div>
+</div>
+
 <nav class="checkout-nav">
   <div class="checkout-nav-inner">
     <a href="index.html" class="checkout-nav-logo"><img src="assets/img/logo.png" alt="Elenice Collection" style="height:36px;object-fit:contain;"></a>
@@ -1550,5 +1600,35 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const _fbCfg = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
+const _db  = getFirestore(_app);
+(async () => {
+  try {
+    const snap = await getDoc(doc(_db, 'configuracoes', 'loja'));
+    const faixa = snap.exists() && snap.data().faixa;
+    if (!faixa || !faixa.length) return;
+    const track = document.getElementById('faixa-track');
+    const bar   = document.getElementById('faixa-bar');
+    if (!track || !bar) return;
+    const items = [...faixa, ...faixa];
+    track.innerHTML = items.map(txt => `<span class="faixa-item">${txt}</span>`).join('');
+    bar.style.display = 'block';
+    track.style.animationDuration = Math.max(18, faixa.length * 4) + 's';
+  } catch(e) { console.warn('Faixa:', e); }
+})();
+</script>
+
 </body>
 </html>

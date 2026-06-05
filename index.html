@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Sélene Jóias — Joias em ouro 18k criadas para mulheres que valorizam elegância, qualidade e significado. Balneário Camboriú, SC.">
-<title>Sélene Jóias — Elegância que transforma</title>
+<meta name="description" content="Elenice Collection — Joias em ouro 18k criadas para mulheres que valorizam elegância, qualidade e significado. Balneário Camboriú, SC.">
+<title>Elenice Collection — Elegância que transforma</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
 /* ── PAGE-SPECIFIC: INDEX ── */
@@ -181,8 +181,11 @@
 /* BRAND BAR */
 .brand-bar {
   background: var(--brown-deep);
-  padding: 1.1rem 0;
+  height: 36px;
   overflow: hidden;
+  position: relative;
+  z-index: 200;
+  width: 100%;
 }
 .brand-bar-track {
   display: flex;
@@ -556,14 +559,20 @@
   .hero-stats { gap: 1.5rem; }
   .about-pillars { grid-template-columns: 1fr; }
 }
+.nav { top: 36px !important; }
 </style>
 </head>
 <body>
 
+<!-- ── BRAND BAR (dinâmica — carrega do Firebase) ── -->
+<div class="brand-bar" id="faixa-bar">
+  <div class="brand-bar-track" id="bar-track"></div>
+</div>
+
 <!-- ── NAV ── -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">Sélene Jóias</a>
+    <a href="index.html" class="nav-logo">Elenice Collection</a>
     <ul class="nav-links">
       <li><a href="catalogo.html">Coleções</a></li>
       <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
@@ -630,41 +639,6 @@
   </div>
 </section>
 
-<!-- ── BRAND BAR ── -->
-<div class="brand-bar">
-  <div class="brand-bar-track" id="bar-track">
-    <span class="brand-bar-item">Ouro 18k Certificado</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Frete Grátis acima de R$299</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Garantia de 1 Ano</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Certificado de Autenticidade</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Embalagem Especial Inclusa</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Parcele em até 12x</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Pix com 5% de Desconto</span>
-    <span class="brand-bar-dot"></span>
-    <!-- duplicado para loop contínuo -->
-    <span class="brand-bar-item">Ouro 18k Certificado</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Frete Grátis acima de R$299</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Garantia de 1 Ano</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Certificado de Autenticidade</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Embalagem Especial Inclusa</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Parcele em até 12x</span>
-    <span class="brand-bar-dot"></span>
-    <span class="brand-bar-item">Pix com 5% de Desconto</span>
-    <span class="brand-bar-dot"></span>
-  </div>
-</div>
-
 <!-- ── COLEÇÕES ── -->
 <section class="collections" id="colecoes">
   <div class="container">
@@ -721,7 +695,7 @@
       <div class="about-text reveal reveal-delay-2">
         <div class="section-tag">Nossa história</div>
         <h2 class="section-title">Feitas com<br><em>paixão</em></h2>
-        <p>A Sélene Jóias nasceu do desejo de criar peças que vão além da beleza — joias que carregam significado, que marcam momentos e que se tornam parte da história de quem as usa.</p>
+        <p>A Elenice Collection nasceu do desejo de criar peças que vão além da beleza — joias que carregam significado, que marcam momentos e que se tornam parte da história de quem as usa.</p>
         <p>Trabalhamos com ouro 18k e pedras cuidadosamente selecionadas. Cada peça passa por um rigoroso processo do design ao acabamento final, garantindo qualidade e exclusividade.</p>
         <a href="sobre.html" class="btn btn-ghost" style="margin-top:0.5rem;">Conhecer nossa história</a>
         <div class="about-pillars">
@@ -817,7 +791,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="logo">Sélene Jóias</div>
+        <div class="logo">Elenice Collection</div>
         <div class="tagline">Elegância que transforma</div>
         <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado. Baseada em Balneário Camboriú, entregamos para todo o Brasil.</p>
       </div>
@@ -854,7 +828,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
+      <p>© 2025 Elenice Collection. Todos os direitos reservados.</p>
       <div class="social-links">
         <a class="social-link" href="#" title="Instagram">ig</a>
         <a class="social-link" href="#" title="Facebook">fb</a>
@@ -999,6 +973,39 @@ window.subscribeNewsletter = function() {
 };
 
 renderProducts();
+</script>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const _fbCfg = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
+const _db  = getFirestore(_app);
+(async () => {
+  try {
+    const snap = await getDoc(doc(_db, 'configuracoes', 'loja'));
+    const faixa = snap.exists() && snap.data().faixa;
+    const track = document.getElementById('bar-track');
+    if (!track) return;
+    // Se Firebase tiver itens, usa; senão mantém os padrões
+    const itens = (faixa && faixa.length)
+      ? faixa
+      : ['Ouro 18k Certificado','Frete Grátis acima de R$299','Garantia de 1 Ano','Parcele em até 12x','Pix com 5% de Desconto'];
+    // Duplica para loop contínuo
+    const todos = [...itens, ...itens];
+    track.innerHTML = todos.map((txt, i) =>
+      `<span class="brand-bar-item">${txt}</span><span class="brand-bar-dot"></span>`
+    ).join('');
+    track.style.animationDuration = Math.max(18, itens.length * 4) + 's';
+  } catch(e) { console.warn('Faixa:', e); }
+})();
 </script>
 </body>
 </html>

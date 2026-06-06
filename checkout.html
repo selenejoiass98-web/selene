@@ -1356,12 +1356,14 @@ const MP_PUBLIC_KEY = 'APP_USR-35df1778-8cf4-4a1a-98de-92e9d8b5f4e7';
 
 // Calcula total final com descontos
 function calcularTotalFinal() {
-  const subtotal = getTotal();
+  const subtotal = parseFloat(getTotal()) || 0;
+  const shipping = parseFloat(shippingCost) || 0;
   const pixDisc = selectedPayment === 'pix' ? subtotal * 0.05 : 0;
   const couponDisc = couponType === 'fixo'
     ? Math.min(couponDiscountFixed, subtotal)
     : subtotal * (couponDiscount / 100);
-  return Math.max(0, subtotal - pixDisc - couponDisc + shippingCost);
+  const total = Math.max(0.01, subtotal - pixDisc - couponDisc + shipping);
+  return parseFloat(total.toFixed(2));
 }
 
 function copiarPix() {

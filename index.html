@@ -928,12 +928,14 @@ async function renderProducts() {
       return;
     }
 
+    const fmt = v => Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
     grid.innerHTML = produtos.map(p => {
       const preco       = Number(p.preco);
       const precoOrig   = p.precoOriginal ? Number(p.precoOriginal) : null;
-      const parcela     = (preco / 12).toLocaleString('pt-BR', {minimumFractionDigits:2});
-      const precoFmt    = preco.toLocaleString('pt-BR', {minimumFractionDigits:2});
-      const origFmt     = precoOrig ? precoOrig.toLocaleString('pt-BR', {minimumFractionDigits:2}) : '';
+      const parcela     = fmt(preco / 12);
+      const precoFmt    = fmt(preco);
+      const origFmt     = precoOrig ? fmt(precoOrig) : '';
       const descPct     = precoOrig ? Math.round((1 - preco/precoOrig)*100) : 0;
       const cartPayload = `{id:'${p.id}',name:'${p.nome.replace(/'/g,"\\'")}',variant:'${(p.material||'Ouro 18k').replace(/'/g,"\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0]||''}'}`;
 
@@ -956,16 +958,16 @@ async function renderProducts() {
           <a href="produto.html?id=${p.id}">
             <div class="product-name">${p.nome}</div>
           </a>
-          <div class="product-price-row">
-            <div class="product-price-block">
-              <span class="product-price-installment">12× de <strong>R$ ${parcela}</strong></span>
-              <span class="product-price-avista">ou <strong>R$ ${precoFmt}</strong> à vista</span>
-              ${precoOrig ? `<span class="product-old-price">era R$ ${origFmt}</span>` : ''}
-            </div>
-            <button class="product-add-btn"
-              onclick="event.stopPropagation();addToCart(${cartPayload})"
-              title="Adicionar ao carrinho">+</button>
+          <div class="product-price-block">
+            ${precoOrig ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
+            <span class="product-price-main">R$ ${precoFmt}</span>
+            <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
           </div>
+          <button class="product-add-btn"
+            onclick="event.stopPropagation();addToCart(${cartPayload})"
+            title="Adicionar ao carrinho">
+            Adicionar ao carrinho
+          </button>
         </div>
       </div>`;
     }).join('');

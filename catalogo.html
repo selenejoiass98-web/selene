@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Catálogo Sélene Jóias — Explore nossa coleção completa de joias em ouro 18k. Anéis, colares, pulseiras e brincos.">
-<title>Coleção — Sélene Jóias</title>
+<meta name="description" content="Catálogo Elenice Collection — Explore nossa coleção completa de joias em ouro 18k. Anéis, colares, pulseiras e brincos.">
+<title>Coleção — Elenice Collection</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
 /* ── CATALOG PAGE ── */
@@ -379,21 +379,20 @@
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-.nav { top: 36px !important; }
-body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
+.nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
 
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
 <div class="faixa-bar" id="faixa-bar" style="display:none;">
   <div class="faixa-track" id="faixa-track"></div>
 </div>
 
+<!-- ── NAV ── -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">Sélene Jóias</a>
+    <a href="index.html" class="nav-logo">Elenice Collection</a>
     <ul class="nav-links">
       <li><a href="catalogo.html" style="color:var(--gold);">Coleções</a></li>
       <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
@@ -535,7 +534,7 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="logo">Sélene Jóias</div>
+        <div class="logo">Elenice Collection</div>
         <div class="tagline">Elegância que transforma</div>
         <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
       </div>
@@ -561,13 +560,13 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
         <h4>Contato</h4>
         <ul>
           <li>📱 (47) 99999-9999</li>
-          <li>✉ contato@selenejoias.com.br</li>
+          <li>✉ contato@elenicecollection.com.br</li>
           <li>📍 Balneário Camboriú, SC</li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
+      <p>© 2025 Elenice Collection. Todos os direitos reservados.</p>
       <div class="social-links">
         <a class="social-link" href="#">ig</a>
         <a class="social-link" href="#">fb</a>
@@ -642,6 +641,20 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
 </div>
 
 <script src="assets/js/cart.js"></script>
+<script>
+(function() {
+  const nav   = document.querySelector('.nav');
+  const faixa = document.getElementById('faixa-bar');
+  if (!nav || !faixa) return;
+  const faixaH = 36;
+  function updateNav() {
+    const remaining = Math.max(0, faixaH - window.scrollY);
+    nav.style.top = remaining + 'px';
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs }
@@ -816,34 +829,39 @@ function render() {
         <button class="btn btn-outline" onclick="clearFilters()">Limpar filtros</button>
       </div>`;
   } else {
-    grid.innerHTML = paginated.map(p => `
+    const fmt = v => Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    grid.innerHTML = paginated.map(p => {
+      const parcela  = fmt(p.price / 12);
+      const precoFmt = fmt(p.price);
+      const origFmt  = p.oldPrice ? fmt(p.oldPrice) : '';
+      const descPct  = p.oldPrice ? Math.round((1 - p.price/p.oldPrice)*100) : 0;
+      const cartPayload = `{id:'${p.id}',name:'${p.name.replace(/'/g,"\\'")}',variant:'${p.variant.replace(/'/g,"\\'")}',price:${p.price},symbol:'${p.symbol}',image:'${p.fotos[0]||''}'}`;
+      return `
       <div class="product-card reveal">
         <a href="produto.html?id=${p.id}" class="product-card-img">
           ${p.fotos.length > 0
-            ? `<img src="${p.fotos[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;">`
+            ? `<img src="${p.fotos[0]}" alt="${p.name}" loading="lazy">`
             : `<div class="product-card-placeholder">${p.symbol}</div>`
           }
-          ${p.badge ? `<span class="product-badge ${p.badge==='Novo'?'novo':''}">${p.badge}</span>` : ''}
+          ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
+          ${descPct >= 5 ? `<span class="product-badge off">−${descPct}%</span>` : ''}
+          <div class="product-card-overlay">
+            <span class="product-overlay-btn">Ver produto →</span>
+          </div>
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         </a>
         <div class="product-card-info">
           <div class="product-cat">${p.catLabel}</div>
           <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
-          <div class="product-price-row">
-            <div>
-              <span class="product-price">R$ ${p.price.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
-              ${p.oldPrice ? `<span class="product-old-price">R$ ${p.oldPrice.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>` : ''}
-            </div>
-            <button class="product-add-btn"
-              onclick="addToCart({id:'${p.id}',name:'${p.name}',variant:'${p.variant}',price:${p.price},symbol:'${p.symbol}',image:'${p.fotos[0]||''}'})"
-              title="Adicionar ao carrinho">+</button>
+          <div class="product-price-block">
+            ${p.oldPrice ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
+            <span class="product-price-main">R$ ${precoFmt}</span>
+            <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
           </div>
-          <div style="font-size:0.62rem;color:var(--text-soft);margin-top:0.3rem;letter-spacing:0.05em;">
-            ou 12× de R$ ${(p.price/12).toLocaleString('pt-BR',{minimumFractionDigits:2})}
-          </div>
+          <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cartPayload})" title="Adicionar ao carrinho">Adicionar ao carrinho</button>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
   }
 
   // Pagination

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Produto — Sélene Jóias</title>
+<title>Produto — Elenice Collection</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
 /* ── PRODUCT PAGE ── */
@@ -580,6 +580,43 @@
   .reviews-summary { flex-direction: column; gap: 1.5rem; }
   .spec-grid { grid-template-columns: 1fr; }
 }
+
+/* ── FAIXA DE AVISOS ── */
+.faixa-bar {
+  background: var(--brown-deep);
+  height: 36px;
+  overflow: hidden;
+  position: relative;
+  z-index: 200;
+  width: 100%;
+}
+.faixa-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+  animation: faixaScroll 28s linear infinite;
+  will-change: transform;
+}
+.faixa-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(224,206,187,0.85);
+}
+.faixa-item::after { content: '◆'; font-size: 0.35rem; opacity: 0.4; margin-left: 2.5rem; }
+.faixa-item:last-child::after { display: none; }
+@keyframes faixaScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
 </style>
 </head>
 <body>
@@ -587,7 +624,7 @@
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">Sélene Jóias</a>
+    <a href="index.html" class="nav-logo">Elenice Collection</a>
     <ul class="nav-links">
       <li><a href="catalogo.html">Coleções</a></li>
       <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
@@ -751,9 +788,9 @@
       <!-- DESCRIÇÃO -->
       <div class="tab-content active" id="tab-descricao">
         <div class="tab-desc">
-          <p>O <strong>Colar Lua Dourada</strong> é uma das peças mais especiais da Sélene Jóias. O disco em ouro 18k maciço captura a luz de um jeito único — delicado durante o dia, marcante à noite.</p>
+          <p>O <strong>Colar Lua Dourada</strong> é uma das peças mais especiais da Elenice Collection. O disco em ouro 18k maciço captura a luz de um jeito único — delicado durante o dia, marcante à noite.</p>
           <p>Inspirado na serenidade e na força da lua cheia, este colar foi criado para mulheres que carregam sua elegância com leveza. O acabamento polido reflete cada detalhe com precisão, enquanto a corrente veneziana fina garante conforto durante o uso prolongado.</p>
-          <p>Cada peça é produzida artesanalmente e acompanha certificado de autenticidade do ouro e embalagem exclusiva Sélene Jóias — perfeita como presente.</p>
+          <p>Cada peça é produzida artesanalmente e acompanha certificado de autenticidade do ouro e embalagem exclusiva Elenice Collection — perfeita como presente.</p>
         </div>
       </div>
 
@@ -891,7 +928,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="logo">Sélene Jóias</div>
+        <div class="logo">Elenice Collection</div>
         <div class="tagline">Elegância que transforma</div>
         <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
       </div>
@@ -917,13 +954,13 @@
         <h4>Contato</h4>
         <ul>
           <li>📱 (47) 99999-9999</li>
-          <li>✉ contato@selenejoias.com.br</li>
+          <li>✉ contato@elenicecollection.com.br</li>
           <li>📍 Balneário Camboriú, SC</li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Sélene Jóias. Todos os direitos reservados.</p>
+      <p>© 2025 Elenice Collection. Todos os direitos reservados.</p>
       <div class="social-links">
         <a class="social-link" href="#">ig</a>
         <a class="social-link" href="#">fb</a>
@@ -973,6 +1010,20 @@
 </div>
 
 <script src="assets/js/cart.js"></script>
+<script>
+(function() {
+  const nav   = document.querySelector('.nav');
+  const faixa = document.getElementById('faixa-bar');
+  if (!nav || !faixa) return;
+  const faixaH = 36;
+  function updateNav() {
+    const remaining = Math.max(0, faixaH - window.scrollY);
+    nav.style.top = remaining + 'px';
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs }
@@ -1040,7 +1091,7 @@ function renderProduct() {
   const badge = p.badge || null;
 
   // Meta
-  document.title = `${nome} — Sélene Jóias`;
+  document.title = `${nome} — Elenice Collection`;
   document.getElementById('breadcrumb-cat').textContent = cat;
   document.getElementById('breadcrumb-name').textContent = nome;
   document.getElementById('info-cat').innerHTML =
@@ -1177,7 +1228,7 @@ window.toggleWishlist = function(btn) {
 // ── SHARE ──
 window.shareProduct = function() {
   if (navigator.share) {
-    navigator.share({ title: currentProduct?.nome, text: 'Olha essa joia linda da Sélene Jóias!', url: window.location.href });
+    navigator.share({ title: currentProduct?.nome, text: 'Olha essa joia linda da Elenice Collection!', url: window.location.href });
   } else {
     navigator.clipboard.writeText(window.location.href);
     showToast('Link copiado!');
@@ -1222,6 +1273,35 @@ function renderRelated() {
 }
 
 loadProduct();
+</script>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const _fbCfg = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
+const _db  = getFirestore(_app);
+(async () => {
+  try {
+    const snap = await getDoc(doc(_db, 'configuracoes', 'loja'));
+    const faixa = snap.exists() && snap.data().faixa;
+    if (!faixa || !faixa.length) return;
+    const track = document.getElementById('faixa-track');
+    const bar   = document.getElementById('faixa-bar');
+    if (!track || !bar) return;
+    const items = [...faixa, ...faixa];
+    track.innerHTML = items.map(txt => `<span class="faixa-item">${txt}</span>`).join('');
+    bar.style.display = 'block';
+    track.style.animationDuration = Math.max(18, faixa.length * 4) + 's';
+  } catch(e) { console.warn('Faixa:', e); }
+})();
 </script>
 </body>
 </html>

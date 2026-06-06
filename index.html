@@ -928,31 +928,47 @@ async function renderProducts() {
       return;
     }
 
-    grid.innerHTML = produtos.map(p => `
+    grid.innerHTML = produtos.map(p => {
+      const preco       = Number(p.preco);
+      const precoOrig   = p.precoOriginal ? Number(p.precoOriginal) : null;
+      const parcela     = (preco / 12).toLocaleString('pt-BR', {minimumFractionDigits:2});
+      const precoFmt    = preco.toLocaleString('pt-BR', {minimumFractionDigits:2});
+      const origFmt     = precoOrig ? precoOrig.toLocaleString('pt-BR', {minimumFractionDigits:2}) : '';
+      const descPct     = precoOrig ? Math.round((1 - preco/precoOrig)*100) : 0;
+      const cartPayload = `{id:'${p.id}',name:'${p.nome.replace(/'/g,"\\'")}',variant:'${(p.material||'Ouro 18k').replace(/'/g,"\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0]||''}'}`;
+
+      return `
       <div class="product-card">
         <a href="produto.html?id=${p.id}" class="product-card-img">
           ${p.fotos?.[0]
-            ? `<img src="${p.fotos[0]}" alt="${p.nome}" style="width:100%;height:100%;object-fit:cover;">`
+            ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy">`
             : `<div class="product-card-placeholder">◈</div>`
           }
-          ${p.badge ? `<span class="product-badge ${p.badge==='Novo'?'novo':''}">${p.badge}</span>` : ''}
+          ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
+          ${descPct >= 5 ? `<span class="product-badge off">−${descPct}%</span>` : ''}
+          <div class="product-card-overlay">
+            <span class="product-overlay-btn">Ver produto →</span>
+          </div>
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         </a>
         <div class="product-card-info">
-          <div class="product-cat">${p.categoria || ''}</div>
-          <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
+          <div class="product-cat">${p.categoria || 'Joia'}</div>
+          <a href="produto.html?id=${p.id}">
+            <div class="product-name">${p.nome}</div>
+          </a>
           <div class="product-price-row">
-            <div>
-              <span class="product-price">R$ ${Number(p.preco).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
-              ${p.precoOriginal ? `<span class="product-old-price">R$ ${Number(p.precoOriginal).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>` : ''}
+            <div class="product-price-block">
+              <span class="product-price-installment">12× de <strong>R$ ${parcela}</strong></span>
+              <span class="product-price-avista">ou <strong>R$ ${precoFmt}</strong> à vista</span>
+              ${precoOrig ? `<span class="product-old-price">era R$ ${origFmt}</span>` : ''}
             </div>
             <button class="product-add-btn"
-              onclick="addToCart({id:'${p.id}',name:'${p.nome}',variant:'${p.material||'Ouro 18k'}',price:${p.preco},symbol:'◈',image:'${p.fotos?.[0]||''}'})"
+              onclick="event.stopPropagation();addToCart(${cartPayload})"
               title="Adicionar ao carrinho">+</button>
           </div>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
 
   } catch(e) {
     console.error(e);

@@ -669,7 +669,6 @@
   gtag('js', new Date());
   gtag('config', 'G-NB5Q5NEEG6');
 </script>
-<script src="assets/js/tracking.js"></script>
 <!-- Mercado Pago SDK -->
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
@@ -682,7 +681,7 @@
 
 <nav class="checkout-nav">
   <div class="checkout-nav-inner">
-    <a href="index.html" class="checkout-nav-logo"><img src="assets/img/logo.png" alt="Elenice Collection" style="height:36px;object-fit:contain;"></a>
+    <a href="index.html" class="checkout-nav-logo">Elenice Collection</a>
     <div class="checkout-steps">
       <div class="checkout-step done">
         <div class="step-num">✓</div>
@@ -1331,17 +1330,23 @@ function validateForm() {
     { id:'numero', check: v => v.length >= 1, msg:'Campo obrigatório' },
     { id:'cidade', check: v => v.length >= 2, msg:'Campo obrigatório' },
   ];
+  let firstError = null;
   fields.forEach(f => {
     const el = document.getElementById(f.id);
     if (!el) return;
     if (!f.check(el.value.trim())) {
       showFieldError(f.id, f.msg);
+      if (!firstError) firstError = el;
       valid = false;
     } else clearFieldError(f.id);
   });
   if (!selectedShipping) {
-    showToast('Selecione uma opção de frete');
+    showToast('Selecione uma opção de frete antes de continuar');
     valid = false;
+  }
+  if (firstError) {
+    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => firstError.focus(), 400);
   }
   return valid;
 }

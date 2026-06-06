@@ -963,11 +963,7 @@ async function renderProducts() {
             <span class="product-price-main">R$ ${precoFmt}</span>
             <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
           </div>
-          <button class="product-add-btn"
-            onclick="event.stopPropagation();addToCart(${cartPayload})"
-            title="Adicionar ao carrinho">
-            Adicionar ao carrinho
-          </button>
+          <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cartPayload})" title="Adicionar ao carrinho">Adicionar ao carrinho</button>
         </div>
       </div>`;
     }).join('');

@@ -1390,8 +1390,6 @@ async function salvarPedidoFirebase(orderNum, paymentData) {
 
 // ── EMAIL BREVO ──
 async function enviarEmailConfirmacao(orderNum, nome, email, itens, total, frete, pagamento) {
-  const BREVO_KEY = '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';
-
   const itensHtml = itens.map(i => `
     <tr>
       <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#2A1F14;">${i.name} (${i.variant})</td>
@@ -1476,16 +1474,12 @@ async function enviarEmailConfirmacao(orderNum, nome, email, itens, total, frete
 </html>`;
 
   try {
-    await fetch('https://api.brevo.com/v3/smtp/email', {
+    await fetch('/api/email', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': BREVO_KEY,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender: { name: 'Elenice Collection', email: 'contato@elenicecollection.com.br' },
-        to: [{ email, name: nome }],
-        bcc: [{ email: 'contato@elenicecollection.com.br', name: 'Elenice Collection' }],
+        to: email,
+        toName: nome,
         subject: `Pedido confirmado ${orderNum} — Elenice Collection`,
         htmlContent: htmlEmail,
       })

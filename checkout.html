@@ -658,8 +658,7 @@
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-.checkout-nav { top: 36px !important; }
-body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
+.checkout-nav { top: 36px; transition: top 0.2s ease; }
 
 </style>
 <!-- Google Analytics 4 -->
@@ -670,7 +669,6 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
   gtag('js', new Date());
   gtag('config', 'G-NB5Q5NEEG6');
 </script>
-<script src="assets/js/tracking.js"></script>
 <!-- Mercado Pago SDK -->
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
@@ -683,7 +681,7 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
 
 <nav class="checkout-nav">
   <div class="checkout-nav-inner">
-    <a href="index.html" class="checkout-nav-logo"><img src="assets/img/logo.png" alt="Elenice Collection" style="height:36px;object-fit:contain;"></a>
+    <a href="index.html" class="checkout-nav-logo">Elenice Collection</a>
     <div class="checkout-steps">
       <div class="checkout-step done">
         <div class="step-num">✓</div>
@@ -980,6 +978,18 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
 </div>
 
 <script src="assets/js/cart.js"></script>
+<script>
+(function() {
+  const nav = document.querySelector('.checkout-nav');
+  if (!nav) return;
+  const faixaH = 36;
+  function updateNav() {
+    nav.style.top = Math.max(0, faixaH - window.scrollY) + 'px';
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+</script>
 
 <!-- Firebase para validar cupons -->
 <script type="module">
@@ -1387,123 +1397,22 @@ async function salvarPedidoFirebase(orderNum, paymentData) {
   } catch(e) { console.error('Erro ao salvar pedido:', e); }
 }
 
-
-// ── EMAIL BREVO ──
-async function enviarEmailConfirmacao(orderNum, nome, email, itens, total, frete, pagamento) {
-  const itensHtml = itens.map(i => `
-    <tr>
-      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#2A1F14;">${i.name} (${i.variant})</td>
-      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#2A1F14;text-align:center;">${i.qty}</td>
-      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#7C5C35;text-align:right;font-family:Georgia,serif;">R$ ${(i.price*i.qty).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
-    </tr>`).join('');
-
-  const metodoPag = { pix: 'Pix (5% de desconto)', cartao: 'Cartão de Crédito', boleto: 'Boleto Bancário' }[pagamento] || pagamento;
-
-  const htmlEmail = `
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#F5F0EA;font-family:'Helvetica Neue',Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0EA;padding:40px 20px;">
-    <tr><td align="center">
-      <table width="560" cellpadding="0" cellspacing="0" style="background:#FEFCF9;border:1px solid #E0CEBB;max-width:560px;width:100%;">
-        <!-- Header -->
-        <tr>
-          <td style="background:#3D2B1A;padding:32px 40px;text-align:center;">
-            <p style="margin:0;font-family:Georgia,serif;font-size:22px;font-weight:300;letter-spacing:8px;color:#C4A47A;text-transform:uppercase;">Elenice Collection</p>
-          </td>
-        </tr>
-        <!-- Body -->
-        <tr>
-          <td style="padding:40px 40px 32px;">
-            <h1 style="font-family:Georgia,serif;font-size:26px;font-weight:300;color:#3D2B1A;margin:0 0 8px;">Pedido confirmado ✦</h1>
-            <p style="font-size:14px;color:#5A4030;margin:0 0 24px;">Olá, <strong>${nome.split(' ')[0]}</strong>! Obrigada pela sua compra.</p>
-
-            <div style="background:#F5F0EA;border:1px solid #E0CEBB;padding:16px 20px;margin-bottom:28px;text-align:center;">
-              <p style="margin:0;font-size:12px;color:#9C8070;letter-spacing:2px;text-transform:uppercase;">Número do pedido</p>
-              <p style="margin:4px 0 0;font-family:Georgia,serif;font-size:22px;color:#7C5C35;">${orderNum}</p>
-            </div>
-
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
-              <tr>
-                <th style="text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9C8070;padding-bottom:12px;border-bottom:2px solid #E0CEBB;">Produto</th>
-                <th style="text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9C8070;padding-bottom:12px;border-bottom:2px solid #E0CEBB;">Qtd</th>
-                <th style="text-align:right;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9C8070;padding-bottom:12px;border-bottom:2px solid #E0CEBB;">Valor</th>
-              </tr>
-              ${itensHtml}
-            </table>
-
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
-              <tr>
-                <td style="font-size:13px;color:#9C8070;padding:4px 0;">Frete (${frete.nome})</td>
-                <td style="font-size:13px;color:#2A1F14;text-align:right;padding:4px 0;">${frete.preco === 0 ? 'Grátis' : 'R$ ' + frete.preco.toFixed(2).replace('.',',')}</td>
-              </tr>
-              <tr>
-                <td style="font-size:13px;color:#9C8070;padding:4px 0;">Forma de pagamento</td>
-                <td style="font-size:13px;color:#2A1F14;text-align:right;padding:4px 0;">${metodoPag}</td>
-              </tr>
-              <tr>
-                <td style="font-family:Georgia,serif;font-size:16px;color:#3D2B1A;padding-top:12px;border-top:1px solid #E0CEBB;">Total</td>
-                <td style="font-family:Georgia,serif;font-size:20px;color:#7C5C35;text-align:right;padding-top:12px;border-top:1px solid #E0CEBB;">R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
-              </tr>
-            </table>
-
-            <div style="background:#F5F0EA;border-left:3px solid #C4A47A;padding:16px 20px;margin-bottom:28px;">
-              <p style="margin:0;font-size:13px;color:#5A4030;line-height:1.7;">
-                📦 Sua joia será preparada com todo cuidado e enviada em embalagem especial.<br>
-                📧 Você receberá o código de rastreio assim que o pedido for despachado.
-              </p>
-            </div>
-
-            <p style="font-size:13px;color:#9C8070;margin:0;">Dúvidas? Fale com a gente:<br>
-              <a href="mailto:contato@elenicecollection.com.br" style="color:#7C5C35;">contato@elenicecollection.com.br</a>
-            </p>
-          </td>
-        </tr>
-        <!-- Footer -->
-        <tr>
-          <td style="background:#F5F0EA;padding:24px 40px;text-align:center;border-top:1px solid #E0CEBB;">
-            <p style="margin:0;font-size:11px;color:#9C8070;letter-spacing:1px;">© 2025 Elenice Collection • Joias em Ouro 18k</p>
-            <p style="margin:4px 0 0;font-size:11px;color:#C4A47A;letter-spacing:1px;">elenicecollection.com.br</p>
-          </td>
-        </tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
-
-  try {
-    await fetch('/api/email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: email,
-        toName: nome,
-        subject: `Pedido confirmado ${orderNum} — Elenice Collection`,
-        htmlContent: htmlEmail,
-      })
-    });
-    console.log('E-mail de confirmação enviado para', email);
-  } catch(e) {
-    console.warn('Erro ao enviar e-mail:', e);
-  }
-}
-
 function mostrarSucesso(orderNum) {
   const nome  = document.getElementById('nome').value;
   const email = document.getElementById('email').value;
   document.getElementById('success-name').textContent = nome.split(' ')[0];
   document.getElementById('success-order-num').textContent = orderNum;
   document.getElementById('success-overlay').classList.add('open');
-  // Enviar e-mail de confirmação via Brevo
-  enviarEmailConfirmacao(
-    orderNum, nome, email,
-    cart.map(i => ({ name: i.name, variant: i.variant, price: i.price, qty: i.qty })),
-    calcularTotalFinal(),
-    selectedShipping || { nome: 'A definir', preco: 0 },
-    selectedPayment
-  );
+  // Boleto já enviou e-mail específico — enviar genérico só para pix e cartão
+  if (selectedPayment !== 'boleto') {
+    enviarEmailConfirmacao(
+      orderNum, nome, email,
+      cart.map(i => ({ name: i.name, variant: i.variant, price: i.price, qty: i.qty })),
+      calcularTotalFinal(),
+      selectedShipping || { nome: 'A definir', preco: 0 },
+      selectedPayment
+    );
+  }
   cart = []; saveCart(); updateCartUI();
 }
 
@@ -1548,23 +1457,22 @@ async function finalizarPedido() {
 }
 
 async function processarPix(orderNum, total, nome, email, cpf) {
-  const res = await fetch('https://api.mercadopago.com/v1/payments', {
+  const res = await fetch('/api/payment', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer APP_USR-3269223910858397-052414-411fa144fa12607f57dd789855356590-3125094936',
-      'X-Idempotency-Key': orderNum + '-pix',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      transaction_amount: total,
-      description: 'Elenice Collection — Pedido ' + orderNum,
-      payment_method_id: 'pix',
-      payer: { email, first_name: nome.split(' ')[0], last_name: nome.split(' ').slice(1).join(' ') || '-',
-        identification: { type: 'CPF', number: cpf } },
+      idempotencyKey: orderNum + '-pix',
+      body: {
+        transaction_amount: parseFloat(total.toFixed(2)),
+        description: 'Elenice Collection — Pedido ' + orderNum,
+        payment_method_id: 'pix',
+        payer: { email, first_name: nome.split(' ')[0], last_name: nome.split(' ').slice(1).join(' ') || '-',
+          identification: { type: 'CPF', number: cpf } },
+      }
     })
   });
   const data = await res.json();
-  if (data.error) throw new Error(data.error);
+  if (!res.ok || data.error) throw new Error(data.message || data.error || 'Erro ao gerar Pix');
 
   // Mostra QR Code
   const qrCode = data.point_of_interaction?.transaction_data?.qr_code;
@@ -1595,24 +1503,23 @@ async function processarCartao(orderNum, total, nome, email, cpf) {
     return;
   }
   const installments = parseInt(document.getElementById('installment-select')?.value || '1');
-  const res = await fetch('https://api.mercadopago.com/v1/payments', {
+  const res = await fetch('/api/payment', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer APP_USR-3269223910858397-052414-411fa144fa12607f57dd789855356590-3125094936',
-      'X-Idempotency-Key': orderNum + '-card',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      transaction_amount: total,
-      token,
-      description: 'Elenice Collection — Pedido ' + orderNum,
-      installments,
-      payment_method_id: window._mpPaymentMethodId || 'visa',
-      payer: { email, identification: { type: 'CPF', number: cpf } },
+      idempotencyKey: orderNum + '-card',
+      body: {
+        transaction_amount: parseFloat(total.toFixed(2)),
+        token,
+        description: 'Elenice Collection — Pedido ' + orderNum,
+        installments,
+        payment_method_id: window._mpPaymentMethodId || 'visa',
+        payer: { email, identification: { type: 'CPF', number: cpf } },
+      }
     })
   });
   const data = await res.json();
-  if (data.error) throw new Error(data.message || data.error);
+  if (!res.ok || data.error) throw new Error(data.message || data.error || 'Erro no cartão');
 
   await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'cartao' });
 
@@ -1635,28 +1542,27 @@ async function processarBoleto(orderNum, total, nome, email, cpf) {
     city: document.getElementById('cidade').value,
     federal_unit: document.getElementById('estado').value,
   };
-  const res = await fetch('https://api.mercadopago.com/v1/payments', {
+  const res = await fetch('/api/payment', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer APP_USR-3269223910858397-052414-411fa144fa12607f57dd789855356590-3125094936',
-      'X-Idempotency-Key': orderNum + '-boleto',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      transaction_amount: total,
-      description: 'Elenice Collection — Pedido ' + orderNum,
-      payment_method_id: 'bolbradesco',
-      payer: {
-        email,
-        first_name: nome.split(' ')[0],
-        last_name: nome.split(' ').slice(1).join(' ') || '-',
-        identification: { type: 'CPF', number: cpf },
-        address: endereco,
-      },
+      idempotencyKey: orderNum + '-boleto',
+      body: {
+        transaction_amount: parseFloat(total.toFixed(2)),
+        description: 'Elenice Collection — Pedido ' + orderNum,
+        payment_method_id: 'bolbradesco',
+        payer: {
+          email,
+          first_name: nome.split(' ')[0],
+          last_name: nome.split(' ').slice(1).join(' ') || '-',
+          identification: { type: 'CPF', number: cpf },
+          address: endereco,
+        },
+      }
     })
   });
   const data = await res.json();
-  if (data.error) throw new Error(data.error);
+  if (!res.ok || data.error) throw new Error(data.message || data.error || 'Erro ao gerar boleto');
 
   const boletoUrl = data.transaction_details?.external_resource_url;
   if (boletoUrl) {
@@ -1666,7 +1572,119 @@ async function processarBoleto(orderNum, total, nome, email, cpf) {
   }
 
   await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'boleto', url: boletoUrl });
+
+  // E-mail específico de boleto com urgência
+  await enviarEmailBoleto(orderNum, nome, email, total, boletoUrl,
+    cart.map(i => ({ name: i.name, variant: i.variant, price: i.price, qty: i.qty })),
+    selectedShipping || { nome: 'A definir', preco: 0 }
+  );
+
   mostrarSucesso(orderNum);
+}
+
+async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens, frete) {
+  // Calcular vencimento (3 dias úteis)
+  const venc = new Date();
+  let diasUteis = 0;
+  while (diasUteis < 3) {
+    venc.setDate(venc.getDate() + 1);
+    if (venc.getDay() !== 0 && venc.getDay() !== 6) diasUteis++;
+  }
+  const vencStr = venc.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  const itensHtml = itens.map(i => `
+    <tr>
+      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#2A1F14;">${i.name} (${i.variant})</td>
+      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#2A1F14;text-align:center;">${i.qty}</td>
+      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#7C5C35;text-align:right;font-family:Georgia,serif;">R$ ${(i.price*i.qty).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+    </tr>`).join('');
+
+  const htmlBoleto = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F5F0EA;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0EA;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#FEFCF9;border:1px solid #E0CEBB;max-width:560px;width:100%;">
+        <tr>
+          <td style="background:#3D2B1A;padding:32px 40px;text-align:center;">
+            <p style="margin:0;font-family:Georgia,serif;font-size:22px;font-weight:300;letter-spacing:8px;color:#C4A47A;text-transform:uppercase;">Elenice Collection</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:40px 40px 32px;">
+            <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:300;color:#3D2B1A;margin:0 0 8px;">Seu boleto está pronto! 📄</h1>
+            <p style="font-size:14px;color:#5A4030;margin:0 0 24px;">Olá, <strong>${nome.split(' ')[0]}</strong>! Seu pedido foi registrado. Agora é só pagar o boleto para confirmarmos o envio.</p>
+
+            <div style="background:#FFF8E7;border:2px solid #F6A800;padding:20px 24px;margin-bottom:28px;text-align:center;border-radius:4px;">
+              <p style="margin:0 0 4px;font-size:13px;color:#7A5500;font-weight:600;letter-spacing:1px;text-transform:uppercase;">⚠️ Atenção — Prazo de pagamento</p>
+              <p style="margin:0;font-family:Georgia,serif;font-size:26px;color:#7A5500;">Vence em ${vencStr}</p>
+              <p style="margin:6px 0 0;font-size:12px;color:#9A7000;">Após o vencimento, o pedido será cancelado automaticamente.</p>
+            </div>
+
+            <div style="text-align:center;margin-bottom:28px;">
+              <p style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#7C5C35;margin:0 0 4px;">R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2})}</p>
+              <p style="font-size:12px;color:#9C8070;margin:0;">Valor total do pedido ${orderNum}</p>
+            </div>
+
+            ${boletoUrl ? `
+            <div style="text-align:center;margin-bottom:28px;">
+              <a href="${boletoUrl}" target="_blank"
+                style="display:inline-block;background:#3D2B1A;color:#C4A47A;font-family:Georgia,serif;font-size:16px;letter-spacing:2px;padding:16px 40px;text-decoration:none;font-weight:300;">
+                📄 PAGAR BOLETO AGORA
+              </a>
+              <p style="font-size:12px;color:#9C8070;margin:12px 0 0;">Clique no botão acima ou copie o link no seu banco</p>
+            </div>` : ''}
+
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+              <tr>
+                <th style="text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9C8070;padding-bottom:12px;border-bottom:2px solid #E0CEBB;">Produto</th>
+                <th style="text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9C8070;padding-bottom:12px;border-bottom:2px solid #E0CEBB;">Qtd</th>
+                <th style="text-align:right;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9C8070;padding-bottom:12px;border-bottom:2px solid #E0CEBB;">Valor</th>
+              </tr>
+              ${itensHtml}
+            </table>
+
+            <div style="background:#F0F9F4;border-left:3px solid #2D6A4F;padding:16px 20px;margin-bottom:28px;">
+              <p style="margin:0;font-size:13px;color:#1A4731;line-height:1.8;">
+                ✅ <strong>Compensação em 1-2 dias úteis</strong> após o pagamento<br>
+                📦 Envio imediato após confirmação do pagamento<br>
+                📧 Você receberá o código de rastreio por e-mail
+              </p>
+            </div>
+
+            <p style="font-size:13px;color:#9C8070;margin:0;">Dúvidas? Fale com a gente:<br>
+              <a href="mailto:contato@elenicecollection.com.br" style="color:#7C5C35;">contato@elenicecollection.com.br</a>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#F5F0EA;padding:24px 40px;text-align:center;border-top:1px solid #E0CEBB;">
+            <p style="margin:0;font-size:11px;color:#9C8070;letter-spacing:1px;">© 2025 Elenice Collection • Joias em Ouro 18k</p>
+            <p style="margin:4px 0 0;font-size:11px;color:#C4A47A;letter-spacing:1px;">elenicecollection.com.br</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  try {
+    await fetch('/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: email,
+        toName: nome,
+        subject: `📄 Boleto gerado — Pedido ${orderNum} vence em ${vencStr}`,
+        htmlContent: htmlBoleto,
+      })
+    });
+  } catch(e) {
+    console.warn('Erro ao enviar e-mail boleto:', e);
+  }
 }
 
 // ── INIT ──

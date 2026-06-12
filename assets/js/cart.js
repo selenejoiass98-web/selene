@@ -2,7 +2,7 @@
    ELENICE COLLECTION — Cart System
    ═══════════════════════════════════════════════ */
 
-const WHATSAPP_NUMBER = '5547000000000'; // ← trocar pelo número real
+const WHATSAPP_NUMBER = '5547997259678'; // ← trocar pelo número real
 const FREE_SHIPPING_THRESHOLD = 299;
 
 // ── STATE ──

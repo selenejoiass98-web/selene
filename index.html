@@ -8,6 +8,14 @@
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
 /* ── PAGE-SPECIFIC: INDEX ── */
+.nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
+
+/* BRAND BAR */
+.brand-bar { background: var(--brown-deep); height: 36px; overflow: hidden; position: relative; z-index: 200; width: 100%; }
+.brand-bar-track { display: flex; height: 100%; gap: 3.5rem; align-items: center; animation: marquee 22s linear infinite; white-space: nowrap; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.brand-bar-item { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(224,206,187,0.55); flex-shrink: 0; }
+.brand-bar-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
 
 /* HERO */
 .hero {
@@ -71,7 +79,6 @@
   border-top: 1px solid var(--gold-pale);
   animation: fadeUp 0.8s 0.65s ease both;
 }
-.hero-stat {}
 .hero-stat .num {
   font-family: var(--font-serif);
   font-size: 1.8rem;
@@ -87,12 +94,7 @@
   text-transform: uppercase;
   color: var(--text-soft);
 }
-
-.hero-visual {
-  position: relative;
-  overflow: hidden;
-  background: var(--cream-dark);
-}
+.hero-visual { position: relative; overflow: hidden; background: var(--cream-dark); }
 .hero-visual-main {
   width: 100%;
   height: 70%;
@@ -103,469 +105,162 @@
   justify-content: center;
   overflow: hidden;
 }
+.hero-visual-main > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .hero-visual-main::after {
   content: '';
   position: absolute;
   inset: 0;
   background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
+  pointer-events: none;
 }
-.hero-visual-overlay {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  z-index: 2;
-}
-.hero-visual-overlay .feat-label {
-  font-size: 0.55rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-  margin-bottom: 0.3rem;
-}
-.hero-visual-overlay .feat-name {
-  font-family: var(--font-serif);
-  font-size: 1.3rem;
-  font-weight: 300;
-  font-style: italic;
-  color: rgba(255,255,255,0.9);
-}
-.hero-visual-glyph {
-  font-family: var(--font-serif);
-  font-size: 10rem;
-  color: rgba(255,255,255,0.1);
-  font-style: italic;
-  animation: fadeIn 1.2s 0.3s ease both;
-  user-select: none;
-}
-.hero-visual-bottom {
-  height: 30%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-.hero-sub-panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-serif);
-  font-size: 3rem;
-  color: rgba(255,255,255,0.15);
-  font-style: italic;
-}
-.hero-sub-panel:first-child {
-  background: linear-gradient(135deg, #C4A882, #8B6B3D);
-}
-.hero-sub-panel:last-child {
-  background: linear-gradient(135deg, #EDE4DA, #C4A47A);
-  color: rgba(0,0,0,0.1);
-}
-.hero-scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
-  writing-mode: vertical-rl;
-  font-size: 0.55rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-.hero-scroll-hint::after {
-  content: '';
-  width: 1px;
-  height: 40px;
-  background: rgba(255,255,255,0.25);
-}
+.hero-visual-overlay { position: absolute; bottom: 1.5rem; left: 1.5rem; z-index: 2; }
+.hero-visual-overlay .feat-label { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.3rem; }
+.hero-visual-overlay .feat-name { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 300; font-style: italic; color: rgba(255,255,255,0.9); }
+.hero-visual-glyph { font-family: var(--font-serif); font-size: 10rem; color: rgba(255,255,255,0.1); font-style: italic; animation: fadeIn 1.2s 0.3s ease both; user-select: none; position: relative; z-index: 1; }
+.hero-visual-bottom { height: 30%; display: grid; grid-template-columns: 1fr 1fr; }
+.hero-sub-panel { display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.hero-sub-panel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero-sub-panel-glyph { font-family: var(--font-serif); font-size: 3rem; color: rgba(255,255,255,0.15); font-style: italic; position: relative; z-index: 1; }
+.hero-sub-panel:first-child { background: linear-gradient(135deg, #C4A882, #8B6B3D); }
+.hero-sub-panel:last-child { background: linear-gradient(135deg, #EDE4DA, #C4A47A); }
+.hero-scroll-hint { position: absolute; bottom: 2rem; right: 2rem; writing-mode: vertical-rl; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 0.8rem; }
+.hero-scroll-hint::after { content: ''; width: 1px; height: 40px; background: rgba(255,255,255,0.25); }
 
-/* BRAND BAR */
-.brand-bar {
-  background: var(--brown-deep);
-  height: 36px;
-  overflow: hidden;
-  position: relative;
-  z-index: 200;
+/* TRUST STRIP */
+.trust-strip { background: var(--brown-deep); }
+.trust-items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.35rem 1.8rem;
+  border-right: 1px solid rgba(196,164,122,0.12);
+}
+.trust-item:last-child { border-right: none; }
+.trust-icon { font-size: 1.25rem; flex-shrink: 0; opacity: 0.85; }
+.trust-title { font-size: 0.7rem; font-weight: 500; color: var(--gold-pale); letter-spacing: 0.04em; margin-bottom: 0.12rem; }
+.trust-desc { font-size: 0.58rem; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; }
+
+/* CATEGORIES */
+.categories-section { padding: 5rem 0; background: var(--white); }
+.cats-header { text-align: center; margin-bottom: 3rem; }
+.cats-header .section-tag { justify-content: center; }
+.cats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem; }
+.cat-card { display: flex; flex-direction: column; align-items: center; text-decoration: none; gap: 0.8rem; }
+.cat-card:hover .cat-img { border-color: var(--gold); transform: translateY(-4px); }
+.cat-card:hover .cat-lbl { color: var(--gold); }
+.cat-img {
   width: 100%;
-}
-.brand-bar-track {
-  display: flex;
-  height: 100%;
-  gap: 3.5rem;
-  align-items: center;
-  animation: marquee 22s linear infinite;
-  white-space: nowrap;
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.brand-bar-item {
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(224,206,187,0.55);
-  flex-shrink: 0;
-}
-.brand-bar-dot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--gold);
-  flex-shrink: 0;
-}
-
-/* COLLECTIONS */
-.collections {
-  padding: 6rem 0;
-  background: var(--white);
-}
-.collections-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 3rem;
-}
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-}
-
-/* FEATURED STRIP */
-.featured-strip {
-  background: var(--cream);
-  padding: 5rem 0;
+  aspect-ratio: 3/4;
+  border-radius: 14px;
   overflow: hidden;
-}
-.featured-strip-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  min-height: 500px;
-}
-.featured-visual {
-  background: linear-gradient(150deg, #C4A882 0%, #7C5C35 60%, #3D2B1A 100%);
+  background: var(--cream-dark);
+  border: 1.5px solid var(--gold-pale);
+  transition: border-color var(--transition), transform var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
-  min-height: 480px;
 }
-.featured-visual::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.08) 0%, transparent 60%);
-}
-.featured-glyph {
-  font-family: var(--font-serif);
-  font-size: 14rem;
-  color: rgba(255,255,255,0.07);
-  font-style: italic;
-  user-select: none;
-  position: absolute;
-}
-.featured-badge {
-  position: absolute;
-  top: 2rem; left: 2rem;
-  background: var(--gold-light);
-  color: var(--brown-deep);
-  font-size: 0.55rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  padding: 0.4rem 1rem;
-}
-.featured-text {
-  padding: 4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.featured-text .section-tag { margin-bottom: 1rem; }
-.featured-text .feat-title {
-  font-family: var(--font-serif);
-  font-size: clamp(2rem, 3.5vw, 3.2rem);
-  font-weight: 300;
-  color: var(--brown-deep);
-  line-height: 1.1;
-  margin-bottom: 1.2rem;
-}
-.featured-text .feat-title em { font-style: italic; color: var(--gold); }
-.featured-text p {
-  font-size: 0.85rem;
-  line-height: 1.85;
-  color: var(--text-soft);
-  font-weight: 300;
-  margin-bottom: 2.5rem;
-  max-width: 360px;
-}
-.featured-price {
-  display: flex;
-  align-items: baseline;
-  gap: 0.8rem;
-  margin-bottom: 2rem;
-}
-.featured-price .current {
-  font-family: var(--font-serif);
-  font-size: 2rem;
-  color: var(--gold);
-  font-weight: 300;
-}
-.featured-price .old {
-  font-size: 0.9rem;
-  color: var(--text-soft);
-  text-decoration: line-through;
-}
-.featured-price .installment {
-  font-size: 0.68rem;
-  color: var(--text-soft);
-  letter-spacing: 0.05em;
-}
+.cat-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cat-img-glyph { font-family: var(--font-serif); font-size: 3rem; color: var(--gold-pale); font-style: italic; position: relative; z-index: 1; }
+.cat-lbl { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-mid); transition: color var(--transition); }
 
-/* ABOUT */
-.about {
-  padding: 7rem 0;
+/* SPOTLIGHT CAROUSEL */
+.spotlight { padding: 5rem 0 4rem; background: var(--cream); overflow: hidden; }
+.spotlight-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; }
+.spot-nav { display: flex; align-items: center; gap: 0.7rem; }
+.spot-arrow {
+  width: 42px; height: 42px;
   background: var(--white);
-}
-.about-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
-  align-items: center;
-}
-.about-visual {
-  position: relative;
-}
-.about-img-main {
-  width: 100%;
-  aspect-ratio: 4/5;
-  background: linear-gradient(160deg, #D4B896 0%, #A07848 50%, #3D2B1A 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.about-img-main-glyph {
-  font-family: var(--font-serif);
-  font-size: 9rem;
-  color: rgba(255,255,255,0.1);
-  font-style: italic;
-}
-.about-img-accent {
-  position: absolute;
-  bottom: -2rem;
-  right: -2rem;
-  width: 52%;
-  aspect-ratio: 1;
-  background: var(--brown-deep);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3rem;
-  padding: 1.5rem;
-}
-.about-img-accent .big-num {
-  font-family: var(--font-serif);
-  font-size: 3.2rem;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--gold-light);
-  line-height: 1;
-}
-.about-img-accent .big-lbl {
-  font-size: 0.55rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
-  text-align: center;
-}
-.about-text .section-title { margin-bottom: 1.5rem; }
-.about-text p {
-  font-size: 0.85rem;
-  line-height: 1.9;
-  color: var(--text-soft);
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  margin-bottom: 1.2rem;
-}
-.about-pillars {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.2rem;
-  margin-top: 2.5rem;
-}
-.pillar {
-  padding: 1.2rem;
   border: 1px solid var(--gold-pale);
-  background: var(--cream);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--text-mid);
+  transition: all var(--transition);
+  line-height: 1;
+  font-family: var(--font-sans);
 }
-.pillar-icon {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  color: var(--gold-light);
-  font-style: italic;
-  margin-bottom: 0.5rem;
-}
-.pillar h4 {
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--brown-deep);
-  letter-spacing: 0.05em;
-  margin-bottom: 0.3rem;
-}
-.pillar p {
-  font-size: 0.68rem;
-  color: var(--text-soft);
-  line-height: 1.6;
-  margin: 0;
-}
+.spot-arrow:hover { background: var(--gold); color: var(--white); border-color: var(--gold); }
+.spot-wrapper { overflow: hidden; }
+.spot-track { display: flex; gap: 1.5rem; transition: transform 0.52s cubic-bezier(0.25, 0.1, 0.25, 1); will-change: transform; }
+.spot-item { flex: 0 0 auto; }
+.spot-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; }
+.spot-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold-pale); cursor: pointer; transition: all 0.3s ease; }
+.spot-dot.active { background: var(--gold); width: 20px; border-radius: 3px; }
+
+/* COLLECTIONS GRID */
+.collections { padding: 5rem 0; background: var(--white); }
+.collections-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; }
+.products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
 
 /* TESTIMONIALS */
-.testimonials {
-  padding: 6rem 0;
-  background: var(--brown-deep);
-}
+.testimonials { padding: 6rem 0; background: var(--brown-deep); }
 .testimonials .section-tag { color: var(--gold-light); }
 .testimonials .section-tag::before { background: var(--gold); }
 .testimonials .section-title { color: var(--cream); }
 .testimonials .section-title em { color: var(--gold-light); }
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: 3rem;
-}
-.testimonial {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(196,164,122,0.15);
-  padding: 2rem;
-  transition: border-color var(--transition);
-}
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.testimonial { background: rgba(255,255,255,0.04); border: 1px solid rgba(196,164,122,0.15); padding: 2rem; border-radius: 8px; transition: border-color var(--transition); }
 .testimonial:hover { border-color: rgba(196,164,122,0.35); }
-.testimonial-stars {
-  color: var(--gold-light);
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  margin-bottom: 1.2rem;
-}
-.testimonial-text {
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  font-style: italic;
-  color: rgba(245,240,234,0.85);
-  line-height: 1.75;
-  font-weight: 300;
-  margin-bottom: 1.5rem;
-}
-.testimonial-author {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-.author-avatar {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: var(--gold);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem;
-  color: var(--white);
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
-}
-.author-name {
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: var(--gold-pale);
-  letter-spacing: 0.04em;
-  margin-bottom: 0.1rem;
-}
-.author-city {
-  font-size: 0.6rem;
-  color: var(--text-soft);
-  letter-spacing: 0.1em;
-}
+.testimonial-stars { color: var(--gold-light); font-size: 0.75rem; letter-spacing: 0.15em; margin-bottom: 1.2rem; }
+.testimonial-text { font-family: var(--font-serif); font-size: 1rem; font-style: italic; color: rgba(245,240,234,0.85); line-height: 1.75; font-weight: 300; margin-bottom: 1.5rem; }
+.testimonial-author { display: flex; align-items: center; gap: 0.8rem; }
+.author-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--white); font-weight: 500; letter-spacing: 0.05em; flex-shrink: 0; }
+.author-name { font-size: 0.75rem; font-weight: 400; color: var(--gold-pale); letter-spacing: 0.04em; margin-bottom: 0.1rem; }
+.author-city { font-size: 0.6rem; color: var(--text-soft); letter-spacing: 0.1em; }
 
 /* NEWSLETTER */
-.newsletter {
-  padding: 5.5rem 0;
-  background: var(--cream-dark);
-  text-align: center;
-}
+.newsletter { padding: 5.5rem 0; background: var(--cream-dark); text-align: center; }
 .newsletter .section-tag { justify-content: center; }
 .newsletter .section-title { margin-bottom: 0.8rem; }
-.newsletter-sub {
-  font-size: 0.83rem;
-  color: var(--text-soft);
-  margin-bottom: 2.5rem;
-  font-weight: 300;
-  letter-spacing: 0.03em;
-}
-.newsletter-form {
-  display: flex;
-  max-width: 460px;
-  margin: 0 auto;
-}
-.newsletter-input {
-  flex: 1;
-  padding: 0.9rem 1.4rem;
-  border: 1px solid var(--gold-pale);
-  border-right: none;
-  background: var(--white);
-  font-family: var(--font-sans);
-  font-size: 0.82rem;
-  color: var(--text);
-  outline: none;
-  transition: border-color var(--transition);
-}
+.newsletter-sub { font-size: 0.83rem; color: var(--text-soft); margin-bottom: 2.5rem; font-weight: 300; letter-spacing: 0.03em; }
+.newsletter-form { display: flex; max-width: 460px; margin: 0 auto; }
+.newsletter-input { flex: 1; padding: 0.9rem 1.4rem; border: 1px solid var(--gold-pale); border-right: none; background: var(--white); font-family: var(--font-sans); font-size: 0.82rem; color: var(--text); outline: none; transition: border-color var(--transition); }
 .newsletter-input:focus { border-color: var(--gold-light); }
 .newsletter-input::placeholder { color: var(--text-soft); }
-.newsletter-btn {
-  padding: 0.9rem 2rem;
-  background: var(--gold);
-  color: var(--white);
-  border: none;
-  font-family: var(--font-sans);
-  font-size: 0.62rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background var(--transition);
-  white-space: nowrap;
-}
+.newsletter-btn { padding: 0.9rem 2rem; background: var(--gold); color: var(--white); border: none; font-family: var(--font-sans); font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; transition: background var(--transition); white-space: nowrap; }
 .newsletter-btn:hover { background: var(--brown-mid); }
-.newsletter-privacy {
-  font-size: 0.62rem;
-  color: var(--text-soft);
-  margin-top: 1rem;
-  letter-spacing: 0.05em;
-}
+.newsletter-privacy { font-size: 0.62rem; color: var(--text-soft); margin-top: 1rem; letter-spacing: 0.05em; }
 
 /* RESPONSIVE */
+@media (max-width: 1200px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; min-height: auto; }
   .hero-content { padding: 3rem 1.5rem; }
   .hero-visual { height: 60vw; }
-  .featured-strip-inner { grid-template-columns: 1fr; }
-  .featured-visual { min-height: 300px; }
-  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-  .about-img-accent { display: none; }
+  .trust-items { grid-template-columns: repeat(2, 1fr); }
+  .trust-item { border-bottom: 1px solid rgba(196,164,122,0.1); }
+  .cats-grid { grid-template-columns: repeat(3, 1fr); }
   .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
   .testimonials-grid { grid-template-columns: 1fr; }
   .collections-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .spotlight-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
 }
 @media (max-width: 600px) {
   .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
   .hero-stats { gap: 1.5rem; }
-  .about-pillars { grid-template-columns: 1fr; }
+  .cats-grid { grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+  .trust-items { grid-template-columns: 1fr; }
+  .trust-item { border-right: none; border-bottom: 1px solid rgba(196,164,122,0.1); }
+  .trust-item:last-child { border-bottom: none; }
 }
-.nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
 </style>
 </head>
 <body>
 
-<!-- ── BRAND BAR (dinâmica — carrega do Firebase) ── -->
+<!-- ── BRAND BAR (Firebase) ── -->
 <div class="brand-bar" id="faixa-bar">
   <div class="brand-bar-track" id="bar-track"></div>
 </div>
@@ -594,133 +289,162 @@
 <!-- ── HERO ── -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-tag">Nova Coleção · Primavera 2025</div>
+    <div class="hero-tag"><span id="hero-tag-txt">Nova Coleção · 2026</span></div>
     <h1 class="hero-title">
-      Joias que<br>
-      contam sua<br>
-      <em>história</em>
+      <span id="hero-t1">Joias que<br>contam sua</span><br>
+      <em id="hero-t2">história</em>
     </h1>
-    <p class="hero-subtitle">
-      Peças criadas com ouro 18k e pedras selecionadas, 
-      inspiradas na elegância e sofisticação feminina. 
+    <p class="hero-subtitle" id="hero-sub">
+      Peças criadas com ouro 18k e pedras selecionadas,
+      inspiradas na elegância e sofisticação feminina.
       Cada joia é única — como você.
     </p>
     <div class="hero-actions">
-      <a href="catalogo.html" class="btn btn-primary">Ver Coleção</a>
+      <a href="catalogo.html" class="btn btn-primary" id="hero-btn-el">Ver Coleção</a>
       <a href="sobre.html" class="btn btn-ghost">Nossa história</a>
     </div>
     <div class="hero-stats">
       <div class="hero-stat">
-        <div class="num">18k</div>
-        <div class="lbl">Ouro garantido</div>
+        <div class="num" id="stat1-val">18k</div>
+        <div class="lbl" id="stat1-lbl">Ouro garantido</div>
       </div>
       <div class="hero-stat">
-        <div class="num">500+</div>
-        <div class="lbl">Clientes felizes</div>
+        <div class="num" id="stat2-val">500+</div>
+        <div class="lbl" id="stat2-lbl">Clientes felizes</div>
       </div>
       <div class="hero-stat">
-        <div class="num">1 ano</div>
-        <div class="lbl">De garantia</div>
+        <div class="num" id="stat3-val">1 ano</div>
+        <div class="lbl" id="stat3-lbl">De garantia</div>
       </div>
     </div>
   </div>
   <div class="hero-visual">
     <div class="hero-visual-main">
-      <div class="hero-visual-glyph">◈</div>
+      <img id="hero-main-img" alt="Elenice Collection" style="display:none;" />
+      <div class="hero-visual-glyph" id="hero-glyph">◈</div>
       <div class="hero-visual-overlay">
         <div class="feat-label">Destaque da coleção</div>
-        <div class="feat-name">Colar Lua Dourada</div>
+        <div class="feat-name" id="box1-feat-name">Colar Lua Dourada</div>
       </div>
     </div>
     <div class="hero-visual-bottom">
-      <div class="hero-sub-panel">✦</div>
-      <div class="hero-sub-panel" style="color:rgba(90,60,30,0.12);">⊛</div>
+      <div class="hero-sub-panel">
+        <img id="hero-box2-img" alt="" style="display:none;" />
+        <span class="hero-sub-panel-glyph" id="glyph-b2">✦</span>
+      </div>
+      <div class="hero-sub-panel">
+        <img id="hero-box3-img" alt="" style="display:none;" />
+        <span class="hero-sub-panel-glyph" id="glyph-b3">⊛</span>
+      </div>
     </div>
     <div class="hero-scroll-hint">Explorar</div>
   </div>
 </section>
 
-<!-- ── COLEÇÕES ── -->
+<!-- ── TRUST STRIP ── -->
+<div class="trust-strip">
+  <div class="trust-items container">
+    <div class="trust-item">
+      <span class="trust-icon">✦</span>
+      <div>
+        <div class="trust-title">Ouro 18k Certificado</div>
+        <div class="trust-desc">Qualidade e autenticidade garantidas</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">📦</span>
+      <div>
+        <div class="trust-title">Frete Grátis acima de R$ 299</div>
+        <div class="trust-desc">Para todo o Brasil</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">◈</span>
+      <div>
+        <div class="trust-title">Garantia de 1 Ano</div>
+        <div class="trust-desc">Em todas as peças da coleção</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">💳</span>
+      <div>
+        <div class="trust-title">12× Sem Juros</div>
+        <div class="trust-desc">Pix com 5% de desconto</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CATEGORIAS ── -->
+<section class="categories-section">
+  <div class="container">
+    <div class="cats-header reveal">
+      <div class="section-tag">Explorar</div>
+      <h2 class="section-title">Nossas <em>Categorias</em></h2>
+    </div>
+    <div class="cats-grid reveal">
+      <a href="catalogo.html?cat=aneis" class="cat-card">
+        <div class="cat-img"><span class="cat-img-glyph">◎</span></div>
+        <span class="cat-lbl">Anéis</span>
+      </a>
+      <a href="catalogo.html?cat=colares" class="cat-card">
+        <div class="cat-img"><span class="cat-img-glyph">∿</span></div>
+        <span class="cat-lbl">Colares</span>
+      </a>
+      <a href="catalogo.html?cat=pulseiras" class="cat-card">
+        <div class="cat-img"><span class="cat-img-glyph">⊂</span></div>
+        <span class="cat-lbl">Pulseiras</span>
+      </a>
+      <a href="catalogo.html?cat=brincos" class="cat-card">
+        <div class="cat-img"><span class="cat-img-glyph">⊕</span></div>
+        <span class="cat-lbl">Brincos</span>
+      </a>
+      <a href="catalogo.html?cat=conjuntos" class="cat-card">
+        <div class="cat-img"><span class="cat-img-glyph">✦</span></div>
+        <span class="cat-lbl">Conjuntos</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── SPOTLIGHT (carousel auto-advance) ── -->
+<section class="spotlight">
+  <div class="container">
+    <div class="spotlight-header reveal">
+      <div>
+        <div class="section-tag">Mais amados</div>
+        <h2 class="section-title">Em <em>Destaque</em></h2>
+      </div>
+      <div class="spot-nav">
+        <button class="spot-arrow" onclick="spotMove(-1)" aria-label="Anterior">←</button>
+        <button class="spot-arrow" onclick="spotMove(1)" aria-label="Próximo">→</button>
+      </div>
+    </div>
+    <div class="spot-wrapper" id="spot-wrapper">
+      <div class="spot-track" id="spot-track">
+        <div style="padding:3rem;color:var(--text-soft);font-size:0.85rem;">
+          <div style="width:24px;height:24px;border:2px solid var(--gold-pale);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:1rem;"></div>
+          Carregando produtos...
+        </div>
+      </div>
+    </div>
+    <div class="spot-dots" id="spot-dots"></div>
+  </div>
+</section>
+
+<!-- ── COLEÇÃO ── -->
 <section class="collections" id="colecoes">
   <div class="container">
     <div class="collections-header reveal">
       <div>
-        <div class="section-tag">Produtos</div>
+        <div class="section-tag">Coleção completa</div>
         <h2 class="section-title">Nossa <em>Coleção</em></h2>
       </div>
       <a href="catalogo.html" class="btn btn-ghost">Ver todos os produtos</a>
     </div>
-    <div class="products-grid" id="products-grid"></div>
-  </div>
-</section>
-
-<!-- ── DESTAQUE ── -->
-<section class="featured-strip reveal">
-  <div class="featured-strip-inner">
-    <div class="featured-visual">
-      <div class="featured-glyph">◯</div>
-      <div class="featured-badge">Peça em destaque</div>
-    </div>
-    <div class="featured-text">
-      <div class="section-tag">Mais amado</div>
-      <h2 class="feat-title">Colar Lua<br><em>Dourada</em></h2>
-      <p>Nossa peça mais especial. O disco dourado em ouro 18k maciço captura a luz de um jeito único — delicado durante o dia, marcante à noite. Acompanha corrente veneziana fina de 45cm.</p>
-      <div class="featured-price">
-        <span class="current">R$ 289,00</span>
-        <span class="old">R$ 380,00</span>
-        <span class="installment">ou 12× de R$ 27,08</span>
-      </div>
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <button class="btn btn-primary" onclick="addToCart({id:'prod-1',name:'Colar Lua Dourada',variant:'Ouro 18k · 45cm',price:289,symbol:'◯'})">
-          Adicionar ao Carrinho
-        </button>
-        <a href="produto.html?id=prod-1" class="btn btn-outline">Ver detalhes</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── SOBRE ── -->
-<section class="about" id="sobre">
-  <div class="container">
-    <div class="about-grid">
-      <div class="about-visual reveal">
-        <div class="about-img-main">
-          <div class="about-img-main-glyph">SJ</div>
-        </div>
-        <div class="about-img-accent">
-          <div class="big-num">500+</div>
-          <div class="big-lbl">Mulheres<br>encantadas</div>
-        </div>
-      </div>
-      <div class="about-text reveal reveal-delay-2">
-        <div class="section-tag">Nossa história</div>
-        <h2 class="section-title">Feitas com<br><em>paixão</em></h2>
-        <p>A Elenice Collection nasceu do desejo de criar peças que vão além da beleza — joias que carregam significado, que marcam momentos e que se tornam parte da história de quem as usa.</p>
-        <p>Trabalhamos com ouro 18k e pedras cuidadosamente selecionadas. Cada peça passa por um rigoroso processo do design ao acabamento final, garantindo qualidade e exclusividade.</p>
-        <a href="sobre.html" class="btn btn-ghost" style="margin-top:0.5rem;">Conhecer nossa história</a>
-        <div class="about-pillars">
-          <div class="pillar">
-            <div class="pillar-icon">✦</div>
-            <h4>Exclusividade</h4>
-            <p>Peças únicas, com atenção a cada detalhe do design ao acabamento.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">◈</div>
-            <h4>Autenticidade</h4>
-            <p>Ouro 18k certificado. O que você vê é o que você recebe.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">∿</div>
-            <h4>Feminilidade</h4>
-            <p>Criadas para celebrar a mulher em todas as suas fases.</p>
-          </div>
-          <div class="pillar">
-            <div class="pillar-icon">○</div>
-            <h4>Atemporalidade</h4>
-            <p>Design que transcende tendências e dura para sempre.</p>
-          </div>
-        </div>
+    <div class="products-grid" id="products-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:3rem;">
+        <div style="width:24px;height:24px;border:2px solid var(--gold-pale);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto;"></div>
       </div>
     </div>
   </div>
@@ -733,41 +457,7 @@
       <div class="section-tag">Depoimentos</div>
       <h2 class="section-title">O que nossas<br>clientes <em>dizem</em></h2>
     </div>
-    <div class="testimonials-grid">
-      <div class="testimonial reveal reveal-delay-1">
-        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
-        <p class="testimonial-text">"Recebi o colar de aniversário e fiquei encantada. A embalagem é linda, a peça é impecável. Com certeza voltarei a comprar!"</p>
-        <div class="testimonial-author">
-          <div class="author-avatar">AM</div>
-          <div>
-            <div class="author-name">Ana Martins</div>
-            <div class="author-city">Florianópolis, SC</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial reveal reveal-delay-2">
-        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
-        <p class="testimonial-text">"Comprei o anel personalizado e ficou perfeito. O atendimento foi incrível, super atencioso do início ao fim. Recomendo demais!"</p>
-        <div class="testimonial-author">
-          <div class="author-avatar">JS</div>
-          <div>
-            <div class="author-name">Juliana Silva</div>
-            <div class="author-city">Balneário Camboriú, SC</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial reveal reveal-delay-3">
-        <div class="testimonial-stars">★ ★ ★ ★ ★</div>
-        <p class="testimonial-text">"Presente perfeito para minha mãe. Ela amou o conjunto de brincos. Qualidade incrível, superou todas as expectativas!"</p>
-        <div class="testimonial-author">
-          <div class="author-avatar">CF</div>
-          <div>
-            <div class="author-name">Camila Ferreira</div>
-            <div class="author-city">Itajaí, SC</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="testimonials-grid" id="testimonials-grid"></div>
   </div>
 </section>
 
@@ -819,8 +509,8 @@
       <div class="footer-col">
         <h4>Contato</h4>
         <ul>
-          <li>📱 (47) 99999-9999</li>
-          <li>✉ contato@selenejoias.com.br</li>
+          <li>📱 (47) 99725-9678</li>
+          <li>✉ contato@elenicecollection.com.br</li>
           <li>📍 Balneário Camboriú, SC</li>
         </ul>
         <div style="margin-top:1.2rem;font-size:0.65rem;color:var(--text-soft);letter-spacing:0.05em;line-height:1.8;">
@@ -829,12 +519,12 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Elenice Collection. Todos os direitos reservados.</p>
+      <p>© 2026 Elenice Collection. Todos os direitos reservados.</p>
       <div class="social-links">
         <a class="social-link" href="#" title="Instagram">ig</a>
         <a class="social-link" href="#" title="Facebook">fb</a>
         <a class="social-link" href="#" title="TikTok">tt</a>
-        <a class="social-link" href="https://wa.me/5547000000000" title="WhatsApp">wa</a>
+        <a class="social-link" href="https://wa.me/5547997259678" title="WhatsApp">wa</a>
       </div>
     </div>
   </div>
@@ -885,26 +575,29 @@
 </div>
 
 <script src="assets/js/cart.js"></script>
+
 <script>
-(function() {
-  const nav   = document.querySelector('.nav');
+/* Nav offset para a faixa de avisos */
+(function () {
+  const nav = document.querySelector('.nav');
   const faixa = document.getElementById('faixa-bar');
   if (!nav || !faixa) return;
   const faixaH = faixa.offsetHeight || 36;
   function updateNav() {
-    const remaining = Math.max(0, faixaH - window.scrollY);
-    nav.style.top = remaining + 'px';
+    const rem = Math.max(0, faixaH - window.scrollY);
+    nav.style.top = rem + 'px';
   }
   window.addEventListener('scroll', updateNav, { passive: true });
   updateNav();
 })();
 </script>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs }
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, getDoc }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
+const FB_CFG = {
   apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
   authDomain: "selene-joias.firebaseapp.com",
   projectId: "selene-joias",
@@ -912,129 +605,259 @@ const firebaseConfig = {
   messagingSenderId: "395713731584",
   appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
 };
+const app = getApps().length ? getApps()[0] : initializeApp(FB_CFG);
+const db  = getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+/* ─── HELPERS ─── */
+const fmt = v => Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-// ── CARREGA PRODUTOS DO FIREBASE ──
-async function renderProducts() {
-  const grid = document.getElementById('products-grid');
-
-  // Loading
-  grid.innerHTML = `
-    <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-soft);">
-      <div style="width:24px;height:24px;border:2px solid var(--gold-pale);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem;"></div>
-    </div>`;
-
-  try {
-    const snap = await getDocs(collection(db, 'produtos'));
-    const produtos = snap.docs
-      .map(doc => ({ id: doc.id, ...doc.data() }))
-      .filter(p => p.status === 'ativo')
-      .reverse()
-      .slice(0, 6);
-
-    if (produtos.length === 0) {
-      grid.innerHTML = `
-        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-soft);">
-          <p style="font-size:0.85rem;">Em breve novos produtos. Acompanhe nossas novidades!</p>
-        </div>`;
-      return;
-    }
-
-    const fmt = v => Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
-
-    grid.innerHTML = produtos.map(p => {
-      const preco       = Number(p.preco);
-      const precoOrig   = p.precoOriginal ? Number(p.precoOriginal) : null;
-      const parcela     = fmt(preco / 12);
-      const precoFmt    = fmt(preco);
-      const origFmt     = precoOrig ? fmt(precoOrig) : '';
-      const descPct     = precoOrig ? Math.round((1 - preco/precoOrig)*100) : 0;
-      const cartPayload = `{id:'${p.id}',name:'${p.nome.replace(/'/g,"\\'")}',variant:'${(p.material||'Ouro 18k').replace(/'/g,"\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0]||''}'}`;
-
-      return `
-      <div class="product-card">
-        <a href="produto.html?id=${p.id}" class="product-card-img">
-          ${p.fotos?.[0]
-            ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy">`
-            : `<div class="product-card-placeholder">◈</div>`
-          }
-          ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
-          ${descPct >= 5 ? `<span class="product-badge off">−${descPct}%</span>` : ''}
-          <div class="product-card-overlay">
-            <span class="product-overlay-btn">Ver produto →</span>
-          </div>
-          <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
-        </a>
-        <div class="product-card-info">
-          <div class="product-cat">${p.categoria || 'Joia'}</div>
-          <a href="produto.html?id=${p.id}">
-            <div class="product-name">${p.nome}</div>
-          </a>
-          <div class="product-price-block">
-            ${precoOrig ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
-            <span class="product-price-main">R$ ${precoFmt}</span>
-            <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
-          </div>
-          <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cartPayload})" title="Adicionar ao carrinho">Adicionar ao carrinho</button>
-        </div>
-      </div>`;
-    }).join('');
-
-  } catch(e) {
-    console.error(e);
-    grid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-soft);">
-        <p style="font-size:0.78rem;">Não foi possível carregar os produtos.</p>
-      </div>`;
-  }
+function cardHTML(p) {
+  const preco     = Number(p.preco);
+  const precoOrig = p.precoOriginal ? Number(p.precoOriginal) : null;
+  const parcela   = fmt(preco / 12);
+  const precoFmt  = fmt(preco);
+  const origFmt   = precoOrig ? fmt(precoOrig) : '';
+  const descPct   = precoOrig ? Math.round((1 - preco / precoOrig) * 100) : 0;
+  const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${(p.material || 'Ouro 18k').replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
+  return `
+  <div class="product-card">
+    <a href="produto.html?id=${p.id}" class="product-card-img">
+      ${p.fotos?.[0]
+        ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy">`
+        : `<div class="product-card-placeholder">◈</div>`}
+      ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
+      ${descPct >= 5 ? `<span class="product-badge off">−${descPct}%</span>` : ''}
+      <div class="product-card-overlay"><span class="product-overlay-btn">Ver produto →</span></div>
+      <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
+    </a>
+    <div class="product-card-info">
+      <div class="product-cat">${p.categoria || 'Joia'}</div>
+      <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
+      <div class="product-price-block">
+        ${precoOrig ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
+        <span class="product-price-main">R$ ${precoFmt}</span>
+        <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
+      </div>
+      <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">Adicionar ao carrinho</button>
+    </div>
+  </div>`;
 }
 
-window.subscribeNewsletter = function() {
-  const email = document.getElementById('newsletter-email').value;
-  if (!email || !email.includes('@')) {
-    showToast('Digite um e-mail válido');
-    return;
+/* ─── SPOTLIGHT CAROUSEL ─── */
+let spotPage    = 0;
+let spotTimer   = null;
+let spotItems   = 0;
+
+function spotVisible() {
+  const w = window.innerWidth;
+  return w < 600 ? 1 : w < 900 ? 2 : w < 1200 ? 3 : 4;
+}
+
+function spotLayout() {
+  const track   = document.getElementById('spot-track');
+  const wrapper = document.getElementById('spot-wrapper');
+  if (!track || !wrapper) return;
+  const vis = spotVisible();
+  const gap = 24; // 1.5rem
+  const wW  = wrapper.offsetWidth;
+  const sW  = (wW - gap * (vis - 1)) / vis;
+  track.querySelectorAll('.spot-item').forEach(s => { s.style.width = sW + 'px'; });
+  spotGoTo(spotPage, false);
+}
+
+function spotGoTo(page, animate = true) {
+  const track = document.getElementById('spot-track');
+  if (!track) return;
+  const items = track.querySelectorAll('.spot-item');
+  if (!items.length) return;
+  const vis        = spotVisible();
+  const totalPages = Math.ceil(items.length / vis);
+  spotPage         = Math.max(0, Math.min(page, totalPages - 1));
+  const gap        = 24;
+  const sW         = items[0].offsetWidth || 0;
+  const maxOffset  = Math.max(0, (items.length - vis) * (sW + gap));
+  const offset     = Math.min(spotPage * vis * (sW + gap), maxOffset);
+  track.style.transition = animate
+    ? 'transform 0.52s cubic-bezier(0.25, 0.1, 0.25, 1)'
+    : 'none';
+  track.style.transform = `translateX(-${offset}px)`;
+  document.querySelectorAll('.spot-dot').forEach((d, i) =>
+    d.classList.toggle('active', i === spotPage)
+  );
+}
+
+window.spotMove = function (dir) {
+  const vis        = spotVisible();
+  const totalPages = Math.ceil(spotItems / vis);
+  spotGoTo((spotPage + dir + totalPages) % totalPages);
+  clearInterval(spotTimer);
+  startSpotTimer();
+};
+
+window.spotGoTo = spotGoTo;
+
+function startSpotTimer() {
+  spotTimer = setInterval(() => {
+    const vis        = spotVisible();
+    const totalPages = Math.ceil(spotItems / vis);
+    spotGoTo((spotPage + 1) % totalPages);
+  }, 4500);
+}
+
+function renderSpotlight(produtos) {
+  const track = document.getElementById('spot-track');
+  const dots  = document.getElementById('spot-dots');
+  if (!track) return;
+  spotItems = produtos.length;
+  if (!spotItems) { track.innerHTML = ''; return; }
+  track.innerHTML = produtos.map(p => `<div class="spot-item">${cardHTML(p)}</div>`).join('');
+  const vis        = spotVisible();
+  const totalPages = Math.ceil(spotItems / vis);
+  if (dots) {
+    dots.innerHTML = Array.from({ length: totalPages }, (_, i) =>
+      `<span class="spot-dot${i === 0 ? ' active' : ''}" onclick="spotGoTo(${i})"></span>`
+    ).join('');
   }
+  spotLayout();
+  startSpotTimer();
+  window.addEventListener('resize', spotLayout);
+}
+
+/* ─── APPLY ADMIN CONFIG ─── */
+const DEFAULT_FAIXA = ['Ouro 18k Certificado', 'Frete Grátis acima de R$299', 'Garantia de 1 Ano', 'Parcele em até 12x', 'Pix com 5% de Desconto'];
+const DEFAULT_DEPS  = [
+  { nome: 'Ana Martins',    cidade: 'Florianópolis, SC',       texto: 'Recebi o colar de aniversário e fiquei encantada. A embalagem é linda, a peça é impecável. Com certeza voltarei a comprar!', estrelas: 5 },
+  { nome: 'Juliana Silva',  cidade: 'Balneário Camboriú, SC',  texto: 'Comprei o anel personalizado e ficou perfeito. O atendimento foi incrível, super atencioso do início ao fim. Recomendo demais!', estrelas: 5 },
+  { nome: 'Camila Ferreira', cidade: 'Itajaí, SC',             texto: 'Presente perfeito para minha mãe. Ela amou o conjunto de brincos. Qualidade incrível, superou todas as expectativas!', estrelas: 5 },
+];
+
+function renderFaixa(itens) {
+  const track = document.getElementById('bar-track');
+  if (!track) return;
+  const todos = [...itens, ...itens];
+  track.innerHTML = todos.map(txt =>
+    `<span class="brand-bar-item">${txt}</span><span class="brand-bar-dot"></span>`
+  ).join('');
+  track.style.animationDuration = Math.max(18, itens.length * 4) + 's';
+}
+
+function renderTestimonials(deps) {
+  const grid = document.getElementById('testimonials-grid');
+  if (!grid) return;
+  grid.innerHTML = deps.slice(0, 3).map(d => {
+    const stars    = '★'.repeat(Math.min(5, Math.max(1, d.estrelas || 5)));
+    const initials = (d.nome || '?').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+    return `
+    <div class="testimonial reveal">
+      <div class="testimonial-stars">${stars.split('').join(' ')}</div>
+      <p class="testimonial-text">"${d.texto}"</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">${initials}</div>
+        <div>
+          <div class="author-name">${d.nome}</div>
+          <div class="author-city">${d.cidade || ''}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function applyConfig(d) {
+  /* Hero texto */
+  if (d.hero?.label)    document.getElementById('hero-tag-txt').textContent = d.hero.label;
+  if (d.hero?.titulo1)  document.getElementById('hero-t1').innerHTML = d.hero.titulo1.replace(/\n/g, '<br>');
+  if (d.hero?.titulo2)  document.getElementById('hero-t2').textContent = d.hero.titulo2;
+  if (d.hero?.subtitulo) document.getElementById('hero-sub').textContent = d.hero.subtitulo;
+  if (d.hero?.btn)      document.getElementById('hero-btn-el').textContent = d.hero.btn;
+
+  /* Hero imagem principal */
+  if (d.hero?.img) {
+    const img = document.getElementById('hero-main-img');
+    img.src = d.hero.img;
+    img.style.display = 'block';
+    const g = document.getElementById('hero-glyph');
+    if (g) g.style.opacity = '0.03';
+  }
+
+  /* Boxes do painel lateral */
+  if (d.box1?.nome) document.getElementById('box1-feat-name').textContent = d.box1.nome;
+  if (d.box2?.img) {
+    const img = document.getElementById('hero-box2-img');
+    img.src = d.box2.img; img.style.display = 'block';
+    const g = document.getElementById('glyph-b2'); if (g) g.style.display = 'none';
+  }
+  if (d.box3?.img) {
+    const img = document.getElementById('hero-box3-img');
+    img.src = d.box3.img; img.style.display = 'block';
+    const g = document.getElementById('glyph-b3'); if (g) g.style.display = 'none';
+  }
+
+  /* Stats (números de credibilidade) */
+  if (d.stats) {
+    if (d.stats.s1num)   document.getElementById('stat1-val').textContent = d.stats.s1num;
+    if (d.stats.s1label) document.getElementById('stat1-lbl').textContent = d.stats.s1label;
+    if (d.stats.s2num)   document.getElementById('stat2-val').textContent = d.stats.s2num;
+    if (d.stats.s2label) document.getElementById('stat2-lbl').textContent = d.stats.s2label;
+    if (d.stats.s3num)   document.getElementById('stat3-val').textContent = d.stats.s3num;
+    if (d.stats.s3label) document.getElementById('stat3-lbl').textContent = d.stats.s3label;
+  }
+
+  /* Depoimentos */
+  const deps = (d.depoimentos || []).filter(dep => dep.nome && dep.texto);
+  renderTestimonials(deps.length ? deps : DEFAULT_DEPS);
+
+  /* Faixa */
+  renderFaixa(d.faixa?.length ? d.faixa : DEFAULT_FAIXA);
+}
+
+/* ─── NEWSLETTER ─── */
+window.subscribeNewsletter = function () {
+  const email = document.getElementById('newsletter-email').value;
+  if (!email || !email.includes('@')) { showToast('Digite um e-mail válido'); return; }
   showToast('Obrigada! Você está na nossa lista VIP ✦');
   document.getElementById('newsletter-email').value = '';
 };
 
-renderProducts();
-</script>
-
-<script type="module">
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const _fbCfg = {
-  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
-  authDomain: "selene-joias.firebaseapp.com",
-  projectId: "selene-joias",
-  storageBucket: "selene-joias.firebasestorage.app",
-  messagingSenderId: "395713731584",
-  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
-};
-const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
-const _db  = getFirestore(_app);
-(async () => {
+/* ─── INIT ─── */
+async function init() {
   try {
-    const snap = await getDoc(doc(_db, 'configuracoes', 'loja'));
-    const faixa = snap.exists() && snap.data().faixa;
-    const track = document.getElementById('bar-track');
-    if (!track) return;
-    // Se Firebase tiver itens, usa; senão mantém os padrões
-    const itens = (faixa && faixa.length)
-      ? faixa
-      : ['Ouro 18k Certificado','Frete Grátis acima de R$299','Garantia de 1 Ano','Parcele em até 12x','Pix com 5% de Desconto'];
-    // Duplica para loop contínuo
-    const todos = [...itens, ...itens];
-    track.innerHTML = todos.map((txt, i) =>
-      `<span class="brand-bar-item">${txt}</span><span class="brand-bar-dot"></span>`
-    ).join('');
-    track.style.animationDuration = Math.max(18, itens.length * 4) + 's';
-  } catch(e) { console.warn('Faixa:', e); }
-})();
+    const [prodSnap, cfgSnap] = await Promise.all([
+      getDocs(collection(db, 'produtos')),
+      getDoc(doc(db, 'configuracoes', 'loja'))
+    ]);
+
+    const todos = prodSnap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(p => p.status === 'ativo')
+      .reverse();
+
+    applyConfig(cfgSnap.exists() ? cfgSnap.data() : {});
+
+    if (!todos.length) {
+      const msg = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-soft);"><p style="font-size:0.85rem;">Em breve novos produtos. Acompanhe nossas novidades!</p></div>`;
+      document.getElementById('spot-track').innerHTML = msg;
+      document.getElementById('products-grid').innerHTML = msg;
+      return;
+    }
+
+    /* Spotlight: os 8 mais recentes */
+    renderSpotlight(todos.slice(0, 8));
+
+    /* Grid: os mesmos 8 */
+    const grid = document.getElementById('products-grid');
+    if (grid) grid.innerHTML = todos.slice(0, 8).map(cardHTML).join('');
+
+  } catch (e) {
+    console.error('init error:', e);
+    renderFaixa(DEFAULT_FAIXA);
+    renderTestimonials(DEFAULT_DEPS);
+    const errMsg = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-soft);"><p style="font-size:0.78rem;">Não foi possível carregar os produtos.</p></div>`;
+    const grid = document.getElementById('products-grid');
+    if (grid) grid.innerHTML = errMsg;
+  }
+}
+
+init();
 </script>
 </body>
 </html>

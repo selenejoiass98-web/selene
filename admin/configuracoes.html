@@ -172,6 +172,19 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
           </div>
           <input type="hidden" id="hero-img-url" />
         </div>
+        <div class="form-group">
+          <label>Estilo do Banner</label>
+          <div style="display:flex;gap:1.5rem;margin-top:0.5rem;">
+            <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:400;">
+              <input type="radio" name="hero-estilo" id="hero-estilo-editorial" value="editorial" />
+              <span><strong>Editorial</strong> — mosaico de fotos ao lado (clássico)</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:400;">
+              <input type="radio" name="hero-estilo" id="hero-estilo-fullscreen" value="fullscreen" />
+              <span><strong>Fullscreen</strong> — fundo escuro com produtos em destaque</span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -406,6 +419,9 @@ async function carregarConfigs() {
     setVal('hero-btn', d.hero?.btn);
     setVal('hero-label', d.hero?.label);
     if (d.hero?.img) showPreview('prev-hero', d.hero.img, 'hero-img-url');
+    const estilo = d.hero?.estilo || 'editorial';
+    const radioEl = document.querySelector(`input[name="hero-estilo"][value="${estilo}"]`);
+    if (radioEl) radioEl.checked = true;
 
     // Depoimentos
     if (d.depoimentos && Array.isArray(d.depoimentos) && d.depoimentos.length > 0) {
@@ -459,6 +475,7 @@ window.salvarTudo = async function() {
         btn:       getVal('hero-btn'),
         label:     getVal('hero-label'),
         img:       getVal('hero-img-url'),
+        estilo:    document.querySelector('input[name="hero-estilo"]:checked')?.value || 'editorial',
       },
       box1: { label: getVal('box1-label'), nome: getVal('box1-nome'), img: getVal('box1-img-url') },
       box2: { nome: getVal('box2-nome'), img: getVal('box2-img-url') },

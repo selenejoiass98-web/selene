@@ -845,20 +845,20 @@ function render() {
           }
           ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
           ${descPct >= 5 ? `<span class="product-badge off">−${descPct}%</span>` : ''}
-          <div class="product-card-overlay">
-            <span class="product-overlay-btn">Ver produto →</span>
-          </div>
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         </a>
         <div class="product-card-info">
-          <div class="product-cat">${p.catLabel}</div>
+          <div class="product-cat">${p.catLabel} · ${p.variant}</div>
           <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
           <div class="product-price-block">
             ${p.oldPrice ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
             <span class="product-price-main">R$ ${precoFmt}</span>
             <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
           </div>
-          <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cartPayload})" title="Adicionar ao carrinho">Adicionar ao carrinho</button>
+          <div class="product-actions">
+            <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver produto</a>
+            <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cartPayload})">+ Carrinho</button>
+          </div>
         </div>
       </div>`;
     }).join('');

@@ -234,6 +234,149 @@
 .newsletter-btn:hover { background: var(--brown-mid); }
 .newsletter-privacy { font-size: 0.62rem; color: var(--text-soft); margin-top: 1rem; letter-spacing: 0.05em; }
 
+/* HERO FULLSCREEN (estilo B) */
+.hero-full {
+  min-height: 100vh;
+  background: linear-gradient(160deg, var(--brown-deep) 0%, #1e130a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--nav-h);
+  position: relative;
+  overflow: hidden;
+  display: none;
+}
+.hero-full::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(160,120,72,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hf-content {
+  text-align: center;
+  padding: 3rem 2rem 2rem;
+  position: relative;
+  z-index: 2;
+  max-width: 740px;
+}
+.hf-tag {
+  font-size: 0.58rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hf-tag::before,.hf-tag::after { content: ''; width: 28px; height: 1px; background: var(--gold); }
+.hf-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1.0;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.8s 0.25s ease both;
+}
+.hf-title em { font-style: italic; color: var(--gold-light); }
+.hf-sub {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: rgba(245,240,234,0.55);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin-bottom: 2.2rem;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+.hf-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  animation: fadeUp 0.8s 0.55s ease both;
+}
+.hf-btn-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 48px; padding: 0 2.2rem;
+  background: var(--gold); color: var(--white);
+  font-family: var(--font-sans); font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
+  text-decoration: none; border-radius: 999px;
+  transition: background var(--transition), transform 0.15s ease;
+}
+.hf-btn-primary:hover { background: var(--gold-mid); transform: translateY(-2px); }
+.hf-btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 48px; padding: 0 2rem;
+  border: 1px solid rgba(196,164,122,0.4); color: var(--gold-pale);
+  background: transparent; font-family: var(--font-sans);
+  font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
+  text-decoration: none; border-radius: 999px;
+  transition: all var(--transition);
+}
+.hf-btn-ghost:hover { border-color: var(--gold-light); color: var(--cream); }
+.hf-products {
+  display: flex; gap: 1.2rem; justify-content: center;
+  padding: 0 2rem 1.5rem;
+  position: relative; z-index: 2;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeUp 0.8s 0.7s ease both;
+}
+.hf-mini-card {
+  flex: 0 0 calc(25% - 0.9rem);
+  max-width: 190px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(196,164,122,0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.hf-mini-card:hover { border-color: rgba(196,164,122,0.4); transform: translateY(-4px); }
+.hf-mini-img {
+  width: 100%; aspect-ratio: 3/4;
+  background: linear-gradient(160deg, #4a3828, #2a1f14);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; position: relative;
+}
+.hf-mini-img img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.hf-mini-glyph { font-family: var(--font-serif); font-size: 2.5rem; color: rgba(196,164,122,0.2); font-style: italic; }
+.hf-mini-info { padding: 0.75rem 0.9rem; }
+.hf-mini-name {
+  font-family: var(--font-serif); font-size: 0.82rem; color: var(--cream);
+  font-weight: 300; font-style: italic; line-height: 1.3; margin-bottom: 0.25rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.hf-mini-price { font-size: 0.7rem; color: var(--gold-light); letter-spacing: 0.02em; }
+.hf-stats {
+  display: flex; gap: 3rem; justify-content: center;
+  padding: 1.5rem 2rem 2.5rem;
+  border-top: 1px solid rgba(196,164,122,0.12);
+  position: relative; z-index: 2; max-width: 900px; margin: 0 auto;
+  width: 100%;
+}
+.hf-stat .num {
+  font-family: var(--font-serif); font-size: 1.6rem; font-weight: 300;
+  color: var(--gold-light); font-style: italic; line-height: 1; margin-bottom: 0.2rem;
+  text-align: center;
+}
+.hf-stat .lbl {
+  font-size: 0.56rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(255,255,255,0.3); text-align: center;
+}
+@media (max-width: 700px) {
+  .hf-products { gap: 0.7rem; }
+  .hf-mini-card { flex: 0 0 calc(50% - 0.35rem); max-width: none; }
+  .hf-stats { gap: 1.5rem; }
+}
+
 /* RESPONSIVE */
 @media (max-width: 1200px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 900px) {
@@ -287,7 +430,7 @@
 </nav>
 
 <!-- ── HERO ── -->
-<section class="hero">
+<section class="hero" id="hero-editorial">
   <div class="hero-content">
     <div class="hero-tag"><span id="hero-tag-txt">Nova Coleção · 2026</span></div>
     <h1 class="hero-title">
@@ -338,6 +481,42 @@
       </div>
     </div>
     <div class="hero-scroll-hint">Explorar</div>
+  </div>
+</section>
+
+<!-- ── HERO FULLSCREEN (Estilo B) ── -->
+<section class="hero-full" id="hero-fullscreen">
+  <div class="hf-content">
+    <div class="hf-tag"><span id="hf-tag-txt">Nova Coleção · 2026</span></div>
+    <h1 class="hf-title">
+      <span id="hf-t1">Joias que contam sua</span><br>
+      <em id="hf-t2">história</em>
+    </h1>
+    <p class="hf-sub" id="hf-sub">
+      Peças criadas com ouro 18k e pedras selecionadas,
+      inspiradas na elegância e sofisticação feminina.
+    </p>
+    <div class="hf-actions">
+      <a href="catalogo.html" class="hf-btn-primary" id="hf-btn-el">Ver Coleção</a>
+      <a href="sobre.html" class="hf-btn-ghost">Nossa história</a>
+    </div>
+  </div>
+  <div class="hf-products" id="hf-products">
+    <!-- mini cards carregados via JS -->
+  </div>
+  <div class="hf-stats">
+    <div class="hf-stat">
+      <div class="num" id="hf-stat1-val">18k</div>
+      <div class="lbl" id="hf-stat1-lbl">Ouro garantido</div>
+    </div>
+    <div class="hf-stat">
+      <div class="num" id="hf-stat2-val">500+</div>
+      <div class="lbl" id="hf-stat2-lbl">Clientes felizes</div>
+    </div>
+    <div class="hf-stat">
+      <div class="num" id="hf-stat3-val">1 ano</div>
+      <div class="lbl" id="hf-stat3-lbl">De garantia</div>
+    </div>
   </div>
 </section>
 
@@ -618,7 +797,9 @@ function cardHTML(p) {
   const precoFmt  = fmt(preco);
   const origFmt   = precoOrig ? fmt(precoOrig) : '';
   const descPct   = precoOrig ? Math.round((1 - preco / precoOrig) * 100) : 0;
-  const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${(p.material || 'Ouro 18k').replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
+  const cat       = p.categoria || 'Joia';
+  const mat       = p.material  || 'Ouro 18k';
+  const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${mat.replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
   return `
   <div class="product-card">
     <a href="produto.html?id=${p.id}" class="product-card-img">
@@ -627,18 +808,20 @@ function cardHTML(p) {
         : `<div class="product-card-placeholder">◈</div>`}
       ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
       ${descPct >= 5 ? `<span class="product-badge off">−${descPct}%</span>` : ''}
-      <div class="product-card-overlay"><span class="product-overlay-btn">Ver produto →</span></div>
       <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
     </a>
     <div class="product-card-info">
-      <div class="product-cat">${p.categoria || 'Joia'}</div>
+      <div class="product-cat">${cat} · ${mat}</div>
       <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
       <div class="product-price-block">
         ${precoOrig ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
         <span class="product-price-main">R$ ${precoFmt}</span>
         <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
       </div>
-      <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">Adicionar ao carrinho</button>
+      <div class="product-actions">
+        <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver produto</a>
+        <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">+ Carrinho</button>
+      </div>
     </div>
   </div>`;
 }
@@ -763,14 +946,21 @@ function renderTestimonials(deps) {
 }
 
 function applyConfig(d) {
-  /* Hero texto */
-  if (d.hero?.label)    document.getElementById('hero-tag-txt').textContent = d.hero.label;
-  if (d.hero?.titulo1)  document.getElementById('hero-t1').innerHTML = d.hero.titulo1.replace(/\n/g, '<br>');
-  if (d.hero?.titulo2)  document.getElementById('hero-t2').textContent = d.hero.titulo2;
-  if (d.hero?.subtitulo) document.getElementById('hero-sub').textContent = d.hero.subtitulo;
-  if (d.hero?.btn)      document.getElementById('hero-btn-el').textContent = d.hero.btn;
+  /* Hero estilo — toggle A/B */
+  const estilo = d.hero?.estilo || 'editorial';
+  const heroEd = document.getElementById('hero-editorial');
+  const heroFs = document.getElementById('hero-fullscreen');
+  if (heroEd) heroEd.style.display = estilo === 'editorial' ? '' : 'none';
+  if (heroFs) heroFs.style.display = estilo === 'fullscreen' ? 'flex' : 'none';
 
-  /* Hero imagem principal */
+  /* Hero A — texto */
+  if (d.hero?.label)     document.getElementById('hero-tag-txt').textContent = d.hero.label;
+  if (d.hero?.titulo1)   document.getElementById('hero-t1').innerHTML = d.hero.titulo1.replace(/\n/g, '<br>');
+  if (d.hero?.titulo2)   document.getElementById('hero-t2').textContent = d.hero.titulo2;
+  if (d.hero?.subtitulo) document.getElementById('hero-sub').textContent = d.hero.subtitulo;
+  if (d.hero?.btn)       document.getElementById('hero-btn-el').textContent = d.hero.btn;
+
+  /* Hero A — imagem principal */
   if (d.hero?.img) {
     const img = document.getElementById('hero-main-img');
     img.src = d.hero.img;
@@ -779,7 +969,7 @@ function applyConfig(d) {
     if (g) g.style.opacity = '0.03';
   }
 
-  /* Boxes do painel lateral */
+  /* Hero A — boxes laterais */
   if (d.box1?.nome) document.getElementById('box1-feat-name').textContent = d.box1.nome;
   if (d.box2?.img) {
     const img = document.getElementById('hero-box2-img');
@@ -792,14 +982,22 @@ function applyConfig(d) {
     const g = document.getElementById('glyph-b3'); if (g) g.style.display = 'none';
   }
 
-  /* Stats (números de credibilidade) */
+  /* Hero B — espelha texto do hero A */
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
+  set('hf-tag-txt', d.hero?.label);
+  if (d.hero?.titulo1) {
+    const el = document.getElementById('hf-t1'); if (el) el.innerHTML = d.hero.titulo1.replace(/\n/g, '<br>');
+  }
+  set('hf-t2', d.hero?.titulo2);
+  set('hf-sub', d.hero?.subtitulo);
+  set('hf-btn-el', d.hero?.btn);
+
+  /* Stats — ambos heroes */
   if (d.stats) {
-    if (d.stats.s1num)   document.getElementById('stat1-val').textContent = d.stats.s1num;
-    if (d.stats.s1label) document.getElementById('stat1-lbl').textContent = d.stats.s1label;
-    if (d.stats.s2num)   document.getElementById('stat2-val').textContent = d.stats.s2num;
-    if (d.stats.s2label) document.getElementById('stat2-lbl').textContent = d.stats.s2label;
-    if (d.stats.s3num)   document.getElementById('stat3-val').textContent = d.stats.s3num;
-    if (d.stats.s3label) document.getElementById('stat3-lbl').textContent = d.stats.s3label;
+    const sv = (a, b) => { set(a, d.stats[b]); set(a.replace('stat', 'hf-stat'), d.stats[b]); };
+    sv('stat1-val', 's1num');   sv('stat1-lbl', 's1label');
+    sv('stat2-val', 's2num');   sv('stat2-lbl', 's2label');
+    sv('stat3-val', 's3num');   sv('stat3-lbl', 's3label');
   }
 
   /* Depoimentos */
@@ -808,6 +1006,25 @@ function applyConfig(d) {
 
   /* Faixa */
   renderFaixa(d.faixa?.length ? d.faixa : DEFAULT_FAIXA);
+}
+
+function renderHeroMiniCards(produtos) {
+  const wrap = document.getElementById('hf-products');
+  if (!wrap) return;
+  const items = produtos.slice(0, 4);
+  wrap.innerHTML = items.map(p => {
+    const img = p.fotos?.[0] || '';
+    return `
+    <a href="produto.html?id=${p.id}" class="hf-mini-card">
+      <div class="hf-mini-img">
+        ${img ? `<img src="${img}" alt="${p.nome}" loading="lazy">` : `<span class="hf-mini-glyph">◈</span>`}
+      </div>
+      <div class="hf-mini-info">
+        <div class="hf-mini-name">${p.nome}</div>
+        <div class="hf-mini-price">R$ ${fmt(Number(p.preco))}</div>
+      </div>
+    </a>`;
+  }).join('');
 }
 
 /* ─── NEWSLETTER ─── */
@@ -842,6 +1059,9 @@ async function init() {
 
     /* Spotlight: os 8 mais recentes */
     renderSpotlight(todos.slice(0, 8));
+
+    /* Hero B — mini cards (4 destaques) */
+    renderHeroMiniCards(todos.slice(0, 4));
 
     /* Grid: os mesmos 8 */
     const grid = document.getElementById('products-grid');

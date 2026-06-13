@@ -188,6 +188,68 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
       </div>
     </div>
 
+    <!-- CATEGORIAS -->
+    <div class="config-card">
+      <div class="config-card-header">
+        <span class="icon">🗂️</span>
+        <h2>Fotos das Categorias (tela inicial)</h2>
+      </div>
+      <div class="config-card-body">
+        <div class="boxes-grid" style="grid-template-columns:repeat(5,1fr);">
+          <div class="box-item">
+            <h4>Anéis</h4>
+            <div class="img-upload-area" id="area-cat-aneis">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-aneis','area-cat-aneis','cat-aneis-img-url')" />
+              <div class="upload-icon">📷</div>
+              <p><small>400×500px</small></p>
+              <img id="prev-cat-aneis" class="img-preview" />
+            </div>
+            <input type="hidden" id="cat-aneis-img-url" />
+          </div>
+          <div class="box-item">
+            <h4>Colares</h4>
+            <div class="img-upload-area" id="area-cat-colares">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-colares','area-cat-colares','cat-colares-img-url')" />
+              <div class="upload-icon">📷</div>
+              <p><small>400×500px</small></p>
+              <img id="prev-cat-colares" class="img-preview" />
+            </div>
+            <input type="hidden" id="cat-colares-img-url" />
+          </div>
+          <div class="box-item">
+            <h4>Pulseiras</h4>
+            <div class="img-upload-area" id="area-cat-pulseiras">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-pulseiras','area-cat-pulseiras','cat-pulseiras-img-url')" />
+              <div class="upload-icon">📷</div>
+              <p><small>400×500px</small></p>
+              <img id="prev-cat-pulseiras" class="img-preview" />
+            </div>
+            <input type="hidden" id="cat-pulseiras-img-url" />
+          </div>
+          <div class="box-item">
+            <h4>Brincos</h4>
+            <div class="img-upload-area" id="area-cat-brincos">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-brincos','area-cat-brincos','cat-brincos-img-url')" />
+              <div class="upload-icon">📷</div>
+              <p><small>400×500px</small></p>
+              <img id="prev-cat-brincos" class="img-preview" />
+            </div>
+            <input type="hidden" id="cat-brincos-img-url" />
+          </div>
+          <div class="box-item">
+            <h4>Conjuntos</h4>
+            <div class="img-upload-area" id="area-cat-conjuntos">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-conjuntos','area-cat-conjuntos','cat-conjuntos-img-url')" />
+              <div class="upload-icon">📷</div>
+              <p><small>400×500px</small></p>
+              <img id="prev-cat-conjuntos" class="img-preview" />
+            </div>
+            <input type="hidden" id="cat-conjuntos-img-url" />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- CAIXAS DESTAQUE -->
     <div class="config-card">
       <div class="config-card-header">
@@ -423,6 +485,12 @@ async function carregarConfigs() {
     const radioEl = document.querySelector(`input[name="hero-estilo"][value="${estilo}"]`);
     if (radioEl) radioEl.checked = true;
 
+    // Categorias
+    ['aneis','colares','pulseiras','brincos','conjuntos'].forEach(cat => {
+      const img = d.categorias?.[cat]?.img;
+      if (img) showPreview('prev-cat-' + cat, img, 'cat-' + cat + '-img-url');
+    });
+
     // Depoimentos
     if (d.depoimentos && Array.isArray(d.depoimentos) && d.depoimentos.length > 0) {
       depoimentos = d.depoimentos;
@@ -494,6 +562,13 @@ window.salvarTudo = async function() {
         s1num: getVal('stat1-num'), s1label: getVal('stat1-label'),
         s2num: getVal('stat2-num'), s2label: getVal('stat2-label'),
         s3num: getVal('stat3-num'), s3label: getVal('stat3-label'),
+      },
+      categorias: {
+        aneis:     { img: getVal('cat-aneis-img-url') },
+        colares:   { img: getVal('cat-colares-img-url') },
+        pulseiras: { img: getVal('cat-pulseiras-img-url') },
+        brincos:   { img: getVal('cat-brincos-img-url') },
+        conjuntos: { img: getVal('cat-conjuntos-img-url') },
       },
       atualizadoEm: new Date().toISOString()
     };

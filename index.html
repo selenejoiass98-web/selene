@@ -234,147 +234,101 @@
 .newsletter-btn:hover { background: var(--brown-mid); }
 .newsletter-privacy { font-size: 0.62rem; color: var(--text-soft); margin-top: 1rem; letter-spacing: 0.05em; }
 
-/* HERO FULLSCREEN (estilo B) */
+/* HERO FULLSCREEN (estilo B) — split editorial */
 .hero-full {
   min-height: 100vh;
-  background: linear-gradient(160deg, var(--brown-deep) 0%, #1e130a 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   padding-top: var(--nav-h);
-  position: relative;
   overflow: hidden;
   display: none;
 }
-.hero-full::before {
+.hf-left {
+  background: linear-gradient(150deg, #160c05 0%, #2a1a0e 50%, #3d2b1a 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem 4.5rem 5rem 6rem;
+  position: relative;
+  z-index: 1;
+}
+.hf-left::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(160,120,72,0.18) 0%, transparent 70%);
+  background: radial-gradient(ellipse 90% 70% at 20% 60%, rgba(160,120,72,0.15) 0%, transparent 70%);
   pointer-events: none;
 }
-.hf-content {
-  text-align: center;
-  padding: 3rem 2rem 2rem;
+.hf-right {
   position: relative;
-  z-index: 2;
-  max-width: 740px;
+  overflow: hidden;
+  background: var(--cream-dark);
+}
+.hf-right img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+.hf-right:hover img { transform: scale(1.03); }
+.hf-right::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(22,12,5,0.35) 0%, transparent 45%);
+  pointer-events: none;
+}
+.hf-right-glyph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 12rem;
+  color: rgba(196,164,122,0.12);
+  font-style: italic;
+  user-select: none;
 }
 .hf-tag {
   font-size: 0.58rem;
   letter-spacing: 0.45em;
   text-transform: uppercase;
   color: var(--gold-light);
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1.8rem;
+  margin-bottom: 2rem;
   animation: fadeUp 0.8s 0.1s ease both;
 }
-.hf-tag::before,.hf-tag::after { content: ''; width: 28px; height: 1px; background: var(--gold); }
+.hf-tag::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
 .hf-title {
   font-family: var(--font-serif);
-  font-size: clamp(3rem, 6vw, 6rem);
+  font-size: clamp(3rem, 4.5vw, 5.5rem);
   font-weight: 300;
   color: var(--cream);
   line-height: 1.0;
   letter-spacing: -0.01em;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
   animation: fadeUp 0.8s 0.25s ease both;
 }
 .hf-title em { font-style: italic; color: var(--gold-light); }
-.hf-sub {
-  font-size: 0.9rem;
-  line-height: 1.9;
-  color: rgba(245,240,234,0.55);
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  margin-bottom: 2.2rem;
-  animation: fadeUp 0.8s 0.4s ease both;
-}
-.hf-actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.2rem;
-  animation: fadeUp 0.8s 0.55s ease both;
-}
 .hf-btn-primary {
   display: inline-flex; align-items: center; justify-content: center;
-  height: 48px; padding: 0 2.2rem;
+  height: 50px; padding: 0 2.5rem;
   background: var(--gold); color: var(--white);
   font-family: var(--font-sans); font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
-  text-decoration: none; border-radius: 999px;
+  text-decoration: none; border-radius: 999px; align-self: flex-start;
   transition: background var(--transition), transform 0.15s ease;
+  animation: fadeUp 0.8s 0.4s ease both;
 }
 .hf-btn-primary:hover { background: var(--gold-mid); transform: translateY(-2px); }
-.hf-btn-ghost {
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 48px; padding: 0 2rem;
-  border: 1px solid rgba(196,164,122,0.4); color: var(--gold-pale);
-  background: transparent; font-family: var(--font-sans);
-  font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
-  text-decoration: none; border-radius: 999px;
-  transition: all var(--transition);
-}
-.hf-btn-ghost:hover { border-color: var(--gold-light); color: var(--cream); }
-.hf-products {
-  display: flex; gap: 1.2rem; justify-content: center;
-  padding: 0 2rem 1.5rem;
-  position: relative; z-index: 2;
-  overflow: hidden;
-  flex-wrap: nowrap;
-  max-width: 900px;
-  margin: 0 auto;
-  animation: fadeUp 0.8s 0.7s ease both;
-}
-.hf-mini-card {
-  flex: 0 0 calc(25% - 0.9rem);
-  max-width: 190px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(196,164,122,0.15);
-  border-radius: 12px;
-  overflow: hidden;
-  text-decoration: none;
-  transition: border-color var(--transition), transform var(--transition);
-}
-.hf-mini-card:hover { border-color: rgba(196,164,122,0.4); transform: translateY(-4px); }
-.hf-mini-img {
-  width: 100%; aspect-ratio: 3/4;
-  background: linear-gradient(160deg, #4a3828, #2a1f14);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden; position: relative;
-}
-.hf-mini-img img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
-.hf-mini-glyph { font-family: var(--font-serif); font-size: 2.5rem; color: rgba(196,164,122,0.2); font-style: italic; }
-.hf-mini-info { padding: 0.75rem 0.9rem; }
-.hf-mini-name {
-  font-family: var(--font-serif); font-size: 0.82rem; color: var(--cream);
-  font-weight: 300; font-style: italic; line-height: 1.3; margin-bottom: 0.25rem;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.hf-mini-price { font-size: 0.7rem; color: var(--gold-light); letter-spacing: 0.02em; }
-.hf-stats {
-  display: flex; gap: 3rem; justify-content: center;
-  padding: 1.5rem 2rem 2.5rem;
-  border-top: 1px solid rgba(196,164,122,0.12);
-  position: relative; z-index: 2; max-width: 900px; margin: 0 auto;
-  width: 100%;
-}
-.hf-stat .num {
-  font-family: var(--font-serif); font-size: 1.6rem; font-weight: 300;
-  color: var(--gold-light); font-style: italic; line-height: 1; margin-bottom: 0.2rem;
-  text-align: center;
-}
-.hf-stat .lbl {
-  font-size: 0.56rem; letter-spacing: 0.22em; text-transform: uppercase;
-  color: rgba(255,255,255,0.3); text-align: center;
-}
-@media (max-width: 700px) {
-  .hf-products { gap: 0.7rem; }
-  .hf-mini-card { flex: 0 0 calc(50% - 0.35rem); max-width: none; }
-  .hf-stats { gap: 1.5rem; }
+@media (max-width: 900px) {
+  .hero-full { grid-template-columns: 1fr; }
+  .hf-left { padding: 3rem 2rem; }
+  .hf-right { height: 55vw; }
 }
 
 /* RESPONSIVE */
@@ -486,37 +440,17 @@
 
 <!-- ── HERO FULLSCREEN (Estilo B) ── -->
 <section class="hero-full" id="hero-fullscreen">
-  <div class="hf-content">
+  <div class="hf-left">
     <div class="hf-tag"><span id="hf-tag-txt">Nova Coleção · 2026</span></div>
     <h1 class="hf-title">
-      <span id="hf-t1">Joias que contam sua</span><br>
+      <span id="hf-t1">Joias que<br>contam sua</span><br>
       <em id="hf-t2">história</em>
     </h1>
-    <p class="hf-sub" id="hf-sub">
-      Peças criadas com ouro 18k e pedras selecionadas,
-      inspiradas na elegância e sofisticação feminina.
-    </p>
-    <div class="hf-actions">
-      <a href="catalogo.html" class="hf-btn-primary" id="hf-btn-el">Ver Coleção</a>
-      <a href="sobre.html" class="hf-btn-ghost">Nossa história</a>
-    </div>
+    <a href="catalogo.html" class="hf-btn-primary" id="hf-btn-el">Ver Coleção</a>
   </div>
-  <div class="hf-products" id="hf-products">
-    <!-- mini cards carregados via JS -->
-  </div>
-  <div class="hf-stats">
-    <div class="hf-stat">
-      <div class="num" id="hf-stat1-val">18k</div>
-      <div class="lbl" id="hf-stat1-lbl">Ouro garantido</div>
-    </div>
-    <div class="hf-stat">
-      <div class="num" id="hf-stat2-val">500+</div>
-      <div class="lbl" id="hf-stat2-lbl">Clientes felizes</div>
-    </div>
-    <div class="hf-stat">
-      <div class="num" id="hf-stat3-val">1 ano</div>
-      <div class="lbl" id="hf-stat3-lbl">De garantia</div>
-    </div>
+  <div class="hf-right">
+    <img id="hf-main-img" alt="Elenice Collection" style="display:none;" />
+    <div class="hf-right-glyph" id="hf-right-glyph">◈</div>
   </div>
 </section>
 
@@ -563,23 +497,38 @@
     </div>
     <div class="cats-grid reveal">
       <a href="catalogo.html?cat=aneis" class="cat-card">
-        <div class="cat-img"><span class="cat-img-glyph">◎</span></div>
+        <div class="cat-img">
+          <img id="cat-img-aneis" alt="Anéis" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-aneis">◎</span>
+        </div>
         <span class="cat-lbl">Anéis</span>
       </a>
       <a href="catalogo.html?cat=colares" class="cat-card">
-        <div class="cat-img"><span class="cat-img-glyph">∿</span></div>
+        <div class="cat-img">
+          <img id="cat-img-colares" alt="Colares" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-colares">∿</span>
+        </div>
         <span class="cat-lbl">Colares</span>
       </a>
       <a href="catalogo.html?cat=pulseiras" class="cat-card">
-        <div class="cat-img"><span class="cat-img-glyph">⊂</span></div>
+        <div class="cat-img">
+          <img id="cat-img-pulseiras" alt="Pulseiras" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-pulseiras">⊂</span>
+        </div>
         <span class="cat-lbl">Pulseiras</span>
       </a>
       <a href="catalogo.html?cat=brincos" class="cat-card">
-        <div class="cat-img"><span class="cat-img-glyph">⊕</span></div>
+        <div class="cat-img">
+          <img id="cat-img-brincos" alt="Brincos" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-brincos">⊕</span>
+        </div>
         <span class="cat-lbl">Brincos</span>
       </a>
       <a href="catalogo.html?cat=conjuntos" class="cat-card">
-        <div class="cat-img"><span class="cat-img-glyph">✦</span></div>
+        <div class="cat-img">
+          <img id="cat-img-conjuntos" alt="Conjuntos" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-conjuntos">✦</span>
+        </div>
         <span class="cat-lbl">Conjuntos</span>
       </a>
     </div>
@@ -989,15 +938,33 @@ function applyConfig(d) {
     const el = document.getElementById('hf-t1'); if (el) el.innerHTML = d.hero.titulo1.replace(/\n/g, '<br>');
   }
   set('hf-t2', d.hero?.titulo2);
-  set('hf-sub', d.hero?.subtitulo);
   set('hf-btn-el', d.hero?.btn);
 
-  /* Stats — ambos heroes */
+  /* Hero B — imagem (mesma do Hero A) */
+  if (d.hero?.img) {
+    const img = document.getElementById('hf-main-img');
+    if (img) { img.src = d.hero.img; img.style.display = 'block'; }
+    const g = document.getElementById('hf-right-glyph');
+    if (g) g.style.display = 'none';
+  }
+
+  /* Stats — hero A */
   if (d.stats) {
-    const sv = (a, b) => { set(a, d.stats[b]); set(a.replace('stat', 'hf-stat'), d.stats[b]); };
-    sv('stat1-val', 's1num');   sv('stat1-lbl', 's1label');
-    sv('stat2-val', 's2num');   sv('stat2-lbl', 's2label');
-    sv('stat3-val', 's3num');   sv('stat3-lbl', 's3label');
+    set('stat1-val', d.stats.s1num);   set('stat1-lbl', d.stats.s1label);
+    set('stat2-val', d.stats.s2num);   set('stat2-lbl', d.stats.s2label);
+    set('stat3-val', d.stats.s3num);   set('stat3-lbl', d.stats.s3label);
+  }
+
+  /* Categorias — fotos dos tiles */
+  if (d.categorias) {
+    ['aneis','colares','pulseiras','brincos','conjuntos'].forEach(cat => {
+      const img = d.categorias[cat]?.img;
+      if (!img) return;
+      const el = document.getElementById('cat-img-' + cat);
+      if (el) { el.src = img; el.style.display = 'block'; }
+      const glyph = document.getElementById('cat-glyph-' + cat);
+      if (glyph) glyph.style.display = 'none';
+    });
   }
 
   /* Depoimentos */
@@ -1059,9 +1026,6 @@ async function init() {
 
     /* Spotlight: os 8 mais recentes */
     renderSpotlight(todos.slice(0, 8));
-
-    /* Hero B — mini cards (4 destaques) */
-    renderHeroMiniCards(todos.slice(0, 4));
 
     /* Grid: os mesmos 8 */
     const grid = document.getElementById('products-grid');

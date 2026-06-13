@@ -215,18 +215,99 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
             <input type="text" id="herob-btn" placeholder="Ver Coleção" />
           </div>
         </div>
-        <p style="font-size:0.78rem;color:var(--text-s);margin-bottom:1rem;">9 fotos — exibidas 3 por vez, alternando automaticamente a cada 5 segundos. Recomendado: fotos verticais 600×900px.</p>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
-          ${[1,2,3,4,5,6,7,8,9].map(i => `
+        <p style="font-size:0.75rem;color:var(--text-s);margin:0.5rem 0 1rem;background:var(--cream);border-radius:6px;padding:0.6rem 0.9rem;">📐 9 fotos verticais · ideal <strong>600×900px</strong> · formato JPG ou PNG · exibidas 3 por vez, trocam a cada 5 seg.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;">
+
           <div>
-            <p style="font-size:0.72rem;font-weight:500;color:var(--brown);margin-bottom:0.4rem;">Foto ${i}</p>
-            <div class="img-upload-area" id="area-herob-foto${i}">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto${i}','area-herob-foto${i}','herob-foto${i}-url')" />
-              <div class="upload-icon">📷</div>
-              <img id="prev-herob-foto${i}" class="img-preview" />
+            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 1</p>
+            <div class="img-upload-area" id="area-herob-foto1" style="padding:0.7rem;">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto1','area-herob-foto1','herob-foto1-url')" />
+              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+              <img id="prev-herob-foto1" class="img-preview" style="max-height:100px;" />
             </div>
-            <input type="hidden" id="herob-foto${i}-url" />
-          </div>`).join('')}
+            <input type="hidden" id="herob-foto1-url" />
+          </div>
+
+          <div>
+            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 2</p>
+            <div class="img-upload-area" id="area-herob-foto2" style="padding:0.7rem;">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto2','area-herob-foto2','herob-foto2-url')" />
+              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+              <img id="prev-herob-foto2" class="img-preview" style="max-height:100px;" />
+            </div>
+            <input type="hidden" id="herob-foto2-url" />
+          </div>
+
+          <div>
+            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 3</p>
+            <div class="img-upload-area" id="area-herob-foto3" style="padding:0.7rem;">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto3','area-herob-foto3','herob-foto3-url')" />
+              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+              <img id="prev-herob-foto3" class="img-preview" style="max-height:100px;" />
+            </div>
+            <input type="hidden" id="herob-foto3-url" />
+          </div>
+
+          <div>
+            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 4</p>
+            <div class="img-upload-area" id="area-herob-foto4" style="padding:0.7rem;">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto4','area-herob-foto4','herob-foto4-url')" />
+              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+              <img id="prev-herob-foto4" class="img-preview" style="max-height:100px;" />
+            </div>
+            <input type="hidden" id="herob-foto4-url" />
+          </div>
+
+          <div>
+            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 5</p>
+            <div class="img-upload-area" id="area-herob-foto5" style="padding:0.7rem;">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto5','area-herob-foto5','herob-foto5-url')" />
+              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+              <img id="prev-herob-foto5" class="img-preview" style="max-height:100px;" />
+            </div>
+            <input type="hidden" id="herob-foto5-url" />
+          </div>
+
+          <div>
+            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 6</p>
+            <div class="img-upload-area" id="area-herob-foto6" style="padding:0.7rem;">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto6','area-herob-foto6','herob-foto6-url')" />
+              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+              <img id="prev-herob-foto6" class="img-preview" style="max-height:100px;" />
+            </div>
+            <input type="hidden" id="herob-foto6-url" />
+          </div>
+
+          <div>
+            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 7</p>
+            <div class="img-upload-area" id="area-herob-foto7" style="padding:0.7rem;">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto7','area-herob-foto7','herob-foto7-url')" />
+              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+              <img id="prev-herob-foto7" class="img-preview" style="max-height:100px;" />
+            </div>
+            <input type="hidden" id="herob-foto7-url" />
+          </div>
+
+          <div>
+            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 8</p>
+            <div class="img-upload-area" id="area-herob-foto8" style="padding:0.7rem;">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto8','area-herob-foto8','herob-foto8-url')" />
+              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+              <img id="prev-herob-foto8" class="img-preview" style="max-height:100px;" />
+            </div>
+            <input type="hidden" id="herob-foto8-url" />
+          </div>
+
+          <div>
+            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 9</p>
+            <div class="img-upload-area" id="area-herob-foto9" style="padding:0.7rem;">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto9','area-herob-foto9','herob-foto9-url')" />
+              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+              <img id="prev-herob-foto9" class="img-preview" style="max-height:100px;" />
+            </div>
+            <input type="hidden" id="herob-foto9-url" />
+          </div>
+
         </div>
       </div>
     </div>

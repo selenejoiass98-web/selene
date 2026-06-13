@@ -234,101 +234,136 @@
 .newsletter-btn:hover { background: var(--brown-mid); }
 .newsletter-privacy { font-size: 0.62rem; color: var(--text-soft); margin-top: 1rem; letter-spacing: 0.05em; }
 
-/* HERO FULLSCREEN (estilo B) — split editorial */
+/* HERO FULLSCREEN (estilo B) — Woopy style: 3 painéis + texto overlay */
 .hero-full {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding-top: var(--nav-h);
+  position: relative;
   overflow: hidden;
   display: none;
+  padding-top: var(--nav-h);
 }
-.hf-left {
-  background: linear-gradient(150deg, #160c05 0%, #2a1a0e 50%, #3d2b1a 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 5rem 4.5rem 5rem 6rem;
-  position: relative;
-  z-index: 1;
+.hf-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: calc(100vh - var(--nav-h));
+  min-height: 520px;
 }
-.hf-left::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 90% 70% at 20% 60%, rgba(160,120,72,0.15) 0%, transparent 70%);
-  pointer-events: none;
-}
-.hf-right {
+.hf-panel {
   position: relative;
   overflow: hidden;
-  background: var(--cream-dark);
+  background: var(--brown-deep);
 }
-.hf-right img {
+.hf-panel img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.8s ease;
+  transition: opacity 0.75s ease;
 }
-.hf-right:hover img { transform: scale(1.03); }
-.hf-right::after {
+.hf-panel img.hf-fade { opacity: 0 !important; }
+.hf-panel::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(22,12,5,0.35) 0%, transparent 45%);
+  background: rgba(0,0,0,0.18);
   pointer-events: none;
+  z-index: 1;
 }
-.hf-right-glyph {
+.hf-panel-placeholder {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-serif);
-  font-size: 12rem;
-  color: rgba(196,164,122,0.12);
+  font-size: 6rem;
+  color: rgba(196,164,122,0.15);
   font-style: italic;
   user-select: none;
 }
-.hf-tag {
-  font-size: 0.58rem;
-  letter-spacing: 0.45em;
-  text-transform: uppercase;
-  color: var(--gold-light);
+/* Overlay de texto — centralizado em cima dos 3 painéis */
+.hf-text-overlay {
+  position: absolute;
+  inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  animation: fadeUp 0.8s 0.1s ease both;
+  justify-content: center;
+  text-align: center;
+  z-index: 10;
+  padding: 0 1.5rem;
+  pointer-events: none;
 }
-.hf-tag::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
-.hf-title {
+.hf-text-overlay > * { pointer-events: all; }
+.hf-over-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 0.6rem;
+}
+.hf-over-big {
   font-family: var(--font-serif);
-  font-size: clamp(3rem, 4.5vw, 5.5rem);
+  font-size: clamp(4.5rem, 11vw, 10rem);
   font-weight: 300;
-  color: var(--cream);
-  line-height: 1.0;
-  letter-spacing: -0.01em;
-  margin-bottom: 2.5rem;
-  animation: fadeUp 0.8s 0.25s ease both;
+  color: var(--white);
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  text-shadow: 0 6px 50px rgba(0,0,0,0.45);
+  margin-bottom: 2rem;
 }
-.hf-title em { font-style: italic; color: var(--gold-light); }
-.hf-btn-primary {
+.hf-over-big em { font-style: italic; }
+.hf-over-btn {
   display: inline-flex; align-items: center; justify-content: center;
-  height: 50px; padding: 0 2.5rem;
-  background: var(--gold); color: var(--white);
-  font-family: var(--font-sans); font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
-  text-decoration: none; border-radius: 999px; align-self: flex-start;
-  transition: background var(--transition), transform 0.15s ease;
-  animation: fadeUp 0.8s 0.4s ease both;
+  height: 48px; padding: 0 2.5rem;
+  border: 1.5px solid rgba(255,255,255,0.75);
+  color: var(--white); background: transparent;
+  font-family: var(--font-sans); font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
-.hf-btn-primary:hover { background: var(--gold-mid); transform: translateY(-2px); }
-@media (max-width: 900px) {
-  .hero-full { grid-template-columns: 1fr; }
-  .hf-left { padding: 3rem 2rem; }
-  .hf-right { height: 55vw; }
+.hf-over-btn:hover { background: var(--white); color: var(--brown-deep); border-color: var(--white); }
+/* Setas */
+.hf-arrow {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  z-index: 20;
+  width: 50px; height: 50px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 50%;
+  color: var(--white);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+  backdrop-filter: blur(6px);
+  transition: background var(--transition);
+}
+.hf-arrow:hover { background: rgba(255,255,255,0.28); }
+.hf-arrow-prev { left: 1.5rem; }
+.hf-arrow-next { right: 1.5rem; }
+/* Dots */
+.hf-dots {
+  position: absolute;
+  bottom: 1.6rem;
+  left: 50%; transform: translateX(-50%);
+  z-index: 20;
+  display: flex; gap: 0.45rem;
+}
+.hf-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.38);
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+}
+.hf-dot.active { background: var(--white); width: 22px; border-radius: 4px; }
+@media (max-width: 700px) {
+  .hf-panels { grid-template-columns: 1fr; }
+  .hf-panel:not(:nth-child(2)) { display: none; }
+  .hf-over-big { font-size: clamp(3.5rem, 18vw, 6rem); }
 }
 
 /* RESPONSIVE */
@@ -438,20 +473,30 @@
   </div>
 </section>
 
-<!-- ── HERO FULLSCREEN (Estilo B) ── -->
+<!-- ── HERO FULLSCREEN (Estilo B) — 3 painéis Woopy ── -->
 <section class="hero-full" id="hero-fullscreen">
-  <div class="hf-left">
-    <div class="hf-tag"><span id="hf-tag-txt">Nova Coleção · 2026</span></div>
-    <h1 class="hf-title">
-      <span id="hf-t1">Joias que<br>contam sua</span><br>
-      <em id="hf-t2">história</em>
-    </h1>
-    <a href="catalogo.html" class="hf-btn-primary" id="hf-btn-el">Ver Coleção</a>
+  <div class="hf-panels">
+    <div class="hf-panel" id="hf-panel-0">
+      <img id="hf-img-0" alt="" /><div class="hf-panel-placeholder">◈</div>
+    </div>
+    <div class="hf-panel" id="hf-panel-1">
+      <img id="hf-img-1" alt="" /><div class="hf-panel-placeholder">◈</div>
+    </div>
+    <div class="hf-panel" id="hf-panel-2">
+      <img id="hf-img-2" alt="" /><div class="hf-panel-placeholder">◈</div>
+    </div>
   </div>
-  <div class="hf-right">
-    <img id="hf-main-img" alt="Elenice Collection" style="display:none;" />
-    <div class="hf-right-glyph" id="hf-right-glyph">◈</div>
+  <div class="hf-text-overlay">
+    <div class="hf-over-tag" id="hf-tag-txt">Coleção 2026</div>
+    <div class="hf-over-big">
+      <span id="hf-t1" style="display:block;font-size:0.38em;font-style:normal;letter-spacing:0.12em;font-family:var(--font-sans);font-weight:300;margin-bottom:0.3em;">Sua via em direção à</span>
+      <em id="hf-t2">ELEGÂNCIA</em>
+    </div>
+    <a href="catalogo.html" class="hf-over-btn" id="hf-btn-el">Ver Coleção</a>
   </div>
+  <button class="hf-arrow hf-arrow-prev" onclick="hfPrev()">&#8249;</button>
+  <button class="hf-arrow hf-arrow-next" onclick="hfNext()">&#8250;</button>
+  <div class="hf-dots" id="hf-dots"></div>
 </section>
 
 <!-- ── TRUST STRIP ── -->
@@ -894,74 +939,119 @@ function renderTestimonials(deps) {
   }).join('');
 }
 
+/* ─── HERO B SLIDESHOW ─── */
+let hfGroup = 0;
+let hfTimer = null;
+let hfPhotos = [];
+
+function hfBuildDots() {
+  const total = Math.max(1, Math.ceil(hfPhotos.length / 3));
+  const el = document.getElementById('hf-dots');
+  if (!el) return;
+  el.innerHTML = Array.from({ length: total }, (_, i) =>
+    `<button class="hf-dot${i === 0 ? ' active' : ''}" onclick="hfGoTo(${i})"></button>`
+  ).join('');
+}
+
+function hfGoTo(group) {
+  const total = Math.max(1, Math.ceil(hfPhotos.length / 3));
+  hfGroup = ((group % total) + total) % total;
+  for (let col = 0; col < 3; col++) {
+    const img = document.getElementById('hf-img-' + col);
+    if (!img) continue;
+    const url = hfPhotos[hfGroup * 3 + col] || '';
+    if (!url) { img.style.opacity = '0'; continue; }
+    img.classList.add('hf-fade');
+    setTimeout(() => {
+      img.src = url;
+      img.style.display = 'block';
+      img.classList.remove('hf-fade');
+    }, 200);
+  }
+  document.querySelectorAll('.hf-dot').forEach((d, i) => d.classList.toggle('active', i === hfGroup));
+}
+
+function hfStartTimer() {
+  clearInterval(hfTimer);
+  hfTimer = setInterval(() => hfGoTo(hfGroup + 1), 5000);
+}
+
+window.hfPrev = () => { hfGoTo(hfGroup - 1); hfStartTimer(); };
+window.hfNext = () => { hfGoTo(hfGroup + 1); hfStartTimer(); };
+
+function initHeroB(photos) {
+  hfPhotos = photos.filter(Boolean);
+  if (!hfPhotos.length) return;
+  for (let col = 0; col < 3; col++) {
+    const img = document.getElementById('hf-img-' + col);
+    if (img && hfPhotos[col]) { img.src = hfPhotos[col]; img.style.display = 'block'; }
+  }
+  hfBuildDots();
+  hfStartTimer();
+}
+
 function applyConfig(d) {
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
+
   /* Hero estilo — toggle A/B */
   const estilo = d.hero?.estilo || 'editorial';
   const heroEd = document.getElementById('hero-editorial');
   const heroFs = document.getElementById('hero-fullscreen');
   if (heroEd) heroEd.style.display = estilo === 'editorial' ? '' : 'none';
-  if (heroFs) heroFs.style.display = estilo === 'fullscreen' ? 'flex' : 'none';
+  if (heroFs) heroFs.style.display = estilo === 'fullscreen' ? 'block' : 'none';
 
   /* Hero A — texto */
-  if (d.hero?.label)     document.getElementById('hero-tag-txt').textContent = d.hero.label;
-  if (d.hero?.titulo1)   document.getElementById('hero-t1').innerHTML = d.hero.titulo1.replace(/\n/g, '<br>');
-  if (d.hero?.titulo2)   document.getElementById('hero-t2').textContent = d.hero.titulo2;
-  if (d.hero?.subtitulo) document.getElementById('hero-sub').textContent = d.hero.subtitulo;
-  if (d.hero?.btn)       document.getElementById('hero-btn-el').textContent = d.hero.btn;
+  if (d.hero?.label)     set('hero-tag-txt', d.hero.label);
+  if (d.hero?.titulo1)   { const el = document.getElementById('hero-t1'); if (el) el.innerHTML = d.hero.titulo1.replace(/\n/g, '<br>'); }
+  if (d.hero?.titulo2)   set('hero-t2', d.hero.titulo2);
+  if (d.hero?.subtitulo) set('hero-sub', d.hero.subtitulo);
+  if (d.hero?.btn)       set('hero-btn-el', d.hero.btn);
 
-  /* Hero A — imagem principal */
+  /* Hero A — imagem */
   if (d.hero?.img) {
     const img = document.getElementById('hero-main-img');
-    img.src = d.hero.img;
-    img.style.display = 'block';
+    if (img) { img.src = d.hero.img; img.style.display = 'block'; }
     const g = document.getElementById('hero-glyph');
     if (g) g.style.opacity = '0.03';
   }
 
   /* Hero A — boxes laterais */
-  if (d.box1?.nome) document.getElementById('box1-feat-name').textContent = d.box1.nome;
+  if (d.box1?.nome) set('box1-feat-name', d.box1.nome);
   if (d.box2?.img) {
     const img = document.getElementById('hero-box2-img');
-    img.src = d.box2.img; img.style.display = 'block';
+    if (img) { img.src = d.box2.img; img.style.display = 'block'; }
     const g = document.getElementById('glyph-b2'); if (g) g.style.display = 'none';
   }
   if (d.box3?.img) {
     const img = document.getElementById('hero-box3-img');
-    img.src = d.box3.img; img.style.display = 'block';
+    if (img) { img.src = d.box3.img; img.style.display = 'block'; }
     const g = document.getElementById('glyph-b3'); if (g) g.style.display = 'none';
   }
 
-  /* Hero B — espelha texto do hero A */
-  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
-  set('hf-tag-txt', d.hero?.label);
-  if (d.hero?.titulo1) {
-    const el = document.getElementById('hf-t1'); if (el) el.innerHTML = d.hero.titulo1.replace(/\n/g, '<br>');
-  }
-  set('hf-t2', d.hero?.titulo2);
-  set('hf-btn-el', d.hero?.btn);
-
-  /* Hero B — imagem (mesma do Hero A) */
-  if (d.hero?.img) {
-    const img = document.getElementById('hf-main-img');
-    if (img) { img.src = d.hero.img; img.style.display = 'block'; }
-    const g = document.getElementById('hf-right-glyph');
-    if (g) g.style.display = 'none';
+  /* Hero B — texto próprio */
+  if (d.heroB) {
+    set('hf-tag-txt', d.heroB.titulo);
+    set('hf-t2',      d.heroB.tituloGrande);
+    set('hf-t1',      d.heroB.subtitulo);
+    set('hf-btn-el',  d.heroB.btn);
+    const fotos = [1,2,3,4,5,6,7,8,9].map(i => d.heroB['foto' + i] || '');
+    initHeroB(fotos);
   }
 
-  /* Stats — hero A */
+  /* Stats */
   if (d.stats) {
     set('stat1-val', d.stats.s1num);   set('stat1-lbl', d.stats.s1label);
     set('stat2-val', d.stats.s2num);   set('stat2-lbl', d.stats.s2label);
     set('stat3-val', d.stats.s3num);   set('stat3-lbl', d.stats.s3label);
   }
 
-  /* Categorias — fotos dos tiles */
+  /* Categorias */
   if (d.categorias) {
     ['aneis','colares','pulseiras','brincos','conjuntos'].forEach(cat => {
-      const img = d.categorias[cat]?.img;
-      if (!img) return;
+      const url = d.categorias[cat]?.img;
+      if (!url) return;
       const el = document.getElementById('cat-img-' + cat);
-      if (el) { el.src = img; el.style.display = 'block'; }
+      if (el) { el.src = url; el.style.display = 'block'; }
       const glyph = document.getElementById('cat-glyph-' + cat);
       if (glyph) glyph.style.display = 'none';
     });
@@ -973,25 +1063,6 @@ function applyConfig(d) {
 
   /* Faixa */
   renderFaixa(d.faixa?.length ? d.faixa : DEFAULT_FAIXA);
-}
-
-function renderHeroMiniCards(produtos) {
-  const wrap = document.getElementById('hf-products');
-  if (!wrap) return;
-  const items = produtos.slice(0, 4);
-  wrap.innerHTML = items.map(p => {
-    const img = p.fotos?.[0] || '';
-    return `
-    <a href="produto.html?id=${p.id}" class="hf-mini-card">
-      <div class="hf-mini-img">
-        ${img ? `<img src="${img}" alt="${p.nome}" loading="lazy">` : `<span class="hf-mini-glyph">◈</span>`}
-      </div>
-      <div class="hf-mini-info">
-        <div class="hf-mini-name">${p.nome}</div>
-        <div class="hf-mini-price">R$ ${fmt(Number(p.preco))}</div>
-      </div>
-    </a>`;
-  }).join('');
 }
 
 /* ─── NEWSLETTER ─── */

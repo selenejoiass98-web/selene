@@ -188,6 +188,49 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
       </div>
     </div>
 
+    <!-- HERO B -->
+    <div class="config-card">
+      <div class="config-card-header">
+        <span class="icon">🎞️</span>
+        <h2>Banner Fullscreen — Estilo B (3 fotos + texto)</h2>
+      </div>
+      <div class="config-card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Etiqueta (ex: Coleção 2026)</label>
+            <input type="text" id="herob-titulo" placeholder="Coleção 2026" />
+          </div>
+          <div class="form-group">
+            <label>Subtítulo acima do título grande</label>
+            <input type="text" id="herob-subtitulo" placeholder="Sua via em direção à" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Título grande (destaque)</label>
+            <input type="text" id="herob-titulo-grande" placeholder="ELEGÂNCIA" />
+          </div>
+          <div class="form-group">
+            <label>Texto do botão</label>
+            <input type="text" id="herob-btn" placeholder="Ver Coleção" />
+          </div>
+        </div>
+        <p style="font-size:0.78rem;color:var(--text-s);margin-bottom:1rem;">9 fotos — exibidas 3 por vez, alternando automaticamente a cada 5 segundos. Recomendado: fotos verticais 600×900px.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+          ${[1,2,3,4,5,6,7,8,9].map(i => `
+          <div>
+            <p style="font-size:0.72rem;font-weight:500;color:var(--brown);margin-bottom:0.4rem;">Foto ${i}</p>
+            <div class="img-upload-area" id="area-herob-foto${i}">
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto${i}','area-herob-foto${i}','herob-foto${i}-url')" />
+              <div class="upload-icon">📷</div>
+              <img id="prev-herob-foto${i}" class="img-preview" />
+            </div>
+            <input type="hidden" id="herob-foto${i}-url" />
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
     <!-- CATEGORIAS -->
     <div class="config-card">
       <div class="config-card-header">
@@ -485,6 +528,18 @@ async function carregarConfigs() {
     const radioEl = document.querySelector(`input[name="hero-estilo"][value="${estilo}"]`);
     if (radioEl) radioEl.checked = true;
 
+    // Hero B
+    if (d.heroB) {
+      setVal('herob-titulo', d.heroB.titulo);
+      setVal('herob-subtitulo', d.heroB.subtitulo);
+      setVal('herob-titulo-grande', d.heroB.tituloGrande);
+      setVal('herob-btn', d.heroB.btn);
+      [1,2,3,4,5,6,7,8,9].forEach(i => {
+        const img = d.heroB['foto' + i];
+        if (img) showPreview('prev-herob-foto' + i, img, 'herob-foto' + i + '-url');
+      });
+    }
+
     // Categorias
     ['aneis','colares','pulseiras','brincos','conjuntos'].forEach(cat => {
       const img = d.categorias?.[cat]?.img;
@@ -562,6 +617,13 @@ window.salvarTudo = async function() {
         s1num: getVal('stat1-num'), s1label: getVal('stat1-label'),
         s2num: getVal('stat2-num'), s2label: getVal('stat2-label'),
         s3num: getVal('stat3-num'), s3label: getVal('stat3-label'),
+      },
+      heroB: {
+        titulo:        getVal('herob-titulo'),
+        subtitulo:     getVal('herob-subtitulo'),
+        tituloGrande:  getVal('herob-titulo-grande'),
+        btn:           getVal('herob-btn'),
+        ...[1,2,3,4,5,6,7,8,9].reduce((acc, i) => { acc['foto' + i] = getVal('herob-foto' + i + '-url'); return acc; }, {}),
       },
       categorias: {
         aneis:     { img: getVal('cat-aneis-img-url') },

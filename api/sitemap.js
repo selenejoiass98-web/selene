@@ -1,6 +1,6 @@
 const PROJECT_ID = 'selene-joias';
 const API_KEY = 'AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI';
-const SITE_URL = 'https://elenicecollection.com.br';
+const SITE_URL = 'https://www.elenicecollection.com.br';
 const FIRESTORE_BASE = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
 
 function fieldValue(field) {

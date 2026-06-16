@@ -4,4 +4,4 @@ Disallow: /admin
 Disallow: /checkout
 Disallow: /api
 
-Sitemap: https://elenicecollection.com.br/sitemap.xml
+Sitemap: https://www.elenicecollection.com.br/sitemap.xml

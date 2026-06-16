@@ -135,6 +135,7 @@
 - Boleto envia e-mail específico (sem o genérico); Pix/Cartão enviam o genérico
 - Toda entrega de arquivo vem com os comandos git (linhas separadas — PowerShell não suporta `&&`)
 - Edições cirúrgicas apenas — nunca refazer páginas inteiras
+- **Cache de `/assets/`**: `vercel.json` usa `max-age=3600, must-revalidate` (não `immutable`) porque só tem CSS/JS, que mudam com frequência. Sempre que `style.css` for alterado, bump a versão no link (`assets/css/style.css?v=N`) em todas as 6 páginas públicas (index, catalogo, produto, checkout, rastreio, sobre) para forçar o navegador a buscar a versão nova — do contrário mudanças visuais não aparecem para quem já visitou o site
 
 ---
 

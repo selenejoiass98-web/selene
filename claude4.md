@@ -65,6 +65,14 @@
 - [x] GA4 (`G-NB5Q5NEEG6`) e Meta Pixel (`976418968511579`) ativos
 - [x] WhatsApp real configurado: `47 99725-9678`
 
+### Páginas Legais (junho 2026)
+- [x] `politica-de-entrega.html` — prazos, frete grátis R$299, rastreamento, tentativas de entrega
+- [x] `politica-de-trocas-e-devolucoes.html` — garantia 1 ano + vitalícia limpeza/polimento, trocas 30 dias, devolução 7 dias (Art. 49 CDC), peças personalizadas, como solicitar
+- [x] `politica-de-privacidade.html` — LGPD completa (coleta, finalidade, segurança, compartilhamento, direitos, cookies, DPO)
+- [x] Layout compartilhado `.legal-*` em `style.css` (hero + sumário lateral sticky + seções numeradas), reutilizável para futuras páginas institucionais
+- [x] Links do footer atualizados em todas as páginas públicas (antes apontavam para `#`)
+- [x] Tom "joalheria de luxo": termos como "nossas clientes", "sua joia"; nenhum valor/prazo genérico — todos exatos conforme briefing (R$299 frete grátis, 1 ano garantia, 30 dias troca, 7 dias devolução, WhatsApp 47 99725-9678)
+
 ### Painel Admin
 - [x] Login (Firebase Auth), dashboard, cadastro de produtos (Cloudinary), cupons, configurações da loja — todos funcionais
 - [x] Admin: campos editáveis para hero (titulo1/2, subtítulo, botão, label, imagem, estilo A/B)
@@ -100,7 +108,7 @@
 ### Conteúdo (depende da Elenice)
 - [ ] Fotos reais dos produtos (fundo neutro creme/branco)
 - [ ] Texto real da página "Sobre nós"
-- [ ] Política de entrega, trocas e privacidade
+- [x] Política de entrega, trocas/devoluções e privacidade (LGPD) — ver seção abaixo
 - [ ] Remover produtos de teste ("teste 1", "teste 2") antes do lançamento oficial
 
 ---

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Política de Trocas e Devoluções da Elenice Collection — garantia de 1 ano, trocas em até 30 dias e devolução com reembolso total em até 7 dias.">
+<title>Trocas e Devoluções — Elenice Collection</title>
+<link rel="stylesheet" href="assets/css/style.css?v=3">
+<style>
+.nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
+body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
+
+/* ── FAIXA DE AVISOS ── */
+.faixa-bar { background: var(--brown-deep, #3D2B1A); color: #fff; height: 36px; overflow: hidden; position: relative; z-index: 200; width: 100%; }
+.faixa-track { display: flex; align-items: center; height: 100%; white-space: nowrap; animation: faixaScroll 28s linear infinite; will-change: transform; }
+.faixa-track:hover { animation-play-state: paused; }
+.faixa-item { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0 2.5rem; font-family: 'Jost', sans-serif; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.92; }
+.faixa-item::after { content: '◆'; font-size: 0.35rem; opacity: 0.4; margin-left: 2.5rem; }
+.faixa-item:last-child::after { display: none; }
+@keyframes faixaScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* Selos de garantia */
+.legal-badges { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.legal-badge {
+  flex: 1; min-width: 150px;
+  background: var(--cream);
+  border: 1px solid var(--gold-pale);
+  border-radius: 8px;
+  padding: 1.3rem 1.2rem;
+  text-align: center;
+}
+.legal-badge .big { font-family: var(--font-serif); font-size: 1.5rem; font-style: italic; color: var(--gold); margin-bottom: 0.2rem; }
+.legal-badge .lbl { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft); }
+</style>
+<script src="assets/js/tracking.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="faixa-bar" id="faixa-bar" style="display:none;">
+  <div class="faixa-track" id="faixa-track"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Elenice Collection</a>
+    <ul class="nav-links">
+      <li><a href="catalogo.html">Coleções</a></li>
+      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="sobre.html">Nossa História</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-cart" onclick="openCart()">
+        Carrinho
+        <span class="cart-badge cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="legal-hero">
+  <div class="container">
+    <div class="legal-breadcrumb"><a href="index.html">Início</a> &nbsp;/&nbsp; Trocas e Devoluções</div>
+    <h1 class="legal-hero-title">Garantia, Trocas e <em>Devoluções</em></h1>
+    <p class="legal-hero-updated">Última atualização: Junho de 2026</p>
+  </div>
+</section>
+
+<!-- CONTEÚDO -->
+<section class="legal-body">
+  <div class="container">
+    <div class="legal-layout">
+
+      <aside class="legal-toc">
+        <div class="legal-toc-label">Nesta página</div>
+        <a href="#garantia">1. Garantia Elenice Collection</a>
+        <a href="#trocas">2. Trocas (Gosto ou Tamanho)</a>
+        <a href="#devolucao">3. Devolução e Cancelamento</a>
+        <a href="#personalizadas">4. Peças Personalizadas</a>
+        <a href="#solicitar">5. Como Solicitar</a>
+        <a href="#cuidados">6. Cuidados com sua Joia</a>
+      </aside>
+
+      <div class="legal-content">
+        <p style="font-size:0.9rem;line-height:1.95;color:var(--text-mid);font-weight:300;margin-bottom:2rem;">
+          Na <strong>Elenice Collection</strong>, buscamos a excelência não apenas em nossas joias, mas em todo o
+          relacionamento com nossas clientes. Nossa política de trocas e devoluções é inspirada nos mais altos
+          padrões do mercado de joalheria de luxo, garantindo transparência e segurança em cada etapa.
+        </p>
+
+        <div class="legal-badges">
+          <div class="legal-badge"><div class="big">1 ano</div><div class="lbl">Garantia Elenice</div></div>
+          <div class="legal-badge"><div class="big">30 dias</div><div class="lbl">Para trocas</div></div>
+          <div class="legal-badge"><div class="big">7 dias</div><div class="lbl">Para devolução</div></div>
+          <div class="legal-badge"><div class="big">Vitalícia</div><div class="lbl">Limpeza e polimento</div></div>
+        </div>
+
+        <div class="legal-section" id="garantia">
+          <h2 class="legal-section-title"><span class="num">1.</span> Garantia Elenice Collection</h2>
+          <p>Nossas joias em <strong>ouro 18k</strong> são acompanhadas de um Certificado de Autenticidade e Garantia.</p>
+          <ul>
+            <li><strong>Garantia legal:</strong> 90 (noventa) dias, conforme o Código de Defesa do Consumidor, para defeitos de fabricação.</li>
+            <li><strong>Garantia Elenice:</strong> válida por <strong>1 (um) ano</strong> a partir da data da compra. Cobre defeitos técnicos de fabricação e/ou dos materiais envolvidos.</li>
+            <li><strong>Serviços gratuitos (vitalícios):</strong> oferecemos manutenção permanente para limpeza e polimento de suas joias Elenice Collection.</li>
+            <li><strong>Ajustes gratuitos:</strong> no período de 1 (um) ano, oferecemos o primeiro ajuste de anéis (em até 2 tamanhos), desde que a peça permita tecnicamente o ajuste e não esteja gravada.</li>
+          </ul>
+          <div class="legal-highlight">
+            <strong>Nota:</strong> o polimento pode ocasionar perda mínima de metal e redução de peso. A garantia não cobre danos decorrentes de quedas, uso inadequado, acidentes de qualquer natureza ou contato com agentes químicos.
+          </div>
+        </div>
+
+        <div class="legal-section" id="trocas">
+          <h2 class="legal-section-title"><span class="num">2.</span> Trocas (Por Gosto ou Tamanho)</h2>
+          <p>Deseja trocar sua peça? Oferecemos condições facilitadas:</p>
+          <ul>
+            <li><strong>Prazo:</strong> até 30 (trinta) dias corridos após o recebimento do produto.</li>
+            <li><strong>Condições do produto:</strong> sem vestígios de uso e em perfeito estado, na embalagem original, com etiqueta e brinde (se houver), acompanhado do Certificado de Garantia ou Nota Fiscal.</li>
+            <li><strong>Crédito:</strong> será gerado um crédito no valor pago pela peça original para ser utilizado em uma nova compra no site. Se houver diferença de valor para uma peça superior, o pagamento deve ser realizado via Pix ou cartão.</li>
+          </ul>
+        </div>
+
+        <div class="legal-section" id="devolucao">
+          <h2 class="legal-section-title"><span class="num">3.</span> Devolução e Cancelamento (Direito de Arrependimento)</h2>
+          <p>Exclusivamente para compras realizadas em nosso site, é permitido o cancelamento com reembolso total:</p>
+          <ul>
+            <li><strong>Prazo:</strong> até 7 (sete) dias corridos após a data de entrega (conforme Art. 49 do CDC).</li>
+            <li><strong>Requisitos:</strong> a joia deve estar em perfeito estado, sem sinais de uso, na embalagem original e com o Certificado de Garantia.</li>
+            <li><strong>Reembolso:</strong> o estorno será realizado na mesma modalidade de pagamento original (cartão de crédito ou Pix) após o recebimento e análise da peça em nosso centro de distribuição.</li>
+          </ul>
+        </div>
+
+        <div class="legal-section" id="personalizadas">
+          <h2 class="legal-section-title"><span class="num">4.</span> Peças Personalizadas e Sob Encomenda</h2>
+          <p>Joias que foram personalizadas (gravações, ajustes específicos de design ou fabricação sob medida) <strong>não podem ser trocadas ou devolvidas</strong>, uma vez que foram criadas exclusivamente para a cliente. Em caso de defeito de fabricação, a garantia de reparo permanece válida.</p>
+        </div>
+
+        <div class="legal-section" id="solicitar">
+          <h2 class="legal-section-title"><span class="num">5.</span> Como Solicitar sua Troca ou Devolução</h2>
+          <p>O processo é simples e humanizado:</p>
+          <ul>
+            <li>Entre em contato com nosso atendimento via <strong>WhatsApp: (47) 99725-9678</strong> ou e-mail <strong>contato@elenicecollection.com.br</strong>.</li>
+            <li>Informe o número do pedido e o motivo da solicitação.</li>
+            <li>Você receberá uma autorização de postagem (logística reversa) para enviar o produto sem custos de frete na primeira troca/devolução.</li>
+            <li>Após o recebimento, nossa equipe de qualidade analisará a peça em até 5 dias úteis para liberar o crédito ou reembolso.</li>
+          </ul>
+        </div>
+
+        <div class="legal-section" id="cuidados">
+          <h2 class="legal-section-title"><span class="num">6.</span> Cuidados Especiais com sua Joia</h2>
+          <p>Para manter a beleza eterna do seu ouro 18k:</p>
+          <ul>
+            <li>Evite contato com perfumes, cremes, protetor solar e produtos de limpeza.</li>
+            <li>Retire as joias antes de banhos de mar, piscina ou atividades físicas.</li>
+            <li>Guarde suas peças separadamente para evitar riscos.</li>
+          </ul>
+        </div>
+
+        <div class="legal-cta">
+          <p>Precisa solicitar uma troca, devolução ou tem dúvidas sobre a garantia da sua joia?</p>
+          <div class="legal-cta-btns">
+            <a href="https://wa.me/5547997259678" class="btn btn-primary" target="_blank">💬 Falar no WhatsApp</a>
+            <a href="catalogo.html" class="btn btn-outline">Ver Coleção</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Elenice Collection</div>
+        <div class="tagline">Elegância que transforma</div>
+        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Coleções</h4>
+        <ul>
+          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+          <li><a href="catalogo.html?cat=colares">Colares</a></li>
+          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="politica-de-entrega.html">Política de entrega</a></li>
+          <li><a href="politica-de-trocas-e-devolucoes.html">Trocas e devoluções</a></li>
+          <li><a href="politica-de-privacidade.html">Política de privacidade</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>📱 (47) 99725-9678</li>
+          <li>✉ contato@elenicecollection.com.br</li>
+          <li>📍 Balneário Camboriú, SC</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Elenice Collection. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a class="social-link" href="#">ig</a>
+        <a class="social-link" href="#">fb</a>
+        <a class="social-link" href="https://wa.me/5547997259678">wa</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h2>Seu Carrinho</h2>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body">
+    <div class="cart-empty" id="cart-empty" style="display:flex;">
+      <div class="cart-empty-icon">◈</div>
+      <p>Seu carrinho está vazio</p>
+      <a href="catalogo.html" class="btn btn-outline" onclick="closeCart()">Ver produtos</a>
+    </div>
+    <div id="cart-items"></div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none;">
+    <div class="free-shipping-bar" id="free-shipping-bar"></div>
+    <div class="cart-totals">
+      <div class="cart-total-row final">
+        <span class="label">Total</span>
+        <span class="value" id="cart-total">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-cta">
+      <a href="checkout.html" class="btn btn-primary" style="justify-content:center;">Finalizar Compra</a>
+      <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script src="assets/js/cart.js"></script>
+<script>
+(function() {
+  const nav   = document.querySelector('.nav');
+  if (!nav) return;
+  const faixaH = 36;
+  function updateNav() {
+    nav.style.top = Math.max(0, faixaH - window.scrollY) + 'px';
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+</script>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const _fbCfg = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
+const _db  = getFirestore(_app);
+(async () => {
+  try {
+    const snap = await getDoc(doc(_db, 'configuracoes', 'loja'));
+    const faixa = snap.exists() && snap.data().faixa;
+    if (!faixa || !faixa.length) return;
+    const track = document.getElementById('faixa-track');
+    const bar   = document.getElementById('faixa-bar');
+    if (!track || !bar) return;
+    const items = [...faixa, ...faixa];
+    track.innerHTML = items.map(txt => `<span class="faixa-item">${txt}</span>`).join('');
+    bar.style.display = 'block';
+    track.style.animationDuration = Math.max(18, faixa.length * 4) + 's';
+  } catch(e) { console.warn('Faixa:', e); }
+})();
+</script>
+
+</body>
+</html>

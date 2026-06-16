@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Política de Entrega da Elenice Collection — prazos, frete grátis acima de R$ 299, rastreamento e cuidados no recebimento da sua joia.">
+<title>Política de Entrega — Elenice Collection</title>
+<link rel="stylesheet" href="assets/css/style.css?v=3">
+<style>
+.nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
+body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
+
+/* ── FAIXA DE AVISOS ── */
+.faixa-bar { background: var(--brown-deep, #3D2B1A); color: #fff; height: 36px; overflow: hidden; position: relative; z-index: 200; width: 100%; }
+.faixa-track { display: flex; align-items: center; height: 100%; white-space: nowrap; animation: faixaScroll 28s linear infinite; will-change: transform; }
+.faixa-track:hover { animation-play-state: paused; }
+.faixa-item { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0 2.5rem; font-family: 'Jost', sans-serif; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.92; }
+.faixa-item::after { content: '◆'; font-size: 0.35rem; opacity: 0.4; margin-left: 2.5rem; }
+.faixa-item:last-child::after { display: none; }
+@keyframes faixaScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+</style>
+<script src="assets/js/tracking.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="faixa-bar" id="faixa-bar" style="display:none;">
+  <div class="faixa-track" id="faixa-track"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Elenice Collection</a>
+    <ul class="nav-links">
+      <li><a href="catalogo.html">Coleções</a></li>
+      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="sobre.html">Nossa História</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-cart" onclick="openCart()">
+        Carrinho
+        <span class="cart-badge cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="legal-hero">
+  <div class="container">
+    <div class="legal-breadcrumb"><a href="index.html">Início</a> &nbsp;/&nbsp; Política de Entrega</div>
+    <h1 class="legal-hero-title">Política de <em>Entrega</em></h1>
+    <p class="legal-hero-updated">Última atualização: Junho de 2026</p>
+  </div>
+</section>
+
+<!-- CONTEÚDO -->
+<section class="legal-body">
+  <div class="container">
+    <div class="legal-layout">
+
+      <aside class="legal-toc">
+        <div class="legal-toc-label">Nesta página</div>
+        <a href="#processamento">1. Prazo de Processamento</a>
+        <a href="#envio">2. Opções de Envio</a>
+        <a href="#frete-gratis">3. Frete Grátis</a>
+        <a href="#rastreamento">4. Rastreamento do Pedido</a>
+        <a href="#tentativas">5. Tentativas de Entrega</a>
+        <a href="#recebimento">6. Recebimento da Mercadoria</a>
+        <a href="#suporte">7. Dúvidas e Suporte</a>
+      </aside>
+
+      <div class="legal-content">
+        <p style="font-size:0.9rem;line-height:1.95;color:var(--text-mid);font-weight:300;margin-bottom:2.5rem;">
+          Na <strong>Elenice Collection</strong>, nosso compromisso é garantir que suas joias cheguem até você com a
+          máxima segurança, cuidado e agilidade. Abaixo, detalhamos como funciona nosso processo de envio e entrega
+          para que nossas clientes tenham total transparência em cada etapa.
+        </p>
+
+        <div class="legal-section" id="processamento">
+          <h2 class="legal-section-title"><span class="num">1.</span> Prazo de Processamento</h2>
+          <p>Após a confirmação do pagamento, seu pedido passa por um processo de separação, conferência de qualidade e embalagem.</p>
+          <ul>
+            <li><strong>Peças em estoque:</strong> prazo de postagem de até 2 (dois) dias úteis.</li>
+            <li><strong>Peças personalizadas ou sob encomenda:</strong> o prazo de produção será informado na página do produto e somado ao prazo de entrega dos Correios/transportadora.</li>
+          </ul>
+        </div>
+
+        <div class="legal-section" id="envio">
+          <h2 class="legal-section-title"><span class="num">2.</span> Opções de Envio</h2>
+          <p>Trabalhamos com os Correios (SEDEX e PAC) e transportadoras parceiras para garantir cobertura em todo o território nacional. O valor do frete e o prazo estimado de entrega são calculados automaticamente no carrinho, com base no CEP de destino.</p>
+        </div>
+
+        <div class="legal-section" id="frete-gratis">
+          <h2 class="legal-section-title"><span class="num">3.</span> Frete Grátis</h2>
+          <p>Oferecemos <strong>Frete Grátis</strong> para todo o Brasil em compras acima de <strong>R$ 299,00</strong>. A modalidade de envio para o frete grátis será definida pela Elenice Collection (geralmente via PAC ou transportadora padrão).</p>
+        </div>
+
+        <div class="legal-section" id="rastreamento">
+          <h2 class="legal-section-title"><span class="num">4.</span> Rastreamento do Pedido</h2>
+          <p>Assim que o seu pedido for postado, você receberá um e-mail com o código de rastreamento para acompanhar cada etapa da entrega diretamente no site da transportadora ou dos Correios.</p>
+        </div>
+
+        <div class="legal-section" id="tentativas">
+          <h2 class="legal-section-title"><span class="num">5.</span> Tentativas de Entrega</h2>
+          <p>É indispensável que haja alguém no local para receber a encomenda.</p>
+          <ul>
+            <li>Os Correios realizam até 3 (três) tentativas de entrega.</li>
+            <li>Caso a entrega não seja concluída por ausência da destinatária ou endereço incorreto, o produto retornará ao nosso centro de distribuição em Balneário Camboriú/SC. O custo do reenvio será de responsabilidade da cliente.</li>
+          </ul>
+        </div>
+
+        <div class="legal-section" id="recebimento">
+          <h2 class="legal-section-title"><span class="num">6.</span> Recebimento da Mercadoria</h2>
+          <p>Ao receber sua joia, verifique se a embalagem está lacrada e em perfeitas condições. Caso note qualquer sinal de violação ou dano na embalagem externa, recuse o recebimento e entre em contato conosco imediatamente.</p>
+        </div>
+
+        <div class="legal-section" id="suporte">
+          <h2 class="legal-section-title"><span class="num">7.</span> Dúvidas e Suporte</h2>
+          <p>Se precisar de qualquer auxílio sobre a entrega do seu pedido, nossa equipe está à disposição:</p>
+          <ul>
+            <li><strong>WhatsApp:</strong> (47) 99725-9678</li>
+            <li><strong>E-mail:</strong> contato@elenicecollection.com.br</li>
+            <li><strong>Horário de atendimento:</strong> segunda a sexta, das 9h às 18h; sábado, das 9h às 13h.</li>
+          </ul>
+        </div>
+
+        <div class="legal-cta">
+          <p>Ainda tem dúvidas sobre o envio da sua joia? Nossa equipe está pronta para ajudar.</p>
+          <div class="legal-cta-btns">
+            <a href="https://wa.me/5547997259678" class="btn btn-primary" target="_blank">💬 Falar no WhatsApp</a>
+            <a href="catalogo.html" class="btn btn-outline">Ver Coleção</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Elenice Collection</div>
+        <div class="tagline">Elegância que transforma</div>
+        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Coleções</h4>
+        <ul>
+          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+          <li><a href="catalogo.html?cat=colares">Colares</a></li>
+          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="politica-de-entrega.html">Política de entrega</a></li>
+          <li><a href="politica-de-trocas-e-devolucoes.html">Trocas e devoluções</a></li>
+          <li><a href="politica-de-privacidade.html">Política de privacidade</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>📱 (47) 99725-9678</li>
+          <li>✉ contato@elenicecollection.com.br</li>
+          <li>📍 Balneário Camboriú, SC</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Elenice Collection. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a class="social-link" href="#">ig</a>
+        <a class="social-link" href="#">fb</a>
+        <a class="social-link" href="https://wa.me/5547997259678">wa</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h2>Seu Carrinho</h2>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body">
+    <div class="cart-empty" id="cart-empty" style="display:flex;">
+      <div class="cart-empty-icon">◈</div>
+      <p>Seu carrinho está vazio</p>
+      <a href="catalogo.html" class="btn btn-outline" onclick="closeCart()">Ver produtos</a>
+    </div>
+    <div id="cart-items"></div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none;">
+    <div class="free-shipping-bar" id="free-shipping-bar"></div>
+    <div class="cart-totals">
+      <div class="cart-total-row final">
+        <span class="label">Total</span>
+        <span class="value" id="cart-total">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-cta">
+      <a href="checkout.html" class="btn btn-primary" style="justify-content:center;">Finalizar Compra</a>
+      <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script src="assets/js/cart.js"></script>
+<script>
+(function() {
+  const nav   = document.querySelector('.nav');
+  if (!nav) return;
+  const faixaH = 36;
+  function updateNav() {
+    nav.style.top = Math.max(0, faixaH - window.scrollY) + 'px';
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+</script>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const _fbCfg = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
+const _db  = getFirestore(_app);
+(async () => {
+  try {
+    const snap = await getDoc(doc(_db, 'configuracoes', 'loja'));
+    const faixa = snap.exists() && snap.data().faixa;
+    if (!faixa || !faixa.length) return;
+    const track = document.getElementById('faixa-track');
+    const bar   = document.getElementById('faixa-bar');
+    if (!track || !bar) return;
+    const items = [...faixa, ...faixa];
+    track.innerHTML = items.map(txt => `<span class="faixa-item">${txt}</span>`).join('');
+    bar.style.display = 'block';
+    track.style.animationDuration = Math.max(18, faixa.length * 4) + 's';
+  } catch(e) { console.warn('Faixa:', e); }
+})();
+</script>
+
+</body>
+</html>

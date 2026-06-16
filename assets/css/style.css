@@ -841,6 +841,153 @@ ul { list-style: none; }
   .toast { left: 1rem; right: 1rem; }
 }
 
+/* ── LEGAL / POLICY PAGES ── */
+.legal-hero {
+  background: var(--brown-deep);
+  padding: 7rem 0 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.legal-hero::before {
+  content: '';
+  position: absolute;
+  top: -25%; right: -8%;
+  width: 380px; height: 380px;
+  border-radius: 50%;
+  border: 1px solid rgba(196,164,122,0.1);
+}
+.legal-breadcrumb {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 1.3rem;
+  position: relative;
+  z-index: 1;
+}
+.legal-breadcrumb a { color: rgba(224,206,187,0.75); text-decoration: none; transition: color var(--transition); }
+.legal-breadcrumb a:hover { color: var(--gold-light); }
+.legal-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  color: var(--cream);
+  margin-bottom: 0.7rem;
+  position: relative;
+  z-index: 1;
+}
+.legal-hero-title em { font-style: italic; color: var(--gold-light); }
+.legal-hero-updated {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.05em;
+  position: relative;
+  z-index: 1;
+}
+
+.legal-body { padding: 4.5rem 0 6rem; background: var(--white); }
+.legal-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+.legal-toc {
+  position: sticky;
+  top: calc(var(--nav-h) + 2rem);
+  border-left: 1px solid var(--gold-pale);
+  padding-left: 1.5rem;
+}
+.legal-toc-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 1rem;
+}
+.legal-toc a {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-mid);
+  text-decoration: none;
+  padding: 0.45rem 0 0.45rem 1.4rem;
+  line-height: 1.4;
+  border-left: 2px solid transparent;
+  margin-left: -1.52rem;
+  transition: color var(--transition), border-color var(--transition);
+}
+.legal-toc a:hover { color: var(--gold); border-color: var(--gold-light); }
+
+.legal-section { margin-bottom: 3.2rem; scroll-margin-top: calc(var(--nav-h) + 1.5rem); }
+.legal-section:last-child { margin-bottom: 0; }
+.legal-section-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--brown-deep);
+  margin-bottom: 1.3rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gold-pale);
+}
+.legal-section-title .num { font-family: var(--font-serif); font-style: italic; color: var(--gold-light); font-size: 1rem; }
+.legal-section p {
+  font-size: 0.85rem;
+  line-height: 1.95;
+  color: var(--text-mid);
+  font-weight: 300;
+  margin-bottom: 1.1rem;
+}
+.legal-section ul { margin: 0 0 1.1rem; padding: 0; list-style: none; }
+.legal-section li {
+  font-size: 0.85rem;
+  line-height: 1.85;
+  color: var(--text-mid);
+  font-weight: 300;
+  padding-left: 1.4rem;
+  position: relative;
+  margin-bottom: 0.6rem;
+}
+.legal-section li::before {
+  content: '◈';
+  position: absolute;
+  left: 0;
+  color: var(--gold-light);
+  font-size: 0.62rem;
+  top: 0.3rem;
+}
+.legal-section strong { color: var(--brown-deep); font-weight: 600; }
+.legal-highlight {
+  background: var(--cream);
+  border-left: 3px solid var(--gold);
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: var(--text-mid);
+  font-weight: 300;
+  border-radius: 0 6px 6px 0;
+}
+.legal-highlight strong { color: var(--brown-deep); }
+
+.legal-cta {
+  margin-top: 3rem;
+  padding: 2.2rem;
+  background: var(--cream);
+  border-radius: 8px;
+  text-align: center;
+}
+.legal-cta p { margin-bottom: 1.2rem; font-size: 0.85rem; color: var(--text-mid); }
+.legal-cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .legal-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .legal-toc { position: static; border-left: none; padding-left: 0; border-top: 1px solid var(--gold-pale); padding-top: 1.2rem; }
+}
+
 /* ── ANIMATIONS ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }

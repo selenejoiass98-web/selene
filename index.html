@@ -1017,14 +1017,16 @@ function cardHTML(p) {
   const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${mat.replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
   return `
   <div class="product-card">
-    <a href="produto.html?id=${p.id}" class="product-card-img">
-      ${p.fotos?.[0]
-        ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy">`
-        : `<div class="product-card-placeholder">◈</div>`}
+    <div class="product-card-img">
       ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
-      ${descPct >= 5 ? `<span class="product-badge off">−${descPct}%</span>` : ''}
+      ${descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
       <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
-    </a>
+      <a href="produto.html?id=${p.id}">
+        ${p.fotos?.[0]
+          ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy">`
+          : `<div class="product-card-placeholder">◈</div>`}
+      </a>
+    </div>
     <div class="product-card-info">
       <div class="product-cat">${cat} · ${mat}</div>
       <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
@@ -1034,8 +1036,8 @@ function cardHTML(p) {
         <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
       </div>
       <div class="product-actions">
-        <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver produto</a>
-        <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">+ Carrinho</button>
+        <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">Adicionar ao Carrinho</button>
+        <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver Detalhes</a>
       </div>
     </div>
   </div>`;

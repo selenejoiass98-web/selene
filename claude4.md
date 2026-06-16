@@ -80,6 +80,8 @@
 - [x] Tiles de categoria suportam foto via Firebase (`cat-img-{cat}`)
 - [x] **Removida seção "Em Destaque"** (spotlight carousel) — somente "Nossa Coleção" (grid 4 col)
 - [x] **Nova seção Diferenciais** após "Nossa Coleção": 4 colunas com ícones SVG line-art elegantes, fundo gradiente creme (Ouro 18k · Frete Grátis · 1 Ano Garantia · 12x sem juros)
+- [x] **Cards redesenhados (estilo luxo minimalista)**: texto centralizado, badges em bege integrado (sem vermelho), botões empilhados "Adicionar ao Carrinho" (escuro) + "Ver Detalhes" (outline) revelados no hover apenas em dispositivos com hover real (`@media (hover: hover) and (pointer: fine)`) — sempre visíveis em touch/mobile. Aplicado em `index.html`, `catalogo.html` e `produto.html` (relacionados — corrigida estrutura antiga que nunca tinha sido atualizada)
+- [x] **Zoom de cursor real** na foto principal da página de produto: `transform-origin` segue o mouse + `scale(2.2)` no hover (somente desktop)
 
 ---
 

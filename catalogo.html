@@ -838,15 +838,17 @@ function render() {
       const cartPayload = `{id:'${p.id}',name:'${p.name.replace(/'/g,"\\'")}',variant:'${p.variant.replace(/'/g,"\\'")}',price:${p.price},symbol:'${p.symbol}',image:'${p.fotos[0]||''}'}`;
       return `
       <div class="product-card reveal">
-        <a href="produto.html?id=${p.id}" class="product-card-img">
-          ${p.fotos.length > 0
-            ? `<img src="${p.fotos[0]}" alt="${p.name}" loading="lazy">`
-            : `<div class="product-card-placeholder">${p.symbol}</div>`
-          }
+        <div class="product-card-img">
           ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
-          ${descPct >= 5 ? `<span class="product-badge off">−${descPct}%</span>` : ''}
+          ${descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
-        </a>
+          <a href="produto.html?id=${p.id}">
+            ${p.fotos.length > 0
+              ? `<img src="${p.fotos[0]}" alt="${p.name}" loading="lazy">`
+              : `<div class="product-card-placeholder">${p.symbol}</div>`
+            }
+          </a>
+        </div>
         <div class="product-card-info">
           <div class="product-cat">${p.catLabel} · ${p.variant}</div>
           <a href="produto.html?id=${p.id}"><div class="product-name">${p.name}</div></a>
@@ -856,8 +858,8 @@ function render() {
             <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
           </div>
           <div class="product-actions">
-            <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver produto</a>
-            <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cartPayload})">+ Carrinho</button>
+            <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cartPayload})">Adicionar ao Carrinho</button>
+            <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver Detalhes</a>
           </div>
         </div>
       </div>`;

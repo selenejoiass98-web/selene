@@ -468,6 +468,12 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <h2>Depoimentos das Clientes</h2>
       </div>
       <div class="config-card-body">
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:400;">
+            <input type="checkbox" id="dep-ativo" checked style="width:18px;height:18px;cursor:pointer;" />
+            <span>Exibir seção de depoimentos na página inicial</span>
+          </label>
+        </div>
         <p style="font-size:0.78rem;color:var(--text-s);margin-bottom:1.25rem;">Até 6 depoimentos. Eles aparecem na página inicial da loja.</p>
         <div id="depoimentos-lista"></div>
         <button class="btn-save" onclick="adicionarDepoimento()" style="background:var(--cream-d);color:var(--gold);border:1px solid var(--gold-pale);margin-top:0.5rem;">
@@ -480,22 +486,22 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     <div class="config-card">
       <div class="config-card-header">
         <span class="icon">📷</span>
-        <h2>Post do Instagram (página inicial)</h2>
+        <h2>Posts do Instagram (página inicial)</h2>
       </div>
       <div class="config-card-body">
         <p style="font-size:0.78rem;color:var(--text-s);margin-bottom:1.25rem;">
-          Alguém marcou a Elenice em uma foto linda? Cole o link do post abaixo e ative para exibi-lo na página inicial.
+          Alguém marcou a Elenice em uma foto linda? Cole os links dos posts abaixo e ative para exibi-los na página inicial. Eles aparecem em fileiras de 4.
         </p>
         <div class="form-group">
           <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:400;">
             <input type="checkbox" id="ig-ativo" style="width:18px;height:18px;cursor:pointer;" />
-            <span>Exibir post do Instagram na página inicial</span>
+            <span>Exibir posts do Instagram na página inicial</span>
           </label>
         </div>
-        <div class="form-group">
-          <label>Link do post (ex: https://www.instagram.com/p/XXXXXXXXXXX/)</label>
-          <input type="text" id="ig-post-url" placeholder="https://www.instagram.com/p/XXXXXXXXXXX/" />
-        </div>
+        <div id="ig-posts-lista"></div>
+        <button class="btn-save" onclick="adicionarIgPost()" style="background:var(--cream-d);color:var(--gold);border:1px solid var(--gold-pale);margin-top:0.5rem;">
+          + Adicionar link
+        </button>
       </div>
     </div>
 
@@ -670,11 +676,16 @@ async function carregarConfigs() {
       depoimentos = d.depoimentos;
     }
     renderDepoimentosAdmin();
+    const depAtivo = document.getElementById('dep-ativo');
+    if (depAtivo) depAtivo.checked = d.depoimentosAtivo !== false;
 
     // Instagram
     const igAtivo = document.getElementById('ig-ativo');
     if (igAtivo) igAtivo.checked = !!d.instagram?.ativo;
-    setVal('ig-post-url', d.instagram?.postUrl);
+    if (Array.isArray(d.instagram?.posts) && d.instagram.posts.length > 0) {
+      igPosts = d.instagram.posts;
+    }
+    renderIgPostsAdmin();
 
     // Faixa
     if (d.faixa && Array.isArray(d.faixa)) {
@@ -730,9 +741,10 @@ window.salvarTudo = async function() {
       box3: { nome: getVal('box3-nome'), img: getVal('box3-img-url') },
       faixa: getVal('faixa-itens').split('\n').map(s => s.trim()).filter(Boolean),
       depoimentos: depoimentos.filter(d => d.nome && d.texto),
+      depoimentosAtivo: document.getElementById('dep-ativo')?.checked ?? true,
       instagram: {
-        ativo:   document.getElementById('ig-ativo')?.checked || false,
-        postUrl: getVal('ig-post-url'),
+        ativo: document.getElementById('ig-ativo')?.checked || false,
+        posts: igPosts.map(s => (s || '').trim()).filter(Boolean),
       },
 
       geral: {
@@ -874,6 +886,32 @@ window.adicionarDepoimento = function() {
 window.removerDepoimento = function(i) {
   depoimentos.splice(i, 1);
   renderDepoimentosAdmin();
+};
+
+// ── INSTAGRAM ──
+let igPosts = [''];
+
+function renderIgPostsAdmin() {
+  const lista = document.getElementById('ig-posts-lista');
+  if (!lista) return;
+  lista.innerHTML = igPosts.map((url, i) => `
+    <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.6rem;">
+      <input type="text" value="${url}" placeholder="https://www.instagram.com/p/XXXXXXXXXXX/" oninput="igPosts[${i}]=this.value" style="flex:1;" />
+      <button onclick="removerIgPost(${i})" style="background:none;border:none;cursor:pointer;color:var(--text-s);font-size:1rem;">🗑</button>
+    </div>
+  `).join('');
+}
+
+window.adicionarIgPost = function() {
+  if (igPosts.length >= 12) { toast('Máximo de 12 posts', 'err'); return; }
+  igPosts.push('');
+  renderIgPostsAdmin();
+};
+
+window.removerIgPost = function(i) {
+  igPosts.splice(i, 1);
+  if (!igPosts.length) igPosts.push('');
+  renderIgPostsAdmin();
 };
 
 </script>

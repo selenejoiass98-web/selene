@@ -253,7 +253,17 @@
 .instagram-section { padding: 5rem 0; background: var(--cream); }
 .instagram-section .section-tag { justify-content: center; }
 .instagram-section .section-title { text-align: center; }
-#instagram-embed-wrap iframe { border-radius: 8px !important; }
+#instagram-embed-wrap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 2.5rem auto 0;
+  justify-items: center;
+}
+#instagram-embed-wrap iframe { border-radius: 8px !important; max-width: 100% !important; }
+@media (max-width: 1100px) { #instagram-embed-wrap { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { #instagram-embed-wrap { grid-template-columns: 1fr; } }
 
 /* NEWSLETTER */
 .newsletter { padding: 5.5rem 0; background: var(--cream-dark); text-align: center; }
@@ -851,7 +861,7 @@
 </section>
 
 <!-- ── DEPOIMENTOS ── -->
-<section class="testimonials">
+<section class="testimonials" id="testimonials-section">
   <div class="container">
     <div class="reveal">
       <div class="section-tag">Depoimentos</div>
@@ -863,7 +873,7 @@
 
 <!-- ── INSTAGRAM ── -->
 <section class="instagram-section" id="instagram-section" style="display:none;">
-  <div class="container-sm">
+  <div class="container">
     <div class="reveal" style="text-align:center;">
       <div class="section-tag" style="justify-content:center;">Comunidade</div>
       <h2 class="section-title">Marcou a <em>Elenice?</em></h2>
@@ -871,7 +881,7 @@
         Adoramos ver você usando nossas joias. Marque <strong>@elenicecollection</strong> no Instagram!
       </p>
     </div>
-    <div id="instagram-embed-wrap" style="max-width:540px;margin:2.5rem auto 0;"></div>
+    <div id="instagram-embed-wrap"></div>
   </div>
 </section>
 
@@ -1235,23 +1245,28 @@ function applyConfig(d) {
   }
 
   /* Depoimentos */
+  const testimonialsSection = document.getElementById('testimonials-section');
+  if (testimonialsSection) testimonialsSection.style.display = d.depoimentosAtivo === false ? 'none' : '';
   const deps = (d.depoimentos || []).filter(dep => dep.nome && dep.texto);
   renderTestimonials(deps.length ? deps : DEFAULT_DEPS);
 
   /* Instagram */
-  if (d.instagram?.ativo && d.instagram?.postUrl) {
-    renderInstagramPost(d.instagram.postUrl);
+  const igPosts = (d.instagram?.posts || []).filter(Boolean);
+  if (d.instagram?.ativo && igPosts.length) {
+    renderInstagramPosts(igPosts);
   }
 
   /* Faixa */
   renderFaixa(d.faixa?.length ? d.faixa : DEFAULT_FAIXA);
 }
 
-function renderInstagramPost(url) {
+function renderInstagramPosts(urls) {
   const section = document.getElementById('instagram-section');
   const wrap    = document.getElementById('instagram-embed-wrap');
-  if (!section || !wrap) return;
-  wrap.innerHTML = `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="width:100%;margin:0;"></blockquote>`;
+  if (!section || !wrap || !urls.length) return;
+  wrap.innerHTML = urls.map(url =>
+    `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="width:100%;margin:0;"></blockquote>`
+  ).join('');
   section.style.display = 'block';
   if (window.instgrm) {
     window.instgrm.Embeds.process();

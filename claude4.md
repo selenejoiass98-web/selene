@@ -78,6 +78,8 @@
 - [x] Admin: campos editáveis para hero (titulo1/2, subtítulo, botão, label, imagem, estilo A/B)
 - [x] Admin: seção Hero B (Fullscreen) com 9 uploads de foto + campos próprios (etiqueta, subtítulo, título grande, botão)
 - [x] Admin: seção Fotos das Categorias (5 uploads: Anéis, Colares, Pulseiras, Brincos, Conjuntos)
+- [x] Admin: seção "Post do Instagram" — toggle ativo/inativo + link do post, embed oficial (`embed.js` da Meta, sem API/App Review) exibido na home quando ativado
+- [x] **Fix:** depoimentos não apareciam na home — causa: classe `.reveal` (scroll-fade-in) é observada uma única vez no `DOMContentLoaded` (cart.js), mas depoimentos chegam depois via Firestore e nunca eram observados, ficando com `opacity:0` permanente. Corrigido com fallback `querySelectorAll('.reveal:not(.visible))` no `finally` do `init()` do index.html (mesmo padrão que já existia em catalogo.html). **Atenção:** qualquer novo conteúdo dinâmico com classe `.reveal` precisa desse mesmo fallback ou nunca aparecerá
 
 ### Homepage Redesenhada (sessão 13/06/2026)
 - [x] **Cards de produto reformulados**: preço em dourado (`--gold-mid`), sem borda separadora, gradiente sutil na imagem, 2 botões (Ver produto outline + + Carrinho ouro), categoria · material na mesma linha
@@ -219,6 +221,7 @@ categorias:
 
 faixa: string[]
 depoimentos: [{ nome, cidade, texto, estrelas }]
+instagram: { ativo: boolean, postUrl: string }
 stats: { s1num, s1label, s2num, s2label, s3num, s3label }
 geral: { whatsapp, email, freteGratis, pixDesconto, aviso }
 ```

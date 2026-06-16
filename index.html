@@ -249,6 +249,12 @@
 .author-name { font-size: 0.75rem; font-weight: 400; color: var(--gold-pale); letter-spacing: 0.04em; margin-bottom: 0.1rem; }
 .author-city { font-size: 0.6rem; color: var(--text-soft); letter-spacing: 0.1em; }
 
+/* INSTAGRAM */
+.instagram-section { padding: 5rem 0; background: var(--cream); }
+.instagram-section .section-tag { justify-content: center; }
+.instagram-section .section-title { text-align: center; }
+#instagram-embed-wrap iframe { border-radius: 8px !important; }
+
 /* NEWSLETTER */
 .newsletter { padding: 5.5rem 0; background: var(--cream-dark); text-align: center; }
 .newsletter .section-tag { justify-content: center; }
@@ -855,6 +861,20 @@
   </div>
 </section>
 
+<!-- ── INSTAGRAM ── -->
+<section class="instagram-section" id="instagram-section" style="display:none;">
+  <div class="container-sm">
+    <div class="reveal" style="text-align:center;">
+      <div class="section-tag" style="justify-content:center;">Comunidade</div>
+      <h2 class="section-title">Marcou a <em>Elenice?</em></h2>
+      <p style="font-size:0.83rem;color:var(--text-soft);margin-top:0.8rem;margin-bottom:0;font-weight:300;">
+        Adoramos ver você usando nossas joias. Marque <strong>@elenicecollection</strong> no Instagram!
+      </p>
+    </div>
+    <div id="instagram-embed-wrap" style="max-width:540px;margin:2.5rem auto 0;"></div>
+  </div>
+</section>
+
 <!-- ── NEWSLETTER ── -->
 <section class="newsletter">
   <div class="container-sm">
@@ -1218,8 +1238,29 @@ function applyConfig(d) {
   const deps = (d.depoimentos || []).filter(dep => dep.nome && dep.texto);
   renderTestimonials(deps.length ? deps : DEFAULT_DEPS);
 
+  /* Instagram */
+  if (d.instagram?.ativo && d.instagram?.postUrl) {
+    renderInstagramPost(d.instagram.postUrl);
+  }
+
   /* Faixa */
   renderFaixa(d.faixa?.length ? d.faixa : DEFAULT_FAIXA);
+}
+
+function renderInstagramPost(url) {
+  const section = document.getElementById('instagram-section');
+  const wrap    = document.getElementById('instagram-embed-wrap');
+  if (!section || !wrap) return;
+  wrap.innerHTML = `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="width:100%;margin:0;"></blockquote>`;
+  section.style.display = 'block';
+  if (window.instgrm) {
+    window.instgrm.Embeds.process();
+  } else {
+    const script = document.createElement('script');
+    script.src = 'https://www.instagram.com/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+  }
 }
 
 /* ─── NEWSLETTER ─── */
@@ -1262,6 +1303,10 @@ async function init() {
     const errMsg = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-soft);"><p style="font-size:0.78rem;">Não foi possível carregar os produtos.</p></div>`;
     const grid = document.getElementById('products-grid');
     if (grid) grid.innerHTML = errMsg;
+  } finally {
+    /* Conteúdo dinâmico (depoimentos etc.) é injetado depois do observer de
+       scroll já ter sido configurado em cart.js — força a visibilidade aqui. */
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
   }
 }
 

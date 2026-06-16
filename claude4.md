@@ -75,7 +75,8 @@
 - [x] **Cards de produto reformulados**: preço em dourado (`--gold-mid`), sem borda separadora, gradiente sutil na imagem, 2 botões (Ver produto outline + + Carrinho ouro), categoria · material na mesma linha
 - [x] **Hero A (Editorial)** — id="hero-editorial", layout split editorial (mosaico de fotos à direita), carrega texto/imagens do Firestore via `applyConfig()`
 - [x] **Hero B (Fullscreen Woopy style)** — id="hero-fullscreen", 3 painéis de foto lado a lado, slideshow automático a cada 5s com grupos de 3 (total 9 fotos), texto overlay centralizado (etiqueta + subtítulo + título grande + botão), setas e dots de navegação, dados vindos de `heroB` no Firestore
-- [x] Toggle A/B salvo em `hero.estilo` (Firestore), radio button no admin
+- [x] **Hero C (Foto Cheia)** — id="hero-photo", foto de fundo full-bleed com gradiente cream da esquerda p/ direita, texto overlay alinhado à esquerda (reaproveita `hero.titulo1/titulo2/subtitulo/btn/label`), 3 trust badges com ícones SVG abaixo do CTA (Ouro 18k · Frete Grátis · Garantia 1 Ano), foto própria em `hero.imgFundo`
+- [x] Toggle A/B/C salvo em `hero.estilo` (`editorial` | `fullscreen` | `foto`), radio buttons no admin
 - [x] Tiles de categoria suportam foto via Firebase (`cat-img-{cat}`)
 - [x] **Removida seção "Em Destaque"** (spotlight carousel) — somente "Nossa Coleção" (grid 4 col)
 - [x] **Nova seção Diferenciais** após "Nossa Coleção": 4 colunas com ícones SVG line-art elegantes, fundo gradiente creme (Ouro 18k · Frete Grátis · 1 Ano Garantia · 12x sem juros)
@@ -188,7 +189,8 @@
 ```
 hero:
   titulo1, titulo2, subtitulo, btn, label, img
-  estilo: 'editorial' | 'fullscreen'
+  imgFundo      (foto de fundo do Hero C — Foto Cheia)
+  estilo: 'editorial' | 'fullscreen' | 'foto'
 
 heroB:
   titulo        (etiqueta, ex: "Coleção 2026")

@@ -262,6 +262,111 @@
 .newsletter-btn:hover { background: var(--brown-mid); }
 .newsletter-privacy { font-size: 0.62rem; color: var(--text-soft); margin-top: 1rem; letter-spacing: 0.05em; }
 
+/* HERO FOTO (estilo C) — foto full-bleed + overlay de texto à esquerda */
+.hero-photo {
+  position: relative;
+  min-height: 100vh;
+  display: none;
+  align-items: center;
+  padding-top: var(--nav-h);
+  overflow: hidden;
+}
+.hp-bg { position: absolute; inset: 0; z-index: 0; background: var(--cream-dark); }
+.hp-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hp-glyph {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-size: 10rem; font-style: italic;
+  color: rgba(196,164,122,0.18);
+}
+.hp-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(100deg, rgba(253,248,243,0.97) 0%, rgba(253,248,243,0.85) 26%, rgba(253,248,243,0.4) 48%, transparent 64%);
+}
+.hp-content {
+  position: relative;
+  z-index: 2;
+  max-width: 580px;
+  padding: 2rem 2rem 2rem 6rem;
+}
+.hp-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.hp-tag::before { content: ''; width: 32px; height: 1px; background: var(--gold-light); }
+.hp-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 300;
+  color: var(--brown-deep);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.6rem;
+}
+.hp-title em { font-style: italic; color: var(--gold); }
+.hp-sub {
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: var(--text-mid);
+  font-weight: 300;
+  max-width: 420px;
+  letter-spacing: 0.02em;
+  margin-bottom: 2.4rem;
+}
+.hp-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+  margin-bottom: 3rem;
+}
+.hp-link {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold-pale);
+  padding-bottom: 2px;
+  transition: color var(--transition), border-color var(--transition);
+}
+.hp-link:hover { color: var(--gold); border-color: var(--gold-light); }
+.hp-trust {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.hp-trust-item { display: flex; align-items: flex-start; gap: 0.7rem; max-width: 170px; }
+.hp-trust-icon {
+  width: 34px; height: 34px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--gold-pale);
+  border-radius: 50%;
+  color: var(--gold-mid);
+}
+.hp-trust-icon svg { width: 16px; height: 16px; }
+.hp-trust-title {
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brown-deep);
+  font-weight: 500;
+  margin-bottom: 0.15rem;
+  line-height: 1.3;
+}
+.hp-trust-desc { font-size: 0.66rem; color: var(--text-soft); line-height: 1.4; }
+@media (max-width: 900px) {
+  .hp-content { padding: 2rem 1.5rem; max-width: 100%; }
+  .hp-overlay { background: linear-gradient(180deg, rgba(253,248,243,0.92) 0%, rgba(253,248,243,0.92) 55%, transparent 90%); }
+  .hp-trust { gap: 1.2rem; }
+}
+
 /* HERO FULLSCREEN (estilo B) — Woopy style: 3 painéis + texto overlay */
 .hero-full {
   position: relative;
@@ -497,6 +602,60 @@
       </div>
     </div>
     <div class="hero-scroll-hint">Explorar</div>
+  </div>
+</section>
+
+<!-- ── HERO FOTO (Estilo C) — foto cheia + overlay texto ── -->
+<section class="hero-photo" id="hero-photo">
+  <div class="hp-bg">
+    <img id="hp-bg-img" alt="Elenice Collection" style="display:none;" />
+    <div class="hp-glyph" id="hp-glyph">◈</div>
+  </div>
+  <div class="hp-overlay"></div>
+  <div class="hp-content">
+    <div class="hp-tag"><span id="hp-tag-txt">Nova Coleção · 2026</span></div>
+    <h1 class="hp-title">
+      <span id="hp-t1">Joias que<br>contam sua</span><br>
+      <em id="hp-t2">história</em>
+    </h1>
+    <p class="hp-sub" id="hp-sub">
+      Peças criadas com ouro 18k e pedras selecionadas,
+      inspiradas na elegância e sofisticação feminina.
+      Cada joia é única — como você.
+    </p>
+    <div class="hp-actions">
+      <a href="catalogo.html" class="btn btn-primary" id="hp-btn-el">Ver Coleção</a>
+      <a href="sobre.html" class="hp-link">Nossa história</a>
+    </div>
+    <div class="hp-trust">
+      <div class="hp-trust-item">
+        <div class="hp-trust-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M28 8 L36 20 L50 22 L39 33 L42 47 L28 40 L14 47 L17 33 L6 22 L20 20 Z"/></svg>
+        </div>
+        <div>
+          <div class="hp-trust-title">Ouro 18k Certificado</div>
+          <div class="hp-trust-desc">Qualidade e autenticidade garantidas</div>
+        </div>
+      </div>
+      <div class="hp-trust-item">
+        <div class="hp-trust-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="20" width="36" height="26" rx="3"/><path d="M10 30 L46 30"/><path d="M20 8 L28 20 L36 8"/></svg>
+        </div>
+        <div>
+          <div class="hp-trust-title">Frete Grátis</div>
+          <div class="hp-trust-desc">Em compras acima de R$ 299</div>
+        </div>
+      </div>
+      <div class="hp-trust-item">
+        <div class="hp-trust-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M28 8 L42 14 L42 30 C42 38 35 44 28 48 C21 44 14 38 14 30 L14 14 Z"/><path d="M22 28 L26 32 L34 23"/></svg>
+        </div>
+        <div>
+          <div class="hp-trust-title">Garantia de 1 Ano</div>
+          <div class="hp-trust-desc">Em todas as peças da coleção</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -975,12 +1134,14 @@ function initHeroB(photos) {
 function applyConfig(d) {
   const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
 
-  /* Hero estilo — toggle A/B */
+  /* Hero estilo — toggle A/B/C */
   const estilo = d.hero?.estilo || 'editorial';
   const heroEd = document.getElementById('hero-editorial');
   const heroFs = document.getElementById('hero-fullscreen');
+  const heroPh = document.getElementById('hero-photo');
   if (heroEd) heroEd.style.display = estilo === 'editorial' ? '' : 'none';
   if (heroFs) heroFs.style.display = estilo === 'fullscreen' ? 'block' : 'none';
+  if (heroPh) heroPh.style.display = estilo === 'foto' ? 'flex' : 'none';
 
   /* Hero A — texto */
   if (d.hero?.label)     set('hero-tag-txt', d.hero.label);
@@ -995,6 +1156,19 @@ function applyConfig(d) {
     if (img) { img.src = d.hero.img; img.style.display = 'block'; }
     const g = document.getElementById('hero-glyph');
     if (g) g.style.opacity = '0.03';
+  }
+
+  /* Hero C — espelha texto do hero A + foto de fundo própria */
+  if (d.hero?.label)     set('hp-tag-txt', d.hero.label);
+  if (d.hero?.titulo1)   { const el = document.getElementById('hp-t1'); if (el) el.innerHTML = d.hero.titulo1.replace(/\n/g, '<br>'); }
+  if (d.hero?.titulo2)   set('hp-t2', d.hero.titulo2);
+  if (d.hero?.subtitulo) set('hp-sub', d.hero.subtitulo);
+  if (d.hero?.btn)       set('hp-btn-el', d.hero.btn);
+  if (d.hero?.imgFundo) {
+    const img = document.getElementById('hp-bg-img');
+    if (img) { img.src = d.hero.imgFundo; img.style.display = 'block'; }
+    const g = document.getElementById('hp-glyph');
+    if (g) g.style.display = 'none';
   }
 
   /* Hero A — boxes laterais */

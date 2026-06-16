@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta id="meta-description" name="description" content="Blog Elenice Collection">
+<title id="page-title">Blog — Elenice Collection</title>
+<link rel="canonical" id="canonical-link" href="https://elenicecollection.com.br/blog">
+
+<!-- Open Graph -->
+<meta id="og-title" property="og:title" content="Blog — Elenice Collection">
+<meta id="og-description" property="og:description" content="Blog Elenice Collection">
+<meta id="og-image" property="og:image" content="">
+<meta id="og-url" property="og:url" content="">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Elenice Collection">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta id="tw-title" name="twitter:title" content="Blog — Elenice Collection">
+<meta id="tw-description" name="twitter:description" content="Blog Elenice Collection">
+<meta id="tw-image" name="twitter:image" content="">
+
+<link rel="stylesheet" href="assets/css/style.css?v=4">
+<style>
+.nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
+body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
+
+/* ── FAIXA DE AVISOS ── */
+.faixa-bar { background: var(--brown-deep, #3D2B1A); color: #fff; height: 36px; overflow: hidden; position: relative; z-index: 200; width: 100%; }
+.faixa-track { display: flex; align-items: center; height: 100%; white-space: nowrap; animation: faixaScroll 28s linear infinite; will-change: transform; }
+.faixa-track:hover { animation-play-state: paused; }
+.faixa-item { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0 2.5rem; font-family: 'Jost', sans-serif; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.92; }
+.faixa-item::after { content: '◆'; font-size: 0.35rem; opacity: 0.4; margin-left: 2.5rem; }
+.faixa-item:last-child::after { display: none; }
+@keyframes faixaScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+.blog-post-body { padding: 4rem 0 6rem; background: var(--white); }
+.blog-post-related { padding: 5rem 0; background: var(--cream); }
+</style>
+<script src="assets/js/tracking.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="faixa-bar" id="faixa-bar" style="display:none;">
+  <div class="faixa-track" id="faixa-track"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">Elenice Collection</a>
+    <ul class="nav-links">
+      <li><a href="../catalogo.html">Coleções</a></li>
+      <li><a href="../catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="../catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="../catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="../catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="../sobre.html">Nossa História</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-cart" onclick="openCart()">
+        Carrinho
+        <span class="cart-badge cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ARTIGO -->
+<article class="blog-post-body">
+  <div class="container">
+    <div class="blog-post-breadcrumb" id="breadcrumb">
+      <a href="../index.html">Início</a> &nbsp;/&nbsp; <a href="../blog.html">Blog</a> &nbsp;/&nbsp; <span id="breadcrumb-title">Artigo</span>
+    </div>
+
+    <header class="blog-post-header">
+      <div class="blog-post-meta">
+        <span class="cat" id="post-cat">Categoria</span>
+        <span>·</span>
+        <time id="post-date">—</time>
+      </div>
+      <h1 class="blog-post-title" id="post-titulo">Carregando…</h1>
+    </header>
+
+    <img class="blog-post-hero-img" id="post-img" alt="" style="display:none;">
+
+    <div class="blog-post-content" id="post-conteudo">
+      <p>Carregando artigo…</p>
+    </div>
+
+    <div class="blog-post-author">
+      <div class="avatar" id="post-author-initial">E</div>
+      <div>
+        <div class="name" id="post-author-name">Elenice Collection</div>
+        <div class="role">Autoria</div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- RELACIONADOS -->
+<section class="blog-post-related" id="related-section" style="display:none;">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:2.5rem;">
+      <div class="section-tag" style="justify-content:center;">Continue lendo</div>
+      <h2 class="section-title">Outros <em>artigos</em></h2>
+    </div>
+    <div class="blog-grid" id="related-grid"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Elenice Collection</div>
+        <div class="tagline">Elegância que transforma</div>
+        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Coleções</h4>
+        <ul>
+          <li><a href="../catalogo.html?cat=aneis">Anéis</a></li>
+          <li><a href="../catalogo.html?cat=colares">Colares</a></li>
+          <li><a href="../catalogo.html?cat=pulseiras">Pulseiras</a></li>
+          <li><a href="../catalogo.html?cat=brincos">Brincos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="../sobre.html">Sobre nós</a></li>
+          <li><a href="../blog.html">Blog</a></li>
+          <li><a href="../politica-de-entrega.html">Política de entrega</a></li>
+          <li><a href="../politica-de-trocas-e-devolucoes.html">Trocas e devoluções</a></li>
+          <li><a href="../politica-de-privacidade.html">Política de privacidade</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>📱 (47) 99725-9678</li>
+          <li>✉ contato@elenicecollection.com.br</li>
+          <li>📍 Balneário Camboriú, SC</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Elenice Collection. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a class="social-link" href="#">ig</a>
+        <a class="social-link" href="#">fb</a>
+        <a class="social-link" href="https://wa.me/5547997259678">wa</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h2>Seu Carrinho</h2>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body">
+    <div class="cart-empty" id="cart-empty" style="display:flex;">
+      <div class="cart-empty-icon">◈</div>
+      <p>Seu carrinho está vazio</p>
+      <a href="../catalogo.html" class="btn btn-outline" onclick="closeCart()">Ver produtos</a>
+    </div>
+    <div id="cart-items"></div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none;">
+    <div class="free-shipping-bar" id="free-shipping-bar"></div>
+    <div class="cart-totals">
+      <div class="cart-total-row final">
+        <span class="label">Total</span>
+        <span class="value" id="cart-total">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-cta">
+      <a href="../checkout.html" class="btn btn-primary" style="justify-content:center;">Finalizar Compra</a>
+      <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script src="../assets/js/cart.js"></script>
+<script>
+(function() {
+  const nav = document.querySelector('.nav');
+  if (!nav) return;
+  const faixaH = 36;
+  function updateNav() { nav.style.top = Math.max(0, faixaH - window.scrollY) + 'px'; }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+</script>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const _fbCfg = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
+const _db  = getFirestore(_app);
+
+const SITE_URL = 'https://elenicecollection.com.br';
+
+function fmtDate(ts) {
+  const d = ts?.toDate ? ts.toDate() : (ts ? new Date(ts) : new Date());
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+}
+
+function relatedCardHTML(p) {
+  return `
+  <a href="${p.slug}" class="blog-card reveal">
+    <div class="blog-card-img">
+      ${p.imagemCapa ? `<img src="${p.imagemCapa}" alt="${p.titulo}" loading="lazy">` : `<div class="blog-card-placeholder">◈</div>`}
+      ${p.categoria ? `<span class="blog-card-cat">${p.categoria}</span>` : ''}
+    </div>
+    <div class="blog-card-body">
+      <div class="blog-card-date">${fmtDate(p.criadoEm)}</div>
+      <div class="blog-card-title">${p.titulo}</div>
+      <p class="blog-card-excerpt">${p.resumo || ''}</p>
+    </div>
+  </a>`;
+}
+
+function injectJsonLd(post, slug) {
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.titulo,
+    "image": post.imagemCapa ? [post.imagemCapa] : [],
+    "datePublished": post.criadoEm?.toDate ? post.criadoEm.toDate().toISOString() : new Date().toISOString(),
+    "author": { "@type": "Organization", "name": post.autor || "Elenice Collection" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Elenice Collection",
+      "logo": { "@type": "ImageObject", "url": SITE_URL + "/assets/img/logo.png" }
+    },
+    "description": post.resumo || "",
+    "mainEntityOfPage": { "@type": "WebPage", "@id": SITE_URL + "/blog/" + slug }
+  };
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(ld);
+  document.head.appendChild(script);
+}
+
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug');
+  const content = document.getElementById('post-conteudo');
+
+  if (!slug) {
+    content.innerHTML = '<p>Artigo não encontrado. <a href="../blog.html">Voltar ao blog</a>.</p>';
+    return;
+  }
+
+  try {
+    const snap = await getDocs(collection(_db, 'blog'));
+    const todos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const post = todos.find(p => p.slug === slug && p.status === 'publicado');
+
+    if (!post) {
+      content.innerHTML = '<p>Este artigo não foi encontrado ou não está mais disponível. <a href="../blog.html">Voltar ao blog</a>.</p>';
+      return;
+    }
+
+    /* SEO: title, meta, OG, Twitter, canonical */
+    const seoTitle = post.metaTitulo || post.titulo;
+    const seoDesc  = post.metaDescricao || post.resumo || '';
+    const url      = `${SITE_URL}/blog/${post.slug}`;
+
+    document.getElementById('page-title').textContent = `${seoTitle} — Blog Elenice Collection`;
+    document.getElementById('meta-description').setAttribute('content', seoDesc);
+    document.getElementById('canonical-link').setAttribute('href', url);
+    document.getElementById('og-title').setAttribute('content', seoTitle);
+    document.getElementById('og-description').setAttribute('content', seoDesc);
+    document.getElementById('og-image').setAttribute('content', post.imagemCapa || '');
+    document.getElementById('og-url').setAttribute('content', url);
+    document.getElementById('tw-title').setAttribute('content', seoTitle);
+    document.getElementById('tw-description').setAttribute('content', seoDesc);
+    document.getElementById('tw-image').setAttribute('content', post.imagemCapa || '');
+    injectJsonLd(post, post.slug);
+
+    /* Conteúdo */
+    document.getElementById('breadcrumb-title').textContent = post.titulo;
+    document.getElementById('post-cat').textContent = post.categoria || 'Blog';
+    document.getElementById('post-date').textContent = fmtDate(post.criadoEm);
+    document.getElementById('post-date').setAttribute('datetime', post.criadoEm?.toDate ? post.criadoEm.toDate().toISOString() : '');
+    document.getElementById('post-titulo').textContent = post.titulo;
+
+    if (post.imagemCapa) {
+      const img = document.getElementById('post-img');
+      img.src = post.imagemCapa;
+      img.alt = post.titulo;
+      img.style.display = 'block';
+    }
+
+    content.innerHTML = (post.conteudo || '')
+      .split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('');
+
+    const autor = post.autor || 'Elenice Collection';
+    document.getElementById('post-author-name').textContent = autor;
+    document.getElementById('post-author-initial').textContent = autor[0]?.toUpperCase() || 'E';
+
+    /* Relacionados */
+    const related = todos
+      .filter(p => p.status === 'publicado' && p.slug !== post.slug)
+      .sort((a, b) => (b.criadoEm?.seconds || 0) - (a.criadoEm?.seconds || 0))
+      .slice(0, 3);
+    if (related.length) {
+      document.getElementById('related-grid').innerHTML = related.map(relatedCardHTML).join('');
+      document.getElementById('related-section').style.display = 'block';
+    }
+
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+
+  } catch (e) {
+    console.error('blog-post init error:', e);
+    content.innerHTML = '<p>Não foi possível carregar o artigo. Tente novamente mais tarde.</p>';
+  }
+
+  try {
+    const cfgSnap = await getDoc(doc(_db, 'configuracoes', 'loja'));
+    const faixa = cfgSnap.exists() && cfgSnap.data().faixa;
+    if (!faixa || !faixa.length) return;
+    const track = document.getElementById('faixa-track');
+    const bar   = document.getElementById('faixa-bar');
+    if (!track || !bar) return;
+    const items = [...faixa, ...faixa];
+    track.innerHTML = items.map(txt => `<span class="faixa-item">${txt}</span>`).join('');
+    bar.style.display = 'block';
+    track.style.animationDuration = Math.max(18, faixa.length * 4) + 's';
+  } catch (e) { console.warn('Faixa:', e); }
+}
+
+init();
+</script>
+
+</body>
+</html>

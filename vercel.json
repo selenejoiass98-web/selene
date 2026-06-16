@@ -10,11 +10,15 @@
     { "source": "/checkout", "destination": "/checkout.html" },
     { "source": "/rastreio", "destination": "/rastreio.html" },
     { "source": "/sobre", "destination": "/sobre.html" },
+    { "source": "/blog", "destination": "/blog.html" },
+    { "source": "/blog/:slug", "destination": "/blog-post.html?slug=:slug" },
     { "source": "/admin", "destination": "/admin/index.html" },
     { "source": "/admin/dashboard", "destination": "/admin/dashboard.html" },
     { "source": "/admin/produto", "destination": "/admin/produto.html" },
     { "source": "/admin/cupons", "destination": "/admin/cupons.html" },
-    { "source": "/admin/configuracoes", "destination": "/admin/configuracoes.html" }
+    { "source": "/admin/configuracoes", "destination": "/admin/configuracoes.html" },
+    { "source": "/admin/blog", "destination": "/admin/blog.html" },
+    { "source": "/admin/blog-post", "destination": "/admin/blog-post.html" }
   ],
   "headers": [
     {

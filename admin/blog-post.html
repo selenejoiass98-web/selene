@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post do Blog — Elenice Collection</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:#7C5C35; --gold-mid:#A07848; --gold-light:#C4A47A;
+  --gold-pale:#E0CEBB; --cream:#F5F0EA; --cream-d:#EDE4DA;
+  --brown:#3D2B1A; --brown-m:#5C3D28; --text:#2A1F14;
+  --text-m:#5A4030; --text-s:#9C8070; --white:#FEFCF9;
+  --sidebar:240px; --green:#2D6A4F; --red:#C53030;
+}
+body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text); display:flex; min-height:100vh; }
+
+.sidebar { width:var(--sidebar); background:var(--brown); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; }
+.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); }
+.sidebar-logo .tag { font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-top:0.2rem; display:block; }
+.sidebar-nav { flex:1; padding:1rem 0; }
+.nav-section-title { font-size:0.5rem; letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.2); padding:0.8rem 1.5rem 0.4rem; }
+.nav-item { display:flex; align-items:center; gap:0.8rem; padding:0.75rem 1.5rem; font-size:0.72rem; letter-spacing:0.08em; color:rgba(255,255,255,0.5); cursor:pointer; transition:all 0.2s; text-decoration:none; border-left:2px solid transparent; }
+.nav-item:hover { color:var(--gold-light); background:rgba(255,255,255,0.03); }
+.nav-item.active { color:var(--gold-light); background:rgba(196,164,122,0.08); border-left-color:var(--gold); }
+.nav-item .icon { font-size:1rem; flex-shrink:0; }
+.sidebar-footer { padding:1.2rem 1.5rem; border-top:1px solid rgba(196,164,122,0.12); }
+.btn-logout { width:100%; padding:0.55rem; background:rgba(255,255,255,0.05); border:1px solid rgba(196,164,122,0.15); color:rgba(255,255,255,0.4); font-family:'Jost',sans-serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+.btn-logout:hover { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); }
+
+.main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; }
+.topbar { background:var(--white); border-bottom:1px solid var(--gold-pale); padding:0 2rem; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+.topbar-title { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:300; color:var(--brown); }
+.topbar-left { display:flex; align-items:center; gap:1rem; }
+.back-btn { display:flex; align-items:center; gap:0.4rem; font-size:0.62rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-s); text-decoration:none; transition:color 0.2s; }
+.back-btn:hover { color:var(--gold); }
+
+.content { padding:2rem; }
+.form-layout { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; align-items:start; }
+
+.form-card { background:var(--white); border:1px solid var(--gold-pale); padding:1.8rem; margin-bottom:1.2rem; }
+.card-title { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:400; color:var(--brown); margin-bottom:1.5rem; padding-bottom:0.8rem; border-bottom:1px solid var(--gold-pale); display:flex; align-items:center; gap:0.5rem; }
+
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+.form-row.single { grid-template-columns:1fr; }
+.form-group { display:flex; flex-direction:column; gap:0.4rem; }
+.form-label { font-size:0.58rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-s); }
+.form-label span { color:var(--red); margin-left:2px; }
+.form-input { padding:0.75rem 1rem; border:1px solid var(--gold-pale); background:var(--white); font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text); outline:none; transition:border-color 0.2s; width:100%; }
+.form-input:focus { border-color:var(--gold-light); }
+.form-input.error { border-color:var(--red); }
+textarea.form-input { resize:vertical; min-height:100px; line-height:1.6; }
+textarea.form-input.tall { min-height:280px; }
+.form-hint { font-size:0.62rem; color:var(--text-s); letter-spacing:0.03em; }
+.form-error { font-size:0.62rem; color:var(--red); display:none; }
+.form-error.show { display:block; }
+.char-count { font-size:0.6rem; color:var(--text-s); text-align:right; }
+.char-count.over { color:var(--red); }
+
+.slug-preview { font-size:0.7rem; color:var(--gold-mid); background:var(--cream); padding:0.5rem 0.8rem; border-radius:4px; word-break:break-all; }
+
+.upload-area { border:2px dashed var(--gold-pale); background:var(--cream); padding:2rem; text-align:center; cursor:pointer; transition:all 0.2s; margin-bottom:1rem; position:relative; }
+.upload-area:hover, .upload-area.dragover { border-color:var(--gold-light); background:var(--cream-d); }
+.upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
+.upload-icon { font-size:2rem; margin-bottom:0.5rem; color:var(--gold-light); }
+.upload-text { font-size:0.72rem; color:var(--text-s); line-height:1.6; }
+.upload-text strong { color:var(--gold); }
+.cover-preview { width:100%; aspect-ratio:16/9; background:var(--cream); margin-bottom:1rem; position:relative; overflow:hidden; }
+.cover-preview img { width:100%; height:100%; object-fit:cover; }
+.cover-delete { position:absolute; top:8px; right:8px; width:26px; height:26px; border-radius:50%; background:rgba(197,48,48,0.9); color:white; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.8rem; }
+
+.action-card { background:var(--white); border:1px solid var(--gold-pale); padding:1.5rem; margin-bottom:1rem; }
+.action-card-title { font-size:0.62rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold-mid); margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:1px solid var(--gold-pale); }
+.btn-save { width:100%; padding:0.9rem; background:var(--gold); color:white; border:none; font-family:'Jost',sans-serif; font-size:0.68rem; letter-spacing:0.25em; text-transform:uppercase; cursor:pointer; transition:background 0.2s; display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.6rem; }
+.btn-save:hover { background:var(--brown-m); }
+.btn-save:disabled { opacity:0.6; cursor:not-allowed; }
+.btn-draft { width:100%; padding:0.7rem; background:var(--white); color:var(--text-m); border:1px solid var(--gold-pale); font-family:'Jost',sans-serif; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+.btn-draft:hover { border-color:var(--gold); color:var(--gold); }
+
+.preview-card { background:var(--cream); border:1px solid var(--gold-pale); padding:1.2rem; }
+.preview-img { width:100%; aspect-ratio:16/10; background:var(--white); display:flex; align-items:center; justify-content:center; margin-bottom:0.8rem; font-family:'Cormorant Garamond',serif; font-size:3rem; color:var(--gold-pale); font-style:italic; overflow:hidden; }
+.preview-img img { width:100%; height:100%; object-fit:cover; }
+.preview-cat { font-size:0.55rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-s); margin-bottom:0.3rem; }
+.preview-name { font-family:'Cormorant Garamond',serif; font-size:1rem; color:var(--brown); margin-bottom:0.3rem; }
+.preview-excerpt { font-size:0.72rem; color:var(--text-s); line-height:1.6; }
+
+.toast { position:fixed; bottom:2rem; right:2rem; background:var(--brown); color:var(--cream); padding:0.9rem 1.4rem; font-size:0.75rem; letter-spacing:0.05em; z-index:500; display:flex; align-items:center; gap:0.7rem; transform:translateY(calc(100% + 2rem)); opacity:0; transition:all 0.3s ease; max-width:320px; }
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-dot { width:7px; height:7px; border-radius:50%; background:var(--gold-light); flex-shrink:0; }
+.spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+@media(max-width:900px) {
+  .sidebar { display:none; }
+  .main { margin-left:0; }
+  .form-layout { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="../assets/img/logo.png" alt="Elenice Collection" style="height:55px;object-fit:contain;filter:brightness(0) invert(1) sepia(1) saturate(0.5) brightness(1.5);" />
+    <span class="tag">Painel Admin</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">Principal</div>
+    <a class="nav-item" href="/admin/dashboard"><span class="icon">📊</span> Dashboard</a>
+    <a class="nav-item" href="/admin/produto"><span class="icon">✦</span> Novo Produto</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Gestão</div>
+    <a class="nav-item" href="/admin/dashboard"><span class="icon">💍</span> Produtos</a>
+    <a class="nav-item" href="/admin/dashboard"><span class="icon">📦</span> Pedidos</a>
+    <a class="nav-item" href="/admin/cupons"><span class="icon">🏷️</span> Cupons</a>
+    <a class="nav-item active" href="/admin/blog"><span class="icon">📝</span> Blog</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Configurações</div>
+    <a class="nav-item" href="../index.html" target="_blank"><span class="icon">🌐</span> Ver loja</a>
+    <a class="nav-item" href="/admin/configuracoes"><span class="icon">⚙</span> Configurações</a>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="btn-logout" onclick="logout()">Sair</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="/admin/blog" class="back-btn">← Voltar</a>
+      <div class="topbar-title" id="page-title">Novo Post</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="form-layout">
+
+      <!-- LEFT -->
+      <div>
+
+        <div class="form-card">
+          <div class="card-title">📝 Conteúdo do post</div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Título <span>*</span></label>
+              <input type="text" class="form-input" id="titulo" placeholder="Ex: Como cuidar das suas joias em ouro 18k" oninput="onTituloInput()">
+              <div class="form-error" id="err-titulo">Campo obrigatório</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Link (slug) <span>*</span></label>
+              <input type="text" class="form-input" id="slug" placeholder="como-cuidar-das-suas-joias-em-ouro-18k" oninput="onSlugInput()">
+              <div class="slug-preview">elenicecollection.com.br/blog/<strong id="slug-display">seu-link-aqui</strong></div>
+              <div class="form-error" id="err-slug">Campo obrigatório</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Resumo (aparece na listagem e no Google) <span>*</span></label>
+              <textarea class="form-input" id="resumo" placeholder="Resumo curto e atraente do artigo, em até 160 caracteres" oninput="updatePreview();updateCharCount('resumo','count-resumo',160)"></textarea>
+              <div class="char-count" id="count-resumo">0 / 160</div>
+              <div class="form-error" id="err-resumo">Campo obrigatório</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Conteúdo do artigo <span>*</span></label>
+              <textarea class="form-input tall" id="conteudo" placeholder="Escreva o artigo. Separe os parágrafos pressionando Enter."></textarea>
+              <div class="form-error" id="err-conteudo">Campo obrigatório</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title">🏷️ Categorização</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Categoria</label>
+              <input type="text" class="form-input" id="categoria" list="categorias-lista" placeholder="Ex: Cuidados com Joias" oninput="updatePreview()">
+              <datalist id="categorias-lista">
+                <option value="Tendências">
+                <option value="Cuidados com Joias">
+                <option value="Guia de Compra">
+                <option value="Estilo">
+                <option value="Presentes">
+                <option value="Novidades">
+              </datalist>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Autor</label>
+              <input type="text" class="form-input" id="autor" placeholder="Elenice Collection" value="Elenice Collection">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title">🔍 SEO (opcional)</div>
+          <p class="form-hint" style="margin-bottom:1rem;">Deixe em branco para usar o título e o resumo automaticamente.</p>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Meta título</label>
+              <input type="text" class="form-input" id="meta-titulo" placeholder="Será usado o título do post" oninput="updateCharCount('meta-titulo','count-meta-titulo',60)">
+              <div class="char-count" id="count-meta-titulo">0 / 60</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Meta descrição</label>
+              <textarea class="form-input" id="meta-descricao" placeholder="Será usado o resumo do post" oninput="updateCharCount('meta-descricao','count-meta-descricao',160)"></textarea>
+              <div class="char-count" id="count-meta-descricao">0 / 160</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+
+        <div class="form-card">
+          <div class="card-title">🖼️ Imagem de capa</div>
+          <div class="upload-progress" id="upload-progress" style="width:100%;height:4px;background:var(--gold-pale);margin-bottom:0.5rem;display:none;border-radius:2px;overflow:hidden;">
+            <div id="upload-bar" style="height:100%;background:var(--gold);transition:width 0.3s ease;width:0%;"></div>
+          </div>
+          <div id="cover-wrap"></div>
+          <div class="upload-area" id="upload-area">
+            <input type="file" accept="image/*" id="file-input" onchange="handleFile(this.files[0])">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">
+              <strong>Clique para adicionar a foto</strong><br>
+              ou arraste e solte aqui<br>
+              <span style="font-size:0.62rem;">JPG, PNG · Máx 5MB · Recomendado 1200×675px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-card">
+          <div class="action-card-title">Publicar post</div>
+          <button class="btn-save" id="btn-save" onclick="salvarPost('publicado')">
+            <div class="spinner" id="spinner"></div>
+            <span id="btn-save-text">✦ Publicar no blog</span>
+          </button>
+          <button class="btn-draft" onclick="salvarPost('rascunho')">Salvar como rascunho</button>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title">👁 Pré-visualização</div>
+          <div class="preview-card">
+            <div class="preview-img" id="preview-img">◈</div>
+            <div class="preview-cat" id="preview-cat">Categoria</div>
+            <div class="preview-name" id="preview-name">Título do post</div>
+            <p class="preview-excerpt" id="preview-excerpt">Resumo do artigo aparece aqui...</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, getDoc, getDocs, updateDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const CLOUDINARY_CLOUD = 'ddmxyguk0';
+const CLOUDINARY_PRESET = 'selene-joias';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+onAuthStateChanged(auth, user => {
+  if (!user) window.location.href = '/admin';
+});
+
+// ── STATE ──
+let coverUrl = null;
+let editingId = null;
+let slugTouched = false;
+
+// ── SLUG ──
+function slugify(text) {
+  return (text || '')
+    .toString()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+window.onTituloInput = function() {
+  updatePreview();
+  if (!slugTouched) {
+    const slug = slugify(document.getElementById('titulo').value);
+    document.getElementById('slug').value = slug;
+    document.getElementById('slug-display').textContent = slug || 'seu-link-aqui';
+  }
+};
+
+window.onSlugInput = function() {
+  slugTouched = true;
+  const el = document.getElementById('slug');
+  el.value = slugify(el.value);
+  document.getElementById('slug-display').textContent = el.value || 'seu-link-aqui';
+};
+
+window.updateCharCount = function(fieldId, countId, max) {
+  const len = document.getElementById(fieldId).value.length;
+  const el = document.getElementById(countId);
+  el.textContent = `${len} / ${max}`;
+  el.classList.toggle('over', len > max);
+};
+
+// ── EDIT MODE ──
+const params = new URLSearchParams(window.location.search);
+const editId = params.get('id');
+if (editId) {
+  editingId = editId;
+  slugTouched = true;
+  document.getElementById('page-title').textContent = 'Editar Post';
+  document.getElementById('btn-save-text').textContent = '✦ Salvar alterações';
+  loadPost(editId);
+}
+
+async function loadPost(id) {
+  try {
+    const snap = await getDoc(doc(db,'blog',id));
+    if (!snap.exists()) return;
+    const p = snap.data();
+    document.getElementById('titulo').value = p.titulo||'';
+    document.getElementById('slug').value = p.slug||'';
+    document.getElementById('slug-display').textContent = p.slug||'seu-link-aqui';
+    document.getElementById('resumo').value = p.resumo||'';
+    document.getElementById('conteudo').value = p.conteudo||'';
+    document.getElementById('categoria').value = p.categoria||'';
+    document.getElementById('autor').value = p.autor||'Elenice Collection';
+    document.getElementById('meta-titulo').value = p.metaTitulo||'';
+    document.getElementById('meta-descricao').value = p.metaDescricao||'';
+    if (p.imagemCapa) {
+      coverUrl = p.imagemCapa;
+      renderCover();
+    }
+    updateCharCount('resumo','count-resumo',160);
+    updateCharCount('meta-titulo','count-meta-titulo',60);
+    updateCharCount('meta-descricao','count-meta-descricao',160);
+    updatePreview();
+  } catch(e) { showToast('Erro ao carregar post'); console.error(e); }
+}
+
+// ── PREVIEW ──
+window.updatePreview = function() {
+  document.getElementById('preview-name').textContent = document.getElementById('titulo').value || 'Título do post';
+  document.getElementById('preview-cat').textContent = document.getElementById('categoria').value || 'Categoria';
+  document.getElementById('preview-excerpt').textContent = document.getElementById('resumo').value || 'Resumo do artigo aparece aqui...';
+  if (coverUrl) {
+    document.getElementById('preview-img').innerHTML = `<img src="${coverUrl}" alt="preview">`;
+  }
+};
+
+// ── COVER UPLOAD ──
+window.handleFile = async function(file) {
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Imagem muito grande (máx 5MB)'); return; }
+
+  const progress = document.getElementById('upload-progress');
+  const bar = document.getElementById('upload-bar');
+  progress.style.display = 'block';
+  bar.style.width = '30%';
+
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+    formData.append('folder', 'elenice-collection/blog');
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method:'POST', body:formData });
+    const data = await res.json();
+    bar.style.width = '100%';
+    if (data.secure_url) {
+      coverUrl = data.secure_url;
+      renderCover();
+      updatePreview();
+    } else {
+      showToast('Erro ao enviar imagem. Tente novamente.');
+    }
+  } catch(e) {
+    showToast('Erro ao enviar imagem. Verifique sua conexão.');
+    console.error(e);
+  }
+
+  setTimeout(() => { progress.style.display = 'none'; bar.style.width = '0%'; }, 400);
+};
+
+function renderCover() {
+  const wrap = document.getElementById('cover-wrap');
+  if (!coverUrl) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `
+    <div class="cover-preview">
+      <img src="${coverUrl}" alt="capa">
+      <button class="cover-delete" onclick="removeCover()" title="Remover">×</button>
+    </div>`;
+}
+
+window.removeCover = function() {
+  coverUrl = null;
+  renderCover();
+  document.getElementById('preview-img').innerHTML = '◈';
+};
+
+// ── VALIDATE ──
+function validate() {
+  let ok = true;
+  const required = [
+    { id:'titulo', err:'err-titulo' },
+    { id:'slug', err:'err-slug' },
+    { id:'resumo', err:'err-resumo' },
+    { id:'conteudo', err:'err-conteudo' },
+  ];
+  required.forEach(f => {
+    const el = document.getElementById(f.id);
+    const errEl = document.getElementById(f.err);
+    if (!el.value.trim()) {
+      el.classList.add('error'); errEl.classList.add('show'); ok = false;
+    } else {
+      el.classList.remove('error'); errEl.classList.remove('show');
+    }
+  });
+  return ok;
+}
+
+// ── CHECK SLUG DUPLICADO ──
+async function slugExists(slug, excludeId) {
+  const snap = await getDocs(collection(db, 'blog'));
+  return snap.docs.some(d => d.id !== excludeId && d.data().slug === slug);
+}
+
+// ── SAVE ──
+window.salvarPost = async function(status) {
+  if (!validate()) { showToast('Preencha os campos obrigatórios'); return; }
+
+  const btn = document.getElementById('btn-save');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('btn-save-text');
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  btnText.textContent = 'Salvando...';
+
+  const slug = slugify(document.getElementById('slug').value);
+
+  try {
+    if (await slugExists(slug, editingId)) {
+      showToast('Já existe um post com esse link. Escolha outro.');
+      btn.disabled = false; spinner.style.display = 'none';
+      btnText.textContent = editingId ? '✦ Salvar alterações' : '✦ Publicar no blog';
+      return;
+    }
+
+    const data = {
+      titulo: document.getElementById('titulo').value.trim(),
+      slug,
+      resumo: document.getElementById('resumo').value.trim(),
+      conteudo: document.getElementById('conteudo').value.trim(),
+      categoria: document.getElementById('categoria').value.trim(),
+      autor: document.getElementById('autor').value.trim() || 'Elenice Collection',
+      metaTitulo: document.getElementById('meta-titulo').value.trim(),
+      metaDescricao: document.getElementById('meta-descricao').value.trim(),
+      imagemCapa: coverUrl || '',
+      status,
+      atualizadoEm: serverTimestamp(),
+    };
+
+    if (editingId) {
+      await updateDoc(doc(db,'blog',editingId), data);
+      showToast('Post atualizado com sucesso! ✦');
+    } else {
+      data.criadoEm = serverTimestamp();
+      await addDoc(collection(db,'blog'), data);
+      showToast(status === 'publicado' ? 'Post publicado no blog! ✦' : 'Rascunho salvo!');
+      setTimeout(() => { window.location.href = '/admin/blog'; }, 1200);
+    }
+  } catch(e) {
+    showToast('Erro ao salvar. Tente novamente.');
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  spinner.style.display = 'none';
+  btnText.textContent = editingId ? '✦ Salvar alterações' : '✦ Publicar no blog';
+};
+
+// Drag and drop
+const uploadArea = document.getElementById('upload-area');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+// ── LOGOUT ──
+window.logout = async () => { await signOut(auth); window.location.href = '/admin'; };
+
+// ── TOAST ──
+let toastTimer;
+window.showToast = function(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+};
+</script>
+</body>
+</html>

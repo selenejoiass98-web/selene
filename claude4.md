@@ -82,6 +82,17 @@
 - [x] Admin: toggle independente para a seção de Depoimentos (mostrar/ocultar na home), padrão ativo
 - [x] **Fix:** depoimentos não apareciam na home — causa: classe `.reveal` (scroll-fade-in) é observada uma única vez no `DOMContentLoaded` (cart.js), mas depoimentos chegam depois via Firestore e nunca eram observados, ficando com `opacity:0` permanente. Corrigido com fallback `querySelectorAll('.reveal:not(.visible))` no `finally` do `init()` do index.html (mesmo padrão que já existia em catalogo.html). **Atenção:** qualquer novo conteúdo dinâmico com classe `.reveal` precisa desse mesmo fallback ou nunca aparecerá
 
+### Blog (sessão 16/06/2026)
+- [x] **Público:** `blog.html` (listagem, grid 3 col, paginação 9/página) e `blog-post.html` (artigo individual)
+- [x] Link "Blog" **somente no rodapé** de todas as páginas públicas (não está no menu superior, por pedido explícito)
+- [x] **Admin:** `admin/blog.html` (lista com editar/excluir/publicar-despublicar) e `admin/blog-post.html` (formulário: título, slug auto-gerado e editável, resumo, conteúdo, categoria com sugestões, autor, imagem de capa via Cloudinary, meta título/descrição opcionais, publicar ou salvar rascunho)
+- [x] Link "Blog" adicionado ao menu lateral de todas as páginas do admin
+- [x] **SEO:** title/meta description dinâmicos por post, Open Graph + Twitter Card, link canonical, JSON-LD (`Article` schema), URLs limpas via slug (`/blog/{slug}`), HTML semântico (`<article>`, `<time>`, breadcrumb)
+- [x] `vercel.json`: rewrites `/blog` → `blog.html` e `/blog/:slug` → `blog-post.html?slug=:slug` (+ `/admin/blog` e `/admin/blog-post`)
+- [x] `robots.txt` e `sitemap.xml` criados (básicos — sitemap lista só páginas estáticas; posts do blog e produtos são indexados via crawling dos links internos, não estão no sitemap pois são dinâmicos via Firestore sem build step)
+- [x] Firestore: nova coleção `blog` (ver schema abaixo)
+- [ ] **Pendente:** se o volume de posts crescer, considerar sitemap dinâmico via serverless function (`/api/sitemap.js`) consultando Firestore
+
 ### Homepage Redesenhada (sessão 13/06/2026)
 - [x] **Cards de produto reformulados**: preço em dourado (`--gold-mid`), sem borda separadora, gradiente sutil na imagem, 2 botões (Ver produto outline + + Carrinho ouro), categoria · material na mesma linha
 - [x] **Hero A (Editorial)** — id="hero-editorial", layout split editorial (mosaico de fotos à direita), carrega texto/imagens do Firestore via `applyConfig()`
@@ -226,6 +237,16 @@ instagram: { ativo: boolean, posts: string[] }
 depoimentosAtivo: boolean
 stats: { s1num, s1label, s2num, s2label, s3num, s3label }
 geral: { whatsapp, email, freteGratis, pixDesconto, aviso }
+```
+
+## 🗄️ FIRESTORE — COLEÇÃO `blog`
+
+```
+titulo, slug, resumo, conteudo (texto com \n entre parágrafos)
+categoria, autor, imagemCapa (Cloudinary)
+metaTitulo, metaDescricao (opcionais — fallback: titulo/resumo)
+status: 'publicado' | 'rascunho'
+criadoEm, atualizadoEm (serverTimestamp)
 ```
 
 ---

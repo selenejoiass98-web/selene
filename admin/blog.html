@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Admin Elenice Collection</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:#7C5C35; --gold-mid:#A07848; --gold-light:#C4A47A;
+  --gold-pale:#E0CEBB; --cream:#F5F0EA; --cream-d:#EDE4DA;
+  --brown:#3D2B1A; --brown-m:#5C3D28; --text:#2A1F14;
+  --text-m:#5A4030; --text-s:#9C8070; --white:#FEFCF9;
+  --sidebar:240px; --green:#2D6A4F; --green-l:#E8F5F0;
+  --red:#C53030; --red-l:#FFF5F5;
+}
+body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text); display:flex; min-height:100vh; }
+
+.sidebar { width:var(--sidebar); background:var(--brown); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; }
+.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); }
+.sidebar-logo .brand { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:300; letter-spacing:0.25em; color:var(--gold-light); text-transform:uppercase; display:block; }
+.sidebar-logo .tag { font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-top:0.2rem; display:block; }
+.sidebar-nav { flex:1; padding:1rem 0; overflow-y:auto; }
+.nav-section-title { font-size:0.5rem; letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.2); padding:0.8rem 1.5rem 0.4rem; }
+.nav-item { display:flex; align-items:center; gap:0.8rem; padding:0.75rem 1.5rem; font-size:0.72rem; letter-spacing:0.08em; color:rgba(255,255,255,0.5); cursor:pointer; transition:all 0.2s; text-decoration:none; border-left:2px solid transparent; }
+.nav-item:hover { color:var(--gold-light); background:rgba(255,255,255,0.03); }
+.nav-item.active { color:var(--gold-light); background:rgba(196,164,122,0.08); border-left-color:var(--gold); }
+.nav-item .icon { font-size:1rem; flex-shrink:0; }
+.sidebar-footer { padding:1.2rem 1.5rem; border-top:1px solid rgba(196,164,122,0.12); }
+.user-info { display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem; }
+.user-avatar { width:34px; height:34px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:0.9rem; color:var(--white); font-style:italic; flex-shrink:0; }
+.user-name { font-size:0.72rem; color:var(--gold-light); font-weight:400; }
+.user-email { font-size:0.58rem; color:rgba(255,255,255,0.25); margin-top:0.1rem; }
+.btn-logout { width:100%; padding:0.55rem; background:rgba(255,255,255,0.05); border:1px solid rgba(196,164,122,0.15); color:rgba(255,255,255,0.4); font-family:'Jost',sans-serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+.btn-logout:hover { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); }
+
+.main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.topbar { background:var(--white); border-bottom:1px solid var(--gold-pale); padding:0 2rem; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+.topbar-title { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:300; color:var(--brown); }
+.btn-new { display:flex; align-items:center; gap:0.5rem; padding:0.55rem 1.2rem; background:var(--gold); color:var(--white); border:none; font-family:'Jost',sans-serif; font-size:0.62rem; letter-spacing:0.18em; text-transform:uppercase; cursor:pointer; transition:background 0.2s; text-decoration:none; }
+.btn-new:hover { background:var(--brown-m); }
+
+.content { padding:2rem; flex:1; }
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem; }
+.section-title { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:400; color:var(--brown); }
+
+.table-wrap { background:var(--white); border:1px solid var(--gold-pale); overflow:hidden; margin-bottom:2rem; }
+.data-table { width:100%; border-collapse:collapse; }
+.data-table thead tr { background:var(--brown); }
+.data-table thead th { padding:0.75rem 1rem; text-align:left; font-size:0.55rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold-light); font-weight:400; white-space:nowrap; }
+.data-table tbody tr { border-bottom:1px solid var(--gold-pale); transition:background 0.15s; }
+.data-table tbody tr:last-child { border-bottom:none; }
+.data-table tbody tr:hover { background:var(--cream); }
+.data-table td { padding:0.9rem 1rem; vertical-align:middle; font-size:0.75rem; color:var(--text); }
+
+.post-cell { display:flex; align-items:center; gap:0.8rem; }
+.post-thumb { width:42px; height:42px; background:var(--cream); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--gold-pale); font-style:italic; flex-shrink:0; overflow:hidden; }
+.post-thumb img { width:100%; height:100%; object-fit:cover; }
+.post-cell-name { font-weight:400; color:var(--brown); margin-bottom:0.15rem; font-size:0.78rem; }
+.post-cell-cat { font-size:0.62rem; color:var(--text-s); letter-spacing:0.05em; }
+
+.status-pill { display:inline-flex; align-items:center; gap:0.3rem; padding:0.2rem 0.7rem; font-size:0.58rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; border-radius:2px; }
+.status-active { background:var(--green-l); color:var(--green); }
+.status-draft { background:var(--cream-d); color:var(--text-s); }
+
+.action-btns { display:flex; gap:0.4rem; }
+.action-btn { padding:0.3rem 0.7rem; font-size:0.58rem; letter-spacing:0.1em; text-transform:uppercase; font-family:'Jost',sans-serif; cursor:pointer; border:1px solid var(--gold-pale); background:var(--white); color:var(--text-m); transition:all 0.2s; text-decoration:none; display:inline-block; }
+.action-btn:hover { background:var(--gold); color:var(--white); border-color:var(--gold); }
+.action-btn.danger:hover { background:var(--red); border-color:var(--red); }
+
+.table-empty { text-align:center; padding:3rem 2rem; color:var(--text-s); }
+.table-empty .e-icon { font-family:'Cormorant Garamond',serif; font-size:3rem; color:var(--gold-pale); font-style:italic; margin-bottom:0.8rem; }
+.table-empty p { font-size:0.78rem; margin-bottom:1rem; }
+
+.loading { display:flex; align-items:center; justify-content:center; padding:3rem; gap:0.8rem; color:var(--text-s); font-size:0.75rem; }
+.spinner { width:20px; height:20px; border:2px solid var(--gold-pale); border-top-color:var(--gold); border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.toast { position:fixed; bottom:2rem; right:2rem; background:var(--brown); color:var(--cream); padding:0.9rem 1.4rem; font-size:0.75rem; letter-spacing:0.05em; z-index:500; display:flex; align-items:center; gap:0.7rem; transform:translateY(calc(100% + 2rem)); opacity:0; transition:all 0.3s ease; max-width:320px; }
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-dot { width:7px; height:7px; border-radius:50%; background:var(--gold-light); flex-shrink:0; }
+
+.modal-overlay { position:fixed; inset:0; background:rgba(42,31,20,0.5); z-index:200; display:none; align-items:center; justify-content:center; padding:2rem; }
+.modal-overlay.open { display:flex; }
+.modal-box { background:var(--white); max-width:380px; width:100%; padding:2rem; }
+.modal-title { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:300; color:var(--brown); margin-bottom:0.8rem; }
+.modal-text { font-size:0.78rem; color:var(--text-m); line-height:1.7; margin-bottom:1.5rem; }
+.modal-btns { display:flex; gap:0.8rem; justify-content:flex-end; }
+.btn-sm { padding:0.4rem 1rem; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; font-family:'Jost',sans-serif; cursor:pointer; transition:all 0.2s; border:1px solid var(--gold-pale); background:var(--white); color:var(--text-m); text-decoration:none; display:inline-block; }
+.btn-sm:hover { background:var(--gold); color:var(--white); border-color:var(--gold); }
+
+@media(max-width:900px) {
+  .sidebar { display:none; }
+  .main { margin-left:0; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="../assets/img/logo.png" alt="Elenice Collection" style="height:55px;object-fit:contain;filter:brightness(0) invert(1) sepia(1) saturate(0.5) brightness(1.5);" />
+    <span class="tag">Painel Admin</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">Principal</div>
+    <a class="nav-item" href="/admin/dashboard"><span class="icon">📊</span> Dashboard</a>
+    <a class="nav-item" href="/admin/produto"><span class="icon">✦</span> Novo Produto</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Gestão</div>
+    <a class="nav-item" href="/admin/dashboard"><span class="icon">💍</span> Produtos</a>
+    <a class="nav-item" href="/admin/dashboard"><span class="icon">📦</span> Pedidos</a>
+    <a class="nav-item" href="/admin/cupons"><span class="icon">🏷️</span> Cupons</a>
+    <a class="nav-item active" href="/admin/blog"><span class="icon">📝</span> Blog</a>
+    <div class="nav-section-title" style="margin-top:0.5rem;">Configurações</div>
+    <a class="nav-item" href="../index.html" target="_blank"><span class="icon">🌐</span> Ver loja</a>
+    <a class="nav-item" href="/admin/configuracoes"><span class="icon">⚙</span> Configurações</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar">E</div>
+      <div>
+        <div class="user-name">Elenice Collection</div>
+        <div class="user-email" id="user-email-display">—</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">Sair</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Blog</div>
+    <a href="/admin/blog-post" class="btn-new">+ Novo Post</a>
+  </div>
+
+  <div class="content">
+    <div class="section-header">
+      <h2 class="section-title">Posts do Blog</h2>
+    </div>
+    <div class="table-wrap">
+      <div class="loading" id="loading-posts"><div class="spinner"></div> Carregando posts...</div>
+      <table class="data-table" id="table-posts" style="display:none;">
+        <thead>
+          <tr>
+            <th>Post</th>
+            <th>Categoria</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-posts"></tbody>
+      </table>
+      <div class="table-empty" id="empty-posts" style="display:none;">
+        <div class="e-icon">📝</div>
+        <p>Nenhum post cadastrado ainda.</p>
+        <a href="/admin/blog-post" class="btn-sm">Criar primeiro post</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box">
+    <div class="modal-title">Confirmar exclusão</div>
+    <p class="modal-text">Tem certeza que deseja excluir este post? Esta ação não pode ser desfeita.</p>
+    <div class="modal-btns">
+      <button class="btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn-sm danger" id="confirm-delete-btn" style="background:var(--red);color:white;border-color:var(--red);">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, deleteDoc, updateDoc, query, orderBy }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+onAuthStateChanged(auth, user => {
+  if (!user) { window.location.href = '/admin'; return; }
+  document.getElementById('user-email-display').textContent = user.email;
+  loadPosts();
+});
+
+async function loadPosts() {
+  try {
+    const snap = await getDocs(query(collection(db,'blog'), orderBy('criadoEm','desc')));
+    const posts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+
+    document.getElementById('loading-posts').style.display = 'none';
+
+    if (posts.length === 0) {
+      document.getElementById('empty-posts').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('table-posts').style.display = 'table';
+    document.getElementById('tbody-posts').innerHTML = posts.map(p => `
+      <tr>
+        <td>
+          <div class="post-cell">
+            <div class="post-thumb">${p.imagemCapa ? `<img src="${p.imagemCapa}" alt="${p.titulo}">` : '◈'}</div>
+            <div>
+              <div class="post-cell-name">${p.titulo||'(sem título)'}</div>
+              <div class="post-cell-cat">/blog/${p.slug||''}</div>
+            </div>
+          </div>
+        </td>
+        <td>${p.categoria||'—'}</td>
+        <td>
+          <span class="status-pill ${p.status==='publicado'?'status-active':'status-draft'}">
+            ${p.status==='publicado'?'● Publicado':'◌ Rascunho'}
+          </span>
+        </td>
+        <td style="font-size:0.68rem;color:var(--text-s);">${p.criadoEm?.toDate?.()?.toLocaleDateString('pt-BR')||'—'}</td>
+        <td>
+          <div class="action-btns">
+            <a href="/admin/blog-post?id=${p.id}" class="action-btn">Editar</a>
+            <button class="action-btn" onclick="toggleStatus('${p.id}','${p.status}')">
+              ${p.status==='publicado'?'Despublicar':'Publicar'}
+            </button>
+            <button class="action-btn danger" onclick="confirmDelete('${p.id}','${p.titulo}')">Excluir</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    document.getElementById('loading-posts').innerHTML = '<p style="color:#E53E3E;font-size:0.75rem;">Erro ao carregar posts.</p>';
+    console.error(e);
+  }
+}
+
+window.toggleStatus = async function(id, status) {
+  const novo = status === 'publicado' ? 'rascunho' : 'publicado';
+  try {
+    await updateDoc(doc(db,'blog',id), { status: novo });
+    showToast(`Post ${novo === 'publicado' ? 'publicado' : 'despublicado'} com sucesso`);
+    loadPosts();
+  } catch(e) { showToast('Erro ao atualizar status'); }
+};
+
+let deleteId = null;
+window.confirmDelete = function(id, titulo) {
+  deleteId = id;
+  document.querySelector('.modal-text').textContent = `Tem certeza que deseja excluir "${titulo}"? Esta ação não pode ser desfeita.`;
+  document.getElementById('confirm-modal').classList.add('open');
+  document.getElementById('confirm-delete-btn').onclick = async () => {
+    try {
+      await deleteDoc(doc(db,'blog',deleteId));
+      closeModal();
+      showToast('Post excluído com sucesso');
+      loadPosts();
+    } catch(e) { showToast('Erro ao excluir post'); }
+  };
+};
+window.closeModal = () => document.getElementById('confirm-modal').classList.remove('open');
+
+window.logout = async () => { await signOut(auth); window.location.href = '/admin'; };
+
+let toastTimer;
+window.showToast = function(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+};
+</script>
+</body>
+</html>

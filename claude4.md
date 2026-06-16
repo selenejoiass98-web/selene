@@ -89,9 +89,10 @@
 - [x] Link "Blog" adicionado ao menu lateral de todas as páginas do admin
 - [x] **SEO:** title/meta description dinâmicos por post, Open Graph + Twitter Card, link canonical, JSON-LD (`Article` schema), URLs limpas via slug (`/blog/{slug}`), HTML semântico (`<article>`, `<time>`, breadcrumb)
 - [x] `vercel.json`: rewrites `/blog` → `blog.html` e `/blog/:slug` → `blog-post.html?slug=:slug` (+ `/admin/blog` e `/admin/blog-post`)
-- [x] `robots.txt` e `sitemap.xml` criados (básicos — sitemap lista só páginas estáticas; posts do blog e produtos são indexados via crawling dos links internos, não estão no sitemap pois são dinâmicos via Firestore sem build step)
+- [x] `robots.txt` criado, apontando para `/sitemap.xml`
+- [x] **Sitemap dinâmico**: `api/sitemap.js` (serverless function) consulta Firestore via REST API a cada requisição e gera o XML na hora — produtos ativos e posts publicados aparecem automaticamente, sem build step e sem precisar editar nenhum arquivo manualmente. `vercel.json` reescreve `/sitemap.xml` → `/api/sitemap`. Não usa Firebase Admin SDK — só a REST API pública do Firestore (mesmas regras de leitura que o client-side já usa)
 - [x] Firestore: nova coleção `blog` (ver schema abaixo)
-- [ ] **Pendente:** se o volume de posts crescer, considerar sitemap dinâmico via serverless function (`/api/sitemap.js`) consultando Firestore
+- [ ] **Ação manual da Elenice:** cadastrar `https://elenicecollection.com.br/sitemap.xml` no Google Search Console (uma única vez — depois disso o Google revisita por conta própria)
 
 ### Homepage Redesenhada (sessão 13/06/2026)
 - [x] **Cards de produto reformulados**: preço em dourado (`--gold-mid`), sem borda separadora, gradiente sutil na imagem, 2 botões (Ver produto outline + + Carrinho ouro), categoria · material na mesma linha

@@ -18,7 +18,8 @@
     { "source": "/admin/cupons", "destination": "/admin/cupons.html" },
     { "source": "/admin/configuracoes", "destination": "/admin/configuracoes.html" },
     { "source": "/admin/blog", "destination": "/admin/blog.html" },
-    { "source": "/admin/blog-post", "destination": "/admin/blog-post.html" }
+    { "source": "/admin/blog-post", "destination": "/admin/blog-post.html" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
   ],
   "headers": [
     {

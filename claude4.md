@@ -91,8 +91,9 @@
 - [x] `vercel.json`: rewrites `/blog` → `blog.html` e `/blog/:slug` → `blog-post.html?slug=:slug` (+ `/admin/blog` e `/admin/blog-post`)
 - [x] `robots.txt` criado, apontando para `/sitemap.xml`
 - [x] **Sitemap dinâmico**: `api/sitemap.js` (serverless function) consulta Firestore via REST API a cada requisição e gera o XML na hora — produtos ativos e posts publicados aparecem automaticamente, sem build step e sem precisar editar nenhum arquivo manualmente. `vercel.json` reescreve `/sitemap.xml` → `/api/sitemap`. Não usa Firebase Admin SDK — só a REST API pública do Firestore (mesmas regras de leitura que o client-side já usa)
+- [x] **Domínio canônico = `www.elenicecollection.com.br`** (sem `www` dá 307 redirect no Vercel) — todas as URLs internas (sitemap, robots.txt, canonical, OG, JSON-LD) usam `www` para evitar o redirect
 - [x] Firestore: nova coleção `blog` (ver schema abaixo)
-- [ ] **Ação manual da Elenice:** cadastrar `https://elenicecollection.com.br/sitemap.xml` no Google Search Console (uma única vez — depois disso o Google revisita por conta própria)
+- [x] **Sitemap cadastrado no Google Search Console** (`https://www.elenicecollection.com.br/sitemap.xml`) — processado com sucesso em 16/06/2026, 9 páginas encontradas. Primeira tentativa deu "não foi possível buscar" (comum, Search Console tenta de novo automaticamente); funcionou ao atualizar a página depois de algumas horas
 
 ### Homepage Redesenhada (sessão 13/06/2026)
 - [x] **Cards de produto reformulados**: preço em dourado (`--gold-mid`), sem borda separadora, gradiente sutil na imagem, 2 botões (Ver produto outline + + Carrinho ouro), categoria · material na mesma linha

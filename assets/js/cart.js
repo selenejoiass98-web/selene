@@ -159,17 +159,27 @@ window.addEventListener('scroll', () => {
 });
 
 // ── SCROLL REVEAL ──
+let revealObserver;
 function initReveal() {
-  const observer = new IntersectionObserver((entries) => {
+  revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         e.target.classList.add('visible');
-        observer.unobserve(e.target);
+        revealObserver.unobserve(e.target);
       }
     });
   }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  observeReveals();
 }
+// Observa elementos .reveal recem-inseridos no DOM (ex: produtos/depoimentos
+// vindos do Firestore depois do load inicial), sem afetar os ja observados.
+function observeReveals() {
+  document.querySelectorAll('.reveal:not(.reveal-observed)').forEach(el => {
+    el.classList.add('reveal-observed');
+    revealObserver.observe(el);
+  });
+}
+window.observeReveals = observeReveals;
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {

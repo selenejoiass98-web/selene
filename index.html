@@ -801,6 +801,20 @@
   </div>
 </section>
 
+<!-- ── INSTAGRAM ── -->
+<section class="instagram-section" id="instagram-section" style="display:none;">
+  <div class="container">
+    <div class="reveal" style="text-align:center;">
+      <div class="section-tag" style="justify-content:center;">Comunidade</div>
+      <h2 class="section-title">Marcou a <em>Elenice?</em></h2>
+      <p style="font-size:0.83rem;color:var(--text-soft);margin-top:0.8rem;margin-bottom:0;font-weight:300;">
+        Adoramos ver você usando nossas joias. Marque <strong>@elenicecollection</strong> no Instagram!
+      </p>
+    </div>
+    <div id="instagram-embed-wrap"></div>
+  </div>
+</section>
+
 <!-- ── DIFERENCIAIS ── -->
 <section class="benefits">
   <div class="container">
@@ -868,20 +882,6 @@
       <h2 class="section-title">O que nossas<br>clientes <em>dizem</em></h2>
     </div>
     <div class="testimonials-grid" id="testimonials-grid"></div>
-  </div>
-</section>
-
-<!-- ── INSTAGRAM ── -->
-<section class="instagram-section" id="instagram-section" style="display:none;">
-  <div class="container">
-    <div class="reveal" style="text-align:center;">
-      <div class="section-tag" style="justify-content:center;">Comunidade</div>
-      <h2 class="section-title">Marcou a <em>Elenice?</em></h2>
-      <p style="font-size:0.83rem;color:var(--text-soft);margin-top:0.8rem;margin-bottom:0;font-weight:300;">
-        Adoramos ver você usando nossas joias. Marque <strong>@elenicecollection</strong> no Instagram!
-      </p>
-    </div>
-    <div id="instagram-embed-wrap"></div>
   </div>
 </section>
 
@@ -1051,7 +1051,7 @@ function cardHTML(p) {
   const mat       = p.material  || 'Ouro 18k';
   const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${mat.replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
   return `
-  <div class="product-card">
+  <div class="product-card reveal">
     <div class="product-card-img">
       ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
       ${descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
@@ -1325,9 +1325,10 @@ async function init() {
     const grid = document.getElementById('products-grid');
     if (grid) grid.innerHTML = errMsg;
   } finally {
-    /* Conteúdo dinâmico (depoimentos etc.) é injetado depois do observer de
-       scroll já ter sido configurado em cart.js — força a visibilidade aqui. */
-    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+    /* Conteúdo dinâmico (produtos, depoimentos etc.) é injetado depois do
+       observer de scroll já ter sido configurado em cart.js — reobserva os
+       elementos .reveal novos para que animem ao entrar na tela. */
+    if (window.observeReveals) window.observeReveals();
   }
 }
 

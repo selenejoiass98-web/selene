@@ -261,6 +261,24 @@ ul { list-style: none; }
 }
 .nav-cart:hover .cart-badge { background: var(--white); color: var(--gold); }
 
+.whatsapp-float {
+  position: fixed;
+  right: 1.6rem;
+  bottom: 6.5rem;
+  z-index: 90;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  transition: transform var(--transition), background var(--transition);
+}
+.whatsapp-float svg { width: 26px; height: 26px; fill: var(--white); }
+.whatsapp-float:hover { background: var(--brown-mid); transform: scale(1.06); }
+@media (max-width: 600px) { .whatsapp-float { right: 1rem; bottom: 5.5rem; width: 50px; height: 50px; } .whatsapp-float svg { width: 23px; height: 23px; } }
+
 .nav-mobile-btn {
   display: none;
   background: none;

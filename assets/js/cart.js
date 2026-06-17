@@ -161,19 +161,24 @@ window.addEventListener('scroll', () => {
 // ── SCROLL REVEAL ──
 let revealObserver;
 function initReveal() {
-  revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        revealObserver.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+  }
   observeReveals();
 }
 // Observa elementos .reveal recem-inseridos no DOM (ex: produtos/depoimentos
 // vindos do Firestore depois do load inicial), sem afetar os ja observados.
+// Cria o observer sozinho se ainda nao existir, para nao depender da ordem
+// de carregamento entre cart.js e os scripts que chamam essa funcao.
 function observeReveals() {
+  if (!revealObserver) { initReveal(); return; }
   document.querySelectorAll('.reveal:not(.reveal-observed)').forEach(el => {
     el.classList.add('reveal-observed');
     revealObserver.observe(el);

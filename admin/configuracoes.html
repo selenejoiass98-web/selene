@@ -745,7 +745,7 @@ window.salvarTudo = async function() {
       depoimentosAtivo: document.getElementById('dep-ativo')?.checked ?? true,
       instagram: {
         ativo: document.getElementById('ig-ativo')?.checked || false,
-        posts: igPosts.map(s => (s || '').trim()).filter(Boolean),
+        posts: Array.from(document.querySelectorAll('#ig-posts-lista input')).map(el => el.value.trim()).filter(Boolean),
       },
 
       geral: {
@@ -890,30 +890,44 @@ window.removerDepoimento = function(i) {
 };
 
 // ── INSTAGRAM ──
+// Cada linha existente nunca é recriada (sem innerHTML em massa) — assim
+// digitação em andamento nunca se perde ao adicionar/remover outra linha.
 let igPosts = [''];
+
+function igRowHTML(url) {
+  return `
+    <div class="ig-post-row" style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.6rem;">
+      <input type="text" value="${(url || '').replace(/"/g, '&quot;')}" placeholder="https://www.instagram.com/p/XXXXXXXXXXX/" style="flex:1;" />
+      <button type="button" class="ig-post-remove" title="Remover link" style="background:none;border:none;cursor:pointer;color:var(--text-s);opacity:0.4;font-size:1rem;padding:0.3rem;transition:opacity .15s,color .15s;">✕</button>
+    </div>`;
+}
 
 function renderIgPostsAdmin() {
   const lista = document.getElementById('ig-posts-lista');
   if (!lista) return;
-  lista.innerHTML = igPosts.map((url, i) => `
-    <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.6rem;">
-      <input type="text" value="${url}" placeholder="https://www.instagram.com/p/XXXXXXXXXXX/" oninput="igPosts[${i}]=this.value" style="flex:1;" />
-      <button onclick="removerIgPost(${i})" style="background:none;border:none;cursor:pointer;color:var(--text-s);font-size:1rem;">🗑</button>
-    </div>
-  `).join('');
+  lista.innerHTML = igPosts.map(igRowHTML).join('');
 }
 
 window.adicionarIgPost = function() {
-  if (igPosts.length >= 12) { toast('Máximo de 12 posts', 'err'); return; }
-  igPosts.push('');
-  renderIgPostsAdmin();
+  const lista = document.getElementById('ig-posts-lista');
+  if (!lista) return;
+  if (lista.children.length >= 12) { toast('Máximo de 12 posts', 'err'); return; }
+  lista.insertAdjacentHTML('beforeend', igRowHTML(''));
 };
 
-window.removerIgPost = function(i) {
-  igPosts.splice(i, 1);
-  if (!igPosts.length) igPosts.push('');
-  renderIgPostsAdmin();
-};
+document.addEventListener('DOMContentLoaded', () => {
+  const lista = document.getElementById('ig-posts-lista');
+  if (!lista) return;
+  lista.addEventListener('mouseover', e => { const b = e.target.closest('.ig-post-remove'); if (b) { b.style.opacity = '1'; b.style.color = 'var(--gold)'; } });
+  lista.addEventListener('mouseout', e => { const b = e.target.closest('.ig-post-remove'); if (b) { b.style.opacity = '0.4'; b.style.color = 'var(--text-s)'; } });
+  lista.addEventListener('click', e => {
+    const btn = e.target.closest('.ig-post-remove');
+    if (!btn) return;
+    const row = btn.closest('.ig-post-row');
+    if (lista.children.length <= 1) { row.querySelector('input').value = ''; return; }
+    row.remove();
+  });
+});
 
 </script>
 </body>

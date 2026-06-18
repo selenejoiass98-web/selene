@@ -448,6 +448,21 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 }
 .modal-text { font-size:0.78rem; color:var(--text-m); line-height:1.7; margin-bottom:1.5rem; }
 .modal-btns { display:flex; gap:0.8rem; justify-content:flex-end; }
+.modal-desc { font-size:0.78rem; color:var(--text-m); line-height:1.7; margin-bottom:1.2rem; }
+
+/* STATUS SELECT */
+.status-select {
+  padding:0.4rem 0.6rem;
+  font-size:0.68rem;
+  font-family:'Jost',sans-serif;
+  border:1px solid var(--gold-pale);
+  background:var(--white);
+  color:var(--text-m);
+  cursor:pointer;
+  outline:none;
+}
+.status-select:focus { border-color:var(--gold); }
+.tracking-note { font-size:0.6rem; color:var(--text-s); margin-top:0.2rem; }
 
 /* RESPONSIVE */
 @media(max-width:900px) {
@@ -615,6 +630,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
               <th>Total</th>
               <th>Pagamento</th>
               <th>Status</th>
+              <th>Atualizar status</th>
               <th>Data</th>
             </tr>
           </thead>
@@ -668,6 +684,29 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     <div class="modal-btns">
       <button class="btn-sm" onclick="closeModal()">Cancelar</button>
       <button class="btn-sm danger" id="confirm-delete-btn" style="background:var(--red);color:white;border-color:var(--red);">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKING MODAL -->
+<div class="modal-overlay" id="tracking-modal">
+  <div class="modal-box">
+    <div class="modal-title">Código de rastreio</div>
+    <p class="modal-desc">Informe o código de rastreio para avisar a cliente por e-mail que o pedido foi enviado.</p>
+    <div class="form-group" style="margin-bottom:0.9rem;">
+      <label class="form-label" style="display:block;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-s);margin-bottom:0.4rem;">Transportadora</label>
+      <select id="tracking-transportadora" class="search-input" style="margin:0;max-width:none;">
+        <option value="Correios">Correios</option>
+        <option value="Outra">Outra transportadora</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:0.4rem;">
+      <label class="form-label" style="display:block;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-s);margin-bottom:0.4rem;">Código de rastreio</label>
+      <input type="text" id="tracking-codigo" class="search-input" style="margin:0;max-width:none;" placeholder="BR123456789BR">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-sm" onclick="cancelarTrackingModal()">Cancelar</button>
+      <button class="btn-sm" id="confirm-tracking-btn" style="background:var(--gold);color:white;border-color:var(--gold);" onclick="confirmarTrackingModal()">Confirmar envio</button>
     </div>
   </div>
 </div>
@@ -727,6 +766,204 @@ function pedidoData(p) {
   if (typeof p.criadoEm.toDate === 'function') return p.criadoEm.toDate();
   const d = new Date(p.criadoEm);
   return isNaN(d.getTime()) ? null : d;
+}
+
+// ── STATUS DO PEDIDO ──
+const STATUS_LABELS = {
+  novo: 'Novo', processando: 'Processando', enviado: 'Enviado',
+  entregue: 'Entregue', cancelado: 'Cancelado',
+};
+const STATUS_PILL_CLASS = {
+  novo: 'status-active', processando: 'status-draft',
+  enviado: 'status-active', entregue: 'status-active', cancelado: 'status-inactive',
+};
+let pedidosCache = [];
+let pendingTrackingPedido = null;
+let pendingTrackingSelect = null;
+
+window.onStatusSelectChange = function(selectEl) {
+  const id = selectEl.dataset.id;
+  const novoStatus = selectEl.value;
+  const pedido = pedidosCache.find(p => p.id === id);
+  if (!pedido) return;
+  const statusAnterior = pedido.status || 'novo';
+  if (novoStatus === statusAnterior) return;
+
+  if (novoStatus === 'enviado') {
+    pendingTrackingPedido = pedido;
+    pendingTrackingSelect = selectEl;
+    document.getElementById('tracking-codigo').value = pedido.codigoRastreio || '';
+    document.getElementById('tracking-transportadora').value = pedido.transportadora || 'Correios';
+    document.getElementById('tracking-modal').classList.add('open');
+    return;
+  }
+
+  aplicarMudancaStatus(pedido, novoStatus, selectEl);
+};
+
+window.cancelarTrackingModal = function() {
+  document.getElementById('tracking-modal').classList.remove('open');
+  if (pendingTrackingSelect && pendingTrackingPedido) {
+    pendingTrackingSelect.value = pendingTrackingPedido.status || 'novo';
+  }
+  pendingTrackingPedido = null;
+  pendingTrackingSelect = null;
+};
+
+window.confirmarTrackingModal = async function() {
+  const codigo = document.getElementById('tracking-codigo').value.trim();
+  const transportadora = document.getElementById('tracking-transportadora').value;
+  if (!codigo) { showToast('Informe o código de rastreio'); return; }
+  document.getElementById('tracking-modal').classList.remove('open');
+  await aplicarMudancaStatus(pendingTrackingPedido, 'enviado', pendingTrackingSelect, { codigoRastreio: codigo, transportadora });
+  pendingTrackingPedido = null;
+  pendingTrackingSelect = null;
+};
+
+async function aplicarMudancaStatus(pedido, novoStatus, selectEl, extra) {
+  try {
+    const updates = { status: novoStatus, ...(extra || {}) };
+    await updateDoc(doc(db, 'pedidos', pedido.id), updates);
+    Object.assign(pedido, updates);
+    showToast('Status atualizado — e-mail enviado à cliente');
+    enviarEmailStatusPedido(pedido, novoStatus, extra);
+    loadPedidos();
+  } catch (e) {
+    console.error(e);
+    showToast('Erro ao atualizar status');
+    if (selectEl) selectEl.value = pedido.status || 'novo';
+  }
+}
+
+// ── E-MAILS DE STATUS ──
+function emailWrapper(titulo, corpoHtml) {
+  return `<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F5F0EA;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0EA;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#FEFCF9;border:1px solid #E0CEBB;max-width:560px;width:100%;">
+        <tr>
+          <td style="background:#3D2B1A;padding:32px 40px;text-align:center;">
+            <p style="margin:0;font-family:Georgia,serif;font-size:22px;font-weight:300;letter-spacing:8px;color:#C4A47A;text-transform:uppercase;">Elenice Collection</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:40px 40px 32px;">
+            <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:300;color:#3D2B1A;margin:0 0 16px;">${titulo}</h1>
+            ${corpoHtml}
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#F5F0EA;padding:24px 40px;text-align:center;border-top:1px solid #E0CEBB;">
+            <p style="margin:0;font-size:11px;color:#9C8070;letter-spacing:1px;">Com carinho, equipe Elenice Collection ✦</p>
+            <p style="margin:4px 0 0;font-size:11px;color:#C4A47A;letter-spacing:1px;">elenicecollection.com.br</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+}
+
+function montarEmailStatus(status, ctx) {
+  const primeiroNome = (ctx.nome || 'Cliente').split(' ')[0];
+  const numero = ctx.numero;
+
+  if (status === 'processando') {
+    return {
+      subject: `✨ Seu pedido ${numero} está sendo preparado com carinho`,
+      html: emailWrapper('Seu pedido está sendo preparado ✨', `
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Olá, <strong>${primeiroNome}</strong>!</p>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Queremos que você saiba: seu pedido <strong>${numero}</strong> já está em nossas mãos e está sendo preparado com todo o cuidado que uma peça Elenice Collection merece.</p>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Assim que ele for despachado, você receberá um novo e-mail com o código de rastreio.</p>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0;">Obrigada pela confiança — é uma alegria preparar essa peça para você.</p>
+      `),
+    };
+  }
+
+  if (status === 'enviado') {
+    const codigo = ctx.codigoRastreio || '';
+    const transportadora = ctx.transportadora || 'Correios';
+    const linkCorreios = transportadora === 'Correios' && codigo
+      ? `<div style="text-align:center;margin-bottom:8px;">
+          <a href="https://rastreamento.correios.com.br/app/index.php?objetos=${encodeURIComponent(codigo)}" target="_blank"
+            style="display:inline-block;background:#3D2B1A;color:#C4A47A;font-family:Georgia,serif;font-size:14px;letter-spacing:2px;padding:14px 32px;text-decoration:none;font-weight:300;">
+            RASTREAR NOS CORREIOS
+          </a>
+        </div>`
+      : '';
+    return {
+      subject: `📦 Seu pedido ${numero} foi enviado!`,
+      html: emailWrapper('Seu pedido foi enviado! 📦', `
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Olá, <strong>${primeiroNome}</strong>!</p>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Sua joia já está a caminho! Preparamos tudo com muito cuidado e o pedido <strong>${numero}</strong> foi despachado hoje.</p>
+        <div style="background:#FFF8E7;border:2px solid #C4A47A;padding:20px 24px;margin:8px 0 20px;text-align:center;border-radius:4px;">
+          <p style="margin:0 0 4px;font-size:11px;color:#7A5500;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Código de rastreio</p>
+          <p style="margin:0;font-family:Georgia,serif;font-size:22px;color:#3D2B1A;letter-spacing:1px;">${codigo}</p>
+          <p style="margin:6px 0 0;font-size:12px;color:#9A7000;">${transportadora}</p>
+        </div>
+        ${linkCorreios}
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0;">Assim que chegar, esperamos que você se encante com cada detalhe. Qualquer dúvida, estamos por aqui.</p>
+      `),
+    };
+  }
+
+  if (status === 'entregue') {
+    return {
+      subject: `✦ Seu pedido ${numero} chegou!`,
+      html: emailWrapper('Esperamos que você ame sua nova joia ✦', `
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Olá, <strong>${primeiroNome}</strong>!</p>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Nosso sistema indica que seu pedido <strong>${numero}</strong> foi entregue — que alegria! Esperamos que cada detalhe da sua nova peça tenha encantado você.</p>
+        <div style="background:#F0F9F4;border-left:3px solid #2D6A4F;padding:16px 20px;margin-bottom:20px;">
+          <p style="margin:0;font-size:13px;color:#1A4731;line-height:1.8;">
+            ✦ <strong>1 ano de garantia</strong> contra defeitos de fabricação<br>
+            ✦ <strong>Limpeza e polimento gratuitos</strong> para sempre — é só nos chamar
+          </p>
+        </div>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0;">Se puder, adoraríamos saber o que achou. Sua opinião significa muito para nós — e para as próximas clientes que ainda vão conhecer a Elenice.</p>
+      `),
+    };
+  }
+
+  if (status === 'cancelado') {
+    return {
+      subject: `Seu pedido ${numero} foi cancelado`,
+      html: emailWrapper('Seu pedido foi cancelado', `
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Olá, <strong>${primeiroNome}</strong>,</p>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Confirmamos que o pedido <strong>${numero}</strong> foi cancelado.</p>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Se isso foi um engano, ou se você tiver qualquer dúvida sobre reembolso, é só responder este e-mail ou falar com a gente pelo WhatsApp — estamos prontos para ajudar.</p>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0;">Esperamos ter a oportunidade de te atender em breve.</p>
+      `),
+    };
+  }
+
+  return null;
+}
+
+async function enviarEmailStatusPedido(pedido, status, extra) {
+  const email = pedido.cliente?.email;
+  if (!email) return;
+  const template = montarEmailStatus(status, {
+    nome: pedido.cliente?.nome,
+    numero: pedido.numeroPedido || pedido.id,
+    ...(extra || {}),
+  });
+  if (!template) return;
+  try {
+    await fetch('/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: email,
+        toName: pedido.cliente?.nome,
+        subject: template.subject,
+        htmlContent: template.html,
+      }),
+    });
+  } catch (e) {
+    console.warn('Erro ao enviar e-mail de status:', e);
+  }
 }
 
 // ── LOAD ──
@@ -797,6 +1034,7 @@ async function loadPedidos() {
   try {
     const snap = await getDocs(query(collection(db,'pedidos'), orderBy('criadoEm','desc')));
     const pedidos = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    pedidosCache = pedidos;
 
     document.getElementById('stat-pedidos').textContent = pedidos.length;
     const fat = pedidos.reduce((s,p) => s + (p.total||0), 0);
@@ -818,20 +1056,25 @@ async function loadPedidos() {
     }
 
     document.getElementById('table-pedidos').style.display = 'table';
-    const statusMap = {
-      novo:'status-active', processando:'status-draft',
-      enviado:'status-active', entregue:'status-active', cancelado:'status-inactive'
-    };
     document.getElementById('tbody-pedidos').innerHTML = pedidos.map(p => {
       const dt = pedidoData(p);
+      const statusAtual = p.status || 'novo';
       return `
       <tr>
-        <td style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gold);">${p.numeroPedido||p.id.slice(0,8)}</td>
+        <td style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gold);">
+          ${p.numeroPedido||p.id.slice(0,8)}
+          ${p.codigoRastreio ? `<div class="tracking-note">Rastreio: ${p.codigoRastreio}</div>` : ''}
+        </td>
         <td>${p.cliente?.nome||'—'}</td>
         <td style="font-size:0.7rem;color:var(--text-s);">${(p.itens||[]).map(i=>i.nome).join(', ')||'—'}</td>
         <td><span class="price-cell">R$ ${Number(p.total||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</span></td>
         <td style="font-size:0.72rem;">${p.pagamento||'—'}</td>
-        <td><span class="status-pill ${statusMap[p.status]||'status-draft'}">${p.status||'novo'}</span></td>
+        <td><span class="status-pill ${STATUS_PILL_CLASS[statusAtual]||'status-draft'}">${STATUS_LABELS[statusAtual]||statusAtual}</span></td>
+        <td>
+          <select class="status-select" data-id="${p.id}" onchange="onStatusSelectChange(this)">
+            ${Object.keys(STATUS_LABELS).map(s => `<option value="${s}" ${s===statusAtual?'selected':''}>${STATUS_LABELS[s]}</option>`).join('')}
+          </select>
+        </td>
         <td style="font-size:0.68rem;color:var(--text-s);">${dt ? dt.toLocaleDateString('pt-BR') : '—'}</td>
       </tr>`;
     }).join('');

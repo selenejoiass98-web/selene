@@ -18,6 +18,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 
 .sidebar { width:var(--sidebar); background:var(--brown); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; }
 .sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); }
+.sidebar-logo .brand { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:300; letter-spacing:0.25em; color:var(--gold-light); text-transform:uppercase; display:block; }
 .sidebar-logo .tag { font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-top:0.2rem; display:block; }
 .sidebar-nav { flex:1; padding:1rem 0; }
 .nav-section-title { font-size:0.5rem; letter-spacing:0.35em; text-transform:uppercase; color:rgba(255,255,255,0.2); padding:0.8rem 1.5rem 0.4rem; }
@@ -104,7 +105,7 @@ textarea.form-input.tall { min-height:280px; }
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <img src="../assets/img/logo.png" alt="Elenice Collection" style="height:55px;object-fit:contain;filter:brightness(0) invert(1) sepia(1) saturate(0.5) brightness(1.5);" />
+    <span class="brand">Elenice Collection</span>
     <span class="tag">Painel Admin</span>
   </div>
   <nav class="sidebar-nav">

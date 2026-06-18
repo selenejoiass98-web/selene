@@ -376,6 +376,13 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
             </div>
             <button class="toggle" id="toggle-frete" onclick="toggleBtn(this)"></button>
           </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="t-title">Ao esgotar, manter na loja com faixa "Esgotado"</div>
+              <div class="t-desc">Se desativado, quando o estoque chegar a zero o produto vira rascunho automaticamente (some da loja). Se ativado, ele continua visível em preto e branco com a faixa ESGOTADO — bom para peças únicas que você quer manter como portfólio.</div>
+            </div>
+            <button class="toggle" id="toggle-esgotar-faixa" onclick="toggleBtn(this)"></button>
+          </div>
         </div>
 
       </div>
@@ -504,6 +511,7 @@ async function loadProduct(id) {
     if (p.status !== 'ativo') document.getElementById('toggle-ativo').classList.remove('on');
     if (p.destaque) document.getElementById('toggle-destaque').classList.add('on');
     if (p.freteGratis) document.getElementById('toggle-frete').classList.add('on');
+    if (p.esgotarComFaixa) document.getElementById('toggle-esgotar-faixa').classList.add('on');
     if (p.fotos?.length) {
       uploadedPhotos = p.fotos.map(url => ({ url, path: null }));
       renderPhotos();
@@ -520,7 +528,7 @@ window.updatePreview = function() {
   document.getElementById('preview-name').textContent = document.getElementById('nome').value || 'Nome do produto';
   document.getElementById('preview-cat').textContent = document.getElementById('categoria').value || 'Categoria';
   const preco = parseFloat(document.getElementById('preco').value);
-  document.getElementById('preview-price').textContent = preco ? `R$ ${preco.toLocaleString('pt-BR',{minimumFractionDigits:2})}` : 'R$ 0,00';
+  document.getElementById('preview-price').textContent = preco ? `R$ ${preco.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}` : 'R$ 0,00';
   if (uploadedPhotos.length > 0) {
     document.getElementById('preview-img').innerHTML = `<img src="${uploadedPhotos[0].url}" alt="preview">`;
   }
@@ -657,9 +665,13 @@ window.salvarProduto = async function(status) {
     status,
     destaque: document.getElementById('toggle-destaque').classList.contains('on'),
     freteGratis: document.getElementById('toggle-frete').classList.contains('on'),
+    esgotarComFaixa: document.getElementById('toggle-esgotar-faixa').classList.contains('on'),
     fotos: uploadedPhotos.map(p => p.url),
     atualizadoEm: serverTimestamp(),
   };
+  // Editar o estoque manualmente aqui sempre recalcula a faixa de esgotado,
+  // pra reabastecer uma peça única não deixar a faixa "Esgotado" travada.
+  data.esgotado = data.estoque <= 0 && data.esgotarComFaixa;
 
   try {
     if (editingId) {

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Produto — Elenice Collection</title>
-<link rel="stylesheet" href="assets/css/style.css?v=5">
+<link rel="stylesheet" href="assets/css/style.css?v=6">
 <style>
 /* ── PRODUCT PAGE ── */
 
@@ -84,6 +84,9 @@
   z-index: 1;
 }
 .gallery-badge.novo { background: var(--gold); color: var(--white); }
+.gallery-badge.esgotado { background: #1A1A1A; color: #F2F2F2; }
+.gallery-badge.ultimas { background: var(--gold); color: var(--white); }
+.gallery-main--esgotado .gallery-main-img { filter: grayscale(1); }
 
 .gallery-zoom-hint {
   position: absolute;
@@ -339,6 +342,7 @@
   gap: 0.5rem;
 }
 .btn-add-cart:hover { background: var(--brown-mid); }
+.btn-add-cart:disabled { background: var(--text-soft); cursor: not-allowed; }
 
 .btn-buy-now {
   width: 100%;
@@ -668,7 +672,7 @@
 
       <!-- GALLERY -->
       <div class="product-gallery">
-        <div class="gallery-main">
+        <div class="gallery-main" id="gallery-main">
           <div class="gallery-placeholder" id="gallery-main-display">◯</div>
           <div class="gallery-badge" id="gallery-badge">Mais Vendido</div>
           <div class="gallery-zoom-hint">Passe o mouse para ampliar</div>
@@ -1001,6 +1005,7 @@
       </div>
     </div>
     <div class="cart-cta">
+      <button class="btn btn-outline" style="justify-content:center;" onclick="closeCart()">Continuar Comprando</button>
       <a href="checkout.html" class="btn btn-primary" style="justify-content:center;" onclick="closeCart()">Finalizar Compra</a>
       <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
     </div>
@@ -1013,7 +1018,7 @@
   <span id="toast-msg">Produto adicionado!</span>
 </div>
 
-<script src="assets/js/cart.js?v=2"></script>
+<script src="assets/js/cart.js?v=3"></script>
 <script>
 (function() {
   const nav   = document.querySelector('.nav');
@@ -1120,15 +1125,40 @@ function renderProduct() {
   }
 
   // Badge
-  const badgeEl = document.getElementById('gallery-badge');
-  if (badge) { badgeEl.textContent = badge; badgeEl.style.display = 'block'; }
-  else badgeEl.style.display = 'none';
+  const estoque  = Number(p.estoque) || 0;
+  const esgotado = !!p.esgotado;
+  const badgeEl  = document.getElementById('gallery-badge');
+  const galleryMainEl = document.getElementById('gallery-main');
+  galleryMainEl.classList.toggle('gallery-main--esgotado', esgotado);
+  badgeEl.className = 'gallery-badge';
+  if (esgotado) {
+    badgeEl.textContent = 'Esgotado';
+    badgeEl.classList.add('esgotado');
+    badgeEl.style.display = 'block';
+  } else if (estoque > 0 && estoque <= 3) {
+    badgeEl.textContent = 'Últimas Peças';
+    badgeEl.classList.add('ultimas');
+    badgeEl.style.display = 'block';
+  } else if (badge) {
+    badgeEl.textContent = badge;
+    badgeEl.style.display = 'block';
+  } else {
+    badgeEl.style.display = 'none';
+  }
+
+  // Desabilita compra se esgotado
+  const btnAdd = document.getElementById('btn-add');
+  const btnBuy = document.querySelector('.btn-buy-now');
+  if (esgotado) {
+    if (btnAdd) { btnAdd.disabled = true; btnAdd.textContent = 'Indisponível'; }
+    if (btnBuy) { btnBuy.disabled = true; btnBuy.style.display = 'none'; }
+  }
 
   // Preço
-  const pix = (preco * 0.95).toLocaleString('pt-BR', {minimumFractionDigits:2});
-  const install = (preco / 12).toLocaleString('pt-BR', {minimumFractionDigits:2});
+  const pix = (preco * 0.95).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const install = (preco / 12).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
   document.getElementById('info-price').textContent =
-    `R$ ${preco.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+    `R$ ${preco.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
   document.getElementById('info-installment').textContent =
     `ou 12× de R$ ${install} sem juros no cartão`;
   document.getElementById('info-pix').innerHTML =
@@ -1137,7 +1167,7 @@ function renderProduct() {
   if (precoOriginal) {
     const disc = Math.round((1 - preco/precoOriginal)*100);
     document.getElementById('info-old-price').textContent =
-      `R$ ${precoOriginal.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
+      `R$ ${precoOriginal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
     document.getElementById('info-old-price').style.display = 'inline';
     document.getElementById('info-discount').textContent = `−${disc}%`;
     document.getElementById('info-discount').style.display = 'inline';
@@ -1272,18 +1302,24 @@ function renderRelated() {
   grid.innerHTML = related.map(p => {
     const preco     = Number(p.preco);
     const precoOrig = p.precoOriginal ? Number(p.precoOriginal) : null;
-    const parcela   = (preco / 12).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-    const precoFmt  = preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-    const origFmt   = precoOrig ? precoOrig.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '';
+    const parcela   = (preco / 12).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const precoFmt  = preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const origFmt   = precoOrig ? precoOrig.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
     const descPct   = precoOrig ? Math.round((1 - preco / precoOrig) * 100) : 0;
     const cat       = p.categoria || 'Joia';
     const mat       = p.material  || 'Ouro 18k';
     const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${mat.replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
+    const estoqueRel  = Number(p.estoque) || 0;
+    const esgotadoRel = !!p.esgotado;
     return `
-    <div class="product-card">
+    <div class="product-card${esgotadoRel ? ' product-card--esgotado' : ''}">
       <div class="product-card-img">
-        ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
-        ${descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
+        <div class="product-badges">
+          ${esgotadoRel ? `<span class="product-badge esgotado">Esgotado</span>`
+            : (estoqueRel > 0 && estoqueRel <= 3) ? `<span class="product-badge ultimas">Últimas Peças</span>` : ''}
+          ${!esgotadoRel && p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
+          ${!esgotadoRel && descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
+        </div>
         <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         <a href="produto.html?id=${p.id}">
           ${p.fotos?.[0]
@@ -1300,7 +1336,9 @@ function renderRelated() {
           <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
         </div>
         <div class="product-actions">
-          <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">Adicionar ao Carrinho</button>
+          ${esgotadoRel
+            ? `<button class="product-add-btn" disabled>Indisponível</button>`
+            : `<button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">Adicionar ao Carrinho</button>`}
           <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver Detalhes</a>
         </div>
       </div>

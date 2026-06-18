@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Finalizar Compra — Elenice Collection</title>
-<link rel="stylesheet" href="assets/css/style.css?v=5">
+<link rel="stylesheet" href="assets/css/style.css?v=6">
 <style>
 /* ── CHECKOUT PAGE ── */
 
@@ -977,7 +977,7 @@
   <span id="toast-msg"></span>
 </div>
 
-<script src="assets/js/cart.js?v=2"></script>
+<script src="assets/js/cart.js?v=3"></script>
 <script>
 (function() {
   const nav = document.querySelector('.checkout-nav');
@@ -994,7 +994,7 @@
 <!-- Firebase para validar cupons -->
 <script type="module">
   import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-  import { getFirestore, collection, query, where, getDocs, doc, updateDoc, increment }
+  import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, increment }
     from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
   const firebaseConfig = {
@@ -1016,6 +1016,7 @@
   window._fbWhere = where;
   window._fbGetDocs = getDocs;
   window._fbDoc = doc;
+  window._fbGetDoc = getDoc;
   window._fbUpdateDoc = updateDoc;
   window._fbIncrement = increment;
 </script>
@@ -1273,12 +1274,12 @@ function updateSummary() {
   const frete = shippingCost;
   const total = Math.max(0, subtotal - pixDisc - couponDisc + frete);
 
-  document.getElementById('s-subtotal').textContent = `R$ ${subtotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
-  document.getElementById('s-discount').textContent = `−R$ ${pixDisc.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
-  document.getElementById('s-coupon-val').textContent = `−R$ ${couponDisc.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
+  document.getElementById('s-subtotal').textContent = `R$ ${subtotal.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+  document.getElementById('s-discount').textContent = `−R$ ${pixDisc.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+  document.getElementById('s-coupon-val').textContent = `−R$ ${couponDisc.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
   document.getElementById('s-frete').textContent = frete === 0 && selectedShipping ? '🎉 Grátis' : frete > 0 ? `R$ ${frete.toFixed(2).replace('.',',')}` : 'A calcular';
-  document.getElementById('s-total').textContent = `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
-  document.getElementById('pix-amount').textContent = `R$ ${(subtotal*0.95+frete).toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
+  document.getElementById('s-total').textContent = `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+  document.getElementById('pix-amount').textContent = `R$ ${(subtotal*0.95+frete).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 
   updateInstallments(total);
   renderSummaryItems();
@@ -1300,7 +1301,7 @@ function renderSummaryItems() {
         <div class="summary-item-name">${item.name}</div>
         <div class="summary-item-variant">${item.variant}</div>
       </div>
-      <div class="summary-item-price">R$ ${(item.price*item.qty).toLocaleString('pt-BR',{minimumFractionDigits:2})}</div>
+      <div class="summary-item-price">R$ ${(item.price*item.qty).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
     </div>
   `).join('');
 }
@@ -1394,7 +1395,30 @@ async function salvarPedidoFirebase(orderNum, paymentData) {
       status: 'novo',
       criadoEm: new Date().toISOString(),
     });
+    await atualizarEstoque();
   } catch(e) { console.error('Erro ao salvar pedido:', e); }
+}
+
+// Decrementa o estoque de cada item vendido; peça única esgotada vira
+// rascunho (some da loja) ou ganha a faixa "Esgotado", conforme a flag
+// "esgotarComFaixa" definida no cadastro do produto.
+async function atualizarEstoque() {
+  if (!window._db) return;
+  for (const item of cart) {
+    try {
+      const ref = window._fbDoc(window._db, 'produtos', item.id);
+      const snap = await window._fbGetDoc(ref);
+      if (!snap.exists()) continue;
+      const p = snap.data();
+      const novoEstoque = Math.max(0, (Number(p.estoque) || 0) - item.qty);
+      const updates = { estoque: novoEstoque };
+      if (novoEstoque <= 0) {
+        updates.esgotado = !!p.esgotarComFaixa;
+        if (!p.esgotarComFaixa) updates.status = 'rascunho';
+      }
+      await window._fbUpdateDoc(ref, updates);
+    } catch (e) { console.error('Erro ao atualizar estoque:', item.id, e); }
+  }
 }
 
 function mostrarSucesso(orderNum) {
@@ -1596,7 +1620,7 @@ async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens,
     <tr>
       <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#2A1F14;">${i.name} (${i.variant})</td>
       <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#2A1F14;text-align:center;">${i.qty}</td>
-      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#7C5C35;text-align:right;font-family:Georgia,serif;">R$ ${(i.price*i.qty).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#7C5C35;text-align:right;font-family:Georgia,serif;">R$ ${(i.price*i.qty).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
     </tr>`).join('');
 
   const htmlBoleto = `
@@ -1624,7 +1648,7 @@ async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens,
             </div>
 
             <div style="text-align:center;margin-bottom:28px;">
-              <p style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#7C5C35;margin:0 0 4px;">R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2})}</p>
+              <p style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#7C5C35;margin:0 0 4px;">R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</p>
               <p style="font-size:12px;color:#9C8070;margin:0;">Valor total do pedido ${orderNum}</p>
             </div>
 

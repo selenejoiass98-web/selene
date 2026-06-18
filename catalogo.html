@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Catálogo Elenice Collection — Explore nossa coleção completa de joias em ouro 18k. Anéis, colares, pulseiras e brincos.">
 <title>Coleção — Elenice Collection</title>
-<link rel="stylesheet" href="assets/css/style.css?v=5">
+<link rel="stylesheet" href="assets/css/style.css?v=6">
 <style>
 /* ── CATALOG PAGE ── */
 
@@ -604,6 +604,7 @@
       </div>
     </div>
     <div class="cart-cta">
+      <button class="btn btn-outline" style="justify-content:center;" onclick="closeCart()">Continuar Comprando</button>
       <a href="checkout.html" class="btn btn-primary" style="justify-content:center;" onclick="closeCart()">Finalizar Compra</a>
       <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
     </div>
@@ -646,7 +647,7 @@
   <svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 224.2 32 100.7 32 0 132.7 0 256c0 44.4 13 86.4 37.4 122.9L8 480l103.3-29.1C145.7 469 184.5 480 224.2 480c123.5 0 224.2-100.7 224.2-224.2 0-59-23-114.7-65.5-156.7zm-156.7 343c-34.6 0-68.6-9.3-98.3-26.9l-7-4.2-60.9 17.1 16.3-59.5-4.6-7.3c-19.3-30.7-29.6-66.2-29.6-102.5 0-104.5 85.1-189.6 189.6-189.6 50.6 0 98.1 19.7 133.9 55.5 35.8 35.8 55.5 83.3 55.5 133.9 0 104.5-85.1 189.6-189.6 189.6zm101.4-138.5c-5.6-2.8-33.1-16.3-38.2-18.2-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.4 18.2-17.7 21.9-3.3 3.7-6.5 4.2-12.1 1.4-32.7-16.3-54.1-29.1-75.6-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.9-9.7-1.9-2.8-9.3-22.4-12.8-30.7-3.4-8.2-6.9-7.1-9.5-7.2-2.5-.1-5.4-.1-8.3-.1-2.9 0-7.6 1.1-11.6 5.5-4 4.4-15.3 15-15.3 36.5 0 21.5 15.6 42.3 17.8 45.2 2.2 2.9 30 47.6 75.6 64.8 37.4 14.2 45 11.4 53.1 9.5 8.1-1.9 26.1-10.6 29.8-20.9 3.7-10.3 3.7-19.1 2.6-21z"/></svg>
 </a>
 
-<script src="assets/js/cart.js?v=2"></script>
+<script src="assets/js/cart.js?v=3"></script>
 <script>
 (function() {
   const nav   = document.querySelector('.nav');
@@ -717,6 +718,8 @@ async function loadProdutos() {
           symbol: '◈',
           novo: d.badge === 'Novo',
           status: d.status || 'inativo',
+          estoque: Number(d.estoque) || 0,
+          esgotado: !!d.esgotado,
         };
       })
       // Filtra só ativos no cliente
@@ -843,10 +846,14 @@ function render() {
       const descPct  = p.oldPrice ? Math.round((1 - p.price/p.oldPrice)*100) : 0;
       const cartPayload = `{id:'${p.id}',name:'${p.name.replace(/'/g,"\\'")}',variant:'${p.variant.replace(/'/g,"\\'")}',price:${p.price},symbol:'${p.symbol}',image:'${p.fotos[0]||''}'}`;
       return `
-      <div class="product-card reveal">
+      <div class="product-card reveal${p.esgotado ? ' product-card--esgotado' : ''}">
         <div class="product-card-img">
-          ${p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
-          ${descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
+          <div class="product-badges">
+            ${p.esgotado ? `<span class="product-badge esgotado">Esgotado</span>`
+              : (p.estoque > 0 && p.estoque <= 3) ? `<span class="product-badge ultimas">Últimas Peças</span>` : ''}
+            ${!p.esgotado && p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
+            ${!p.esgotado && descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
+          </div>
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
           <a href="produto.html?id=${p.id}">
             ${p.fotos.length > 0
@@ -864,7 +871,9 @@ function render() {
             <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
           </div>
           <div class="product-actions">
-            <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cartPayload})">Adicionar ao Carrinho</button>
+            ${p.esgotado
+              ? `<button class="product-add-btn" disabled>Indisponível</button>`
+              : `<button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cartPayload})">Adicionar ao Carrinho</button>`}
             <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver Detalhes</a>
           </div>
         </div>

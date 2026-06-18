@@ -332,6 +332,60 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .action-btn:hover { background:var(--gold); color:var(--white); border-color:var(--gold); }
 .action-btn.danger:hover { background:var(--red); border-color:var(--red); }
 
+/* SEARCH */
+.search-input {
+  width:100%; max-width:320px;
+  padding:0.55rem 0.9rem;
+  border:1px solid var(--gold-pale);
+  font-family:'Jost',sans-serif;
+  font-size:0.78rem;
+  color:var(--text);
+  background:var(--white);
+  outline:none;
+  margin-bottom:1.2rem;
+}
+.search-input:focus { border-color:var(--gold); }
+
+/* WEEKDAY CHART */
+.weekday-chart-card {
+  background:var(--white);
+  border:1px solid var(--gold-pale);
+  padding:1.5rem;
+  margin-bottom:1.5rem;
+}
+.weekday-chart-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;
+  color:var(--brown);
+  margin-bottom:1rem;
+}
+.weekday-chart {
+  display:flex;
+  align-items:flex-end;
+  gap:0.8rem;
+  height:120px;
+}
+.weekday-bar-col {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  height:100%;
+  gap:0.4rem;
+}
+.weekday-bar-count { font-size:0.65rem; color:var(--text-s); }
+.weekday-bar {
+  width:100%;
+  max-width:32px;
+  background:var(--gold-pale);
+  border-radius:3px 3px 0 0;
+  transition:background 0.2s;
+  min-height:3px;
+}
+.weekday-bar-col.peak .weekday-bar { background:var(--gold); }
+.weekday-bar-label { font-size:0.6rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-s); }
+
 /* EMPTY TABLE */
 .table-empty {
   text-align:center;
@@ -427,14 +481,14 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     </a>
 
     <div class="nav-section-title" style="margin-top:0.5rem;">Gestão</div>
-    <a class="nav-item" href="dashboard.html#produtos" onclick="showSection('produtos')">
+    <a class="nav-item" id="nav-produtos" href="dashboard.html#produtos" onclick="showSection('produtos');return false;">
       <span class="icon">💍</span> Produtos
     </a>
-    <a class="nav-item" href="dashboard.html#pedidos" onclick="showSection('pedidos')">
+    <a class="nav-item" id="nav-pedidos" href="dashboard.html#pedidos" onclick="showSection('pedidos');return false;">
       <span class="icon">📦</span> Pedidos
       <span class="nav-badge" id="badge-pedidos">0</span>
     </a>
-    <a class="nav-item" href="dashboard.html#clientes" onclick="showSection('clientes')">
+    <a class="nav-item" id="nav-clientes" href="dashboard.html#clientes" onclick="showSection('clientes');return false;">
       <span class="icon">👤</span> Clientes
     </a>
 
@@ -544,6 +598,10 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
       <div class="section-header">
         <h2 class="section-title">Pedidos Recentes</h2>
       </div>
+      <div class="weekday-chart-card">
+        <div class="weekday-chart-title">Pedidos por dia da semana</div>
+        <div class="weekday-chart" id="weekday-chart"></div>
+      </div>
       <div class="table-wrap">
         <div class="loading" id="loading-pedidos">
           <div class="spinner"></div> Carregando pedidos...
@@ -565,6 +623,36 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <div class="table-empty" id="empty-pedidos" style="display:none;">
           <div class="e-icon">📦</div>
           <p>Nenhum pedido recebido ainda.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTES -->
+    <div id="section-clientes" style="display:none;">
+      <div class="section-header">
+        <h2 class="section-title">Clientes</h2>
+      </div>
+      <input type="text" class="search-input" id="clientes-busca" placeholder="Buscar por nome ou e-mail..." oninput="renderClientesTable()">
+      <div class="table-wrap">
+        <div class="loading" id="loading-clientes">
+          <div class="spinner"></div> Carregando clientes...
+        </div>
+        <table class="data-table" id="table-clientes" style="display:none;">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Contato</th>
+              <th>Cidade/UF</th>
+              <th>Pedidos</th>
+              <th>Total gasto</th>
+              <th>Último pedido</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-clientes"></tbody>
+        </table>
+        <div class="table-empty" id="empty-clientes" style="display:none;">
+          <div class="e-icon">👤</div>
+          <p>Nenhum cliente ainda — clientes aparecem aqui após o primeiro pedido.</p>
         </div>
       </div>
     </div>
@@ -617,6 +705,30 @@ onAuthStateChanged(auth, user => {
   loadDashboard();
 });
 
+// ── SECTIONS ──
+const SECTIONS = ['produtos', 'pedidos', 'clientes'];
+const SECTION_TITLES = { produtos: 'Produtos', pedidos: 'Pedidos', clientes: 'Clientes' };
+window.showSection = function(nome) {
+  if (!SECTIONS.includes(nome)) nome = 'produtos';
+  SECTIONS.forEach(s => {
+    const el = document.getElementById('section-' + s);
+    if (el) el.style.display = s === nome ? '' : 'none';
+    document.getElementById('nav-' + s)?.classList.toggle('active', s === nome);
+  });
+  document.getElementById('page-title').textContent = SECTION_TITLES[nome];
+  history.replaceState(null, '', '#' + nome);
+};
+showSection(location.hash.replace('#', '') || 'produtos');
+
+// Lê a data do pedido tanto se vier como Firestore Timestamp quanto como
+// string ISO (checkout.html grava como string, não como Timestamp).
+function pedidoData(p) {
+  if (!p.criadoEm) return null;
+  if (typeof p.criadoEm.toDate === 'function') return p.criadoEm.toDate();
+  const d = new Date(p.criadoEm);
+  return isNaN(d.getTime()) ? null : d;
+}
+
 // ── LOAD ──
 async function loadDashboard() {
   await Promise.all([loadProdutos(), loadPedidos()]);
@@ -656,7 +768,7 @@ async function loadProdutos() {
           </div>
         </td>
         <td>${p.categoria||'—'}</td>
-        <td><span class="price-cell">R$ ${Number(p.preco).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span></td>
+        <td><span class="price-cell">R$ ${Number(p.preco).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</span></td>
         <td>${p.estoque ?? '—'}</td>
         <td>
           <span class="status-pill ${p.status==='ativo'?'status-active':p.status==='rascunho'?'status-draft':'status-inactive'}">
@@ -696,6 +808,10 @@ async function loadPedidos() {
 
     document.getElementById('loading-pedidos').style.display = 'none';
 
+    renderWeekdayChart(pedidos);
+    clientesAgregados = agregarClientes(pedidos);
+    renderClientesTable();
+
     if (pedidos.length === 0) {
       document.getElementById('empty-pedidos').style.display = 'block';
       return;
@@ -706,22 +822,99 @@ async function loadPedidos() {
       novo:'status-active', processando:'status-draft',
       enviado:'status-active', entregue:'status-active', cancelado:'status-inactive'
     };
-    document.getElementById('tbody-pedidos').innerHTML = pedidos.map(p => `
+    document.getElementById('tbody-pedidos').innerHTML = pedidos.map(p => {
+      const dt = pedidoData(p);
+      return `
       <tr>
         <td style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gold);">${p.numeroPedido||p.id.slice(0,8)}</td>
         <td>${p.cliente?.nome||'—'}</td>
         <td style="font-size:0.7rem;color:var(--text-s);">${(p.itens||[]).map(i=>i.nome).join(', ')||'—'}</td>
-        <td><span class="price-cell">R$ ${Number(p.total||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</span></td>
+        <td><span class="price-cell">R$ ${Number(p.total||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</span></td>
         <td style="font-size:0.72rem;">${p.pagamento||'—'}</td>
         <td><span class="status-pill ${statusMap[p.status]||'status-draft'}">${p.status||'novo'}</span></td>
-        <td style="font-size:0.68rem;color:var(--text-s);">${p.criadoEm?.toDate?.()?.toLocaleDateString('pt-BR')||'—'}</td>
-      </tr>
-    `).join('');
+        <td style="font-size:0.68rem;color:var(--text-s);">${dt ? dt.toLocaleDateString('pt-BR') : '—'}</td>
+      </tr>`;
+    }).join('');
   } catch(e) {
     document.getElementById('loading-pedidos').innerHTML = '';
     document.getElementById('empty-pedidos').style.display = 'block';
   }
 }
+
+// ── PEDIDOS POR DIA DA SEMANA ──
+function renderWeekdayChart(pedidos) {
+  const el = document.getElementById('weekday-chart');
+  if (!el) return;
+  const labels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const counts = [0,0,0,0,0,0,0];
+  pedidos.forEach(p => {
+    const dt = pedidoData(p);
+    if (dt) counts[dt.getDay()]++;
+  });
+  const max = Math.max(1, ...counts);
+  el.innerHTML = counts.map((c, i) => `
+    <div class="weekday-bar-col${c === max && c > 0 ? ' peak' : ''}">
+      <span class="weekday-bar-count">${c}</span>
+      <div class="weekday-bar" style="height:${c > 0 ? Math.max(4, (c / max) * 100) : 2}px;"></div>
+      <span class="weekday-bar-label">${labels[i]}</span>
+    </div>
+  `).join('');
+}
+
+// ── CLIENTES ──
+let clientesAgregados = [];
+function agregarClientes(pedidos) {
+  const map = new Map();
+  pedidos.forEach(p => {
+    const key = (p.cliente?.email || p.cliente?.telefone || p.cliente?.nome || '—').toLowerCase();
+    if (!map.has(key)) {
+      map.set(key, {
+        nome: p.cliente?.nome || '—',
+        email: p.cliente?.email || '',
+        telefone: p.cliente?.telefone || '',
+        cidade: p.endereco?.cidade || '',
+        estado: p.endereco?.estado || '',
+        pedidos: 0,
+        total: 0,
+        ultimo: null,
+      });
+    }
+    const c = map.get(key);
+    c.pedidos++;
+    c.total += Number(p.total) || 0;
+    const dt = pedidoData(p);
+    if (dt && (!c.ultimo || dt > c.ultimo)) c.ultimo = dt;
+  });
+  return Array.from(map.values()).sort((a, b) => b.total - a.total);
+}
+
+window.renderClientesTable = function() {
+  const busca = (document.getElementById('clientes-busca')?.value || '').toLowerCase().trim();
+  const filtrados = clientesAgregados.filter(c =>
+    !busca || c.nome.toLowerCase().includes(busca) || c.email.toLowerCase().includes(busca)
+  );
+
+  document.getElementById('loading-clientes').style.display = 'none';
+
+  if (clientesAgregados.length === 0) {
+    document.getElementById('empty-clientes').style.display = 'block';
+    document.getElementById('table-clientes').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('empty-clientes').style.display = 'none';
+  document.getElementById('table-clientes').style.display = 'table';
+  document.getElementById('tbody-clientes').innerHTML = filtrados.map(c => `
+    <tr>
+      <td><div class="product-cell-name" style="font-size:0.78rem;">${c.nome}</div></td>
+      <td style="font-size:0.7rem;color:var(--text-s);">${c.email || '—'}${c.telefone ? '<br>' + c.telefone : ''}</td>
+      <td style="font-size:0.78rem;">${c.cidade ? `${c.cidade}/${c.estado}` : '—'}</td>
+      <td>${c.pedidos}</td>
+      <td><span class="price-cell">R$ ${c.total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</span></td>
+      <td style="font-size:0.68rem;color:var(--text-s);">${c.ultimo ? c.ultimo.toLocaleDateString('pt-BR') : '—'}</td>
+    </tr>
+  `).join('');
+};
 
 // ── TOGGLE STATUS ──
 let deleteId = null;

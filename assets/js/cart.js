@@ -93,7 +93,7 @@ function updateCartUI() {
         </div>
       </div>
       <div>
-        <div class="cart-item-price">R$ ${(item.price * item.qty).toLocaleString('pt-BR', {minimumFractionDigits:2})}</div>
+        <div class="cart-item-price">R$ ${(item.price * item.qty).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}</div>
         <button class="cart-item-remove" onclick="removeFromCart('${item.id}','${item.variant}')">remover</button>
       </div>
     </div>
@@ -107,16 +107,16 @@ function updateCartUI() {
   if (freeShippingBar) {
     freeShippingBar.innerHTML = freeShipping
       ? '🎉 Você ganhou <strong>frete grátis!</strong>'
-      : `Faltam <strong>R$ ${remaining.toLocaleString('pt-BR', {minimumFractionDigits:2})}</strong> para frete grátis`;
+      : `Faltam <strong>R$ ${remaining.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}</strong> para frete grátis`;
   }
 
   const subtotalEl = document.getElementById('cart-subtotal');
   const freteEl = document.getElementById('cart-frete');
   const totalEl = document.getElementById('cart-total');
 
-  if (subtotalEl) subtotalEl.textContent = `R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+  if (subtotalEl) subtotalEl.textContent = `R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
   if (freteEl) freteEl.textContent = freeShipping ? 'Grátis 🎉' : 'Calcular no checkout';
-  if (totalEl) totalEl.textContent = `R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+  if (totalEl) totalEl.textContent = `R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
 }
 
 // ── CART DRAWER ──
@@ -135,9 +135,9 @@ function closeCart() {
 // ── WHATSAPP ORDER ──
 function whatsappOrder() {
   if (cart.length === 0) return;
-  const items = cart.map(i => `• ${i.name} (${i.variant}) x${i.qty} — R$${(i.price*i.qty).toLocaleString('pt-BR',{minimumFractionDigits:2})}`).join('%0A');
+  const items = cart.map(i => `• ${i.name} (${i.variant}) x${i.qty} — R$${(i.price*i.qty).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`).join('%0A');
   const total = getTotal();
-  const msg = `Olá! Gostaria de fazer um pedido:%0A%0A${items}%0A%0ATotal: R$${total.toLocaleString('pt-BR',{minimumFractionDigits:2})}%0A%0APode me ajudar a finalizar?`;
+  const msg = `Olá! Gostaria de fazer um pedido:%0A%0A${items}%0A%0ATotal: R$${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%0A%0APode me ajudar a finalizar?`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
 }
 

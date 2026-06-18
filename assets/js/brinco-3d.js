@@ -11,7 +11,7 @@
  * trocada, esses números precisam ser remedidos.
  */
 
-const EARRING_BOX = { x: 755, y: 325, w: 320, h: 240, imgW: 1600, imgH: 854 };
+const EARRING_BOX = { x: 795, y: 390, w: 300, h: 180, imgW: 1600, imgH: 854 };
 
 const heroPhoto = document.getElementById('hero-photo');
 const hpBg = heroPhoto?.querySelector('.hp-bg');

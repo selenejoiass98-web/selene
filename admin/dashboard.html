@@ -966,6 +966,29 @@ async function enviarEmailStatusPedido(pedido, status, extra) {
   }
 }
 
+// ── TESTE MANUAL (rodar no console do DevTools, F12) ──
+// testarEmailStatus('enviado', 'contato@elenicecollection.com.br')
+// ['processando','enviado','entregue','cancelado'].forEach(s => testarEmailStatus(s, 'contato@elenicecollection.com.br'))
+window.testarEmailStatus = async function(status, emailDestino, opts) {
+  opts = opts || {};
+  const ctx = {
+    nome: opts.nome || 'Cliente Teste',
+    numero: opts.numero || '#EC-00000',
+    codigoRastreio: opts.codigoRastreio || 'BR123456789BR',
+    transportadora: opts.transportadora || 'Correios',
+  };
+  const template = montarEmailStatus(status, ctx);
+  if (!template) { console.warn('Status sem e-mail definido:', status); return; }
+  const res = await fetch('/api/email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ to: emailDestino, toName: ctx.nome, subject: template.subject, htmlContent: template.html }),
+  });
+  const data = await res.json();
+  console.log(`[${status}] enviado para ${emailDestino}:`, data);
+  return data;
+};
+
 // ── LOAD ──
 async function loadDashboard() {
   await Promise.all([loadProdutos(), loadPedidos()]);

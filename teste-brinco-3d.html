@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Elenice Collection — Joias em ouro 18k criadas para mulheres que valorizam elegância, qualidade e significado. Balneário Camboriú, SC.">
+<title>Elenice Collection — Elegância que transforma</title>
+<link rel="stylesheet" href="assets/css/style.css?v=6">
+<style>
+/* ── PAGE-SPECIFIC: INDEX ── */
+.nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
+
+/* BRAND BAR */
+.brand-bar { background: var(--brown-deep); height: 36px; overflow: hidden; position: relative; z-index: 200; width: 100%; }
+.brand-bar-track { display: flex; height: 100%; gap: 3.5rem; align-items: center; animation: marquee 22s linear infinite; white-space: nowrap; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.brand-bar-item { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(224,206,187,0.55); flex-shrink: 0; }
+.brand-bar-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: var(--nav-h);
+  background: var(--cream);
+  overflow: hidden;
+}
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem 4rem 5rem 6rem;
+}
+.hero-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hero-tag::before { content: ''; width: 32px; height: 1px; background: var(--gold-light); }
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3.5rem, 5.5vw, 6rem);
+  font-weight: 300;
+  color: var(--brown-deep);
+  line-height: 1.0;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.8rem;
+  animation: fadeUp 0.8s 0.25s ease both;
+}
+.hero-title em { font-style: italic; color: var(--gold); }
+.hero-subtitle {
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: var(--text-soft);
+  font-weight: 300;
+  max-width: 380px;
+  letter-spacing: 0.02em;
+  margin-bottom: 2.8rem;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  animation: fadeUp 0.8s 0.55s ease both;
+}
+.hero-stats {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--gold-pale);
+  animation: fadeUp 0.8s 0.65s ease both;
+}
+.hero-stat .num {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--gold);
+  font-style: italic;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+.hero-stat .lbl {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+.hero-visual { position: relative; overflow: hidden; background: var(--cream-dark); }
+.hero-visual-main {
+  width: 100%;
+  height: 70%;
+  background: linear-gradient(160deg, #D4B896 0%, #A87E5A 45%, #6B4F3A 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-visual-main > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-visual-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-visual-overlay { position: absolute; bottom: 1.5rem; left: 1.5rem; z-index: 2; }
+.hero-visual-overlay .feat-label { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.3rem; }
+.hero-visual-overlay .feat-name { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 300; font-style: italic; color: rgba(255,255,255,0.9); }
+.hero-visual-glyph { font-family: var(--font-serif); font-size: 10rem; color: rgba(255,255,255,0.1); font-style: italic; animation: fadeIn 1.2s 0.3s ease both; user-select: none; position: relative; z-index: 1; }
+.hero-visual-bottom { height: 30%; display: grid; grid-template-columns: 1fr 1fr; }
+.hero-sub-panel { display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.hero-sub-panel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero-sub-panel-glyph { font-family: var(--font-serif); font-size: 3rem; color: rgba(255,255,255,0.15); font-style: italic; position: relative; z-index: 1; }
+.hero-sub-panel:first-child { background: linear-gradient(135deg, #C4A882, #8B6B3D); }
+.hero-sub-panel:last-child { background: linear-gradient(135deg, #EDE4DA, #C4A47A); }
+.hero-scroll-hint { position: absolute; bottom: 2rem; right: 2rem; writing-mode: vertical-rl; font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 0.8rem; }
+.hero-scroll-hint::after { content: ''; width: 1px; height: 40px; background: rgba(255,255,255,0.25); }
+
+/* TRUST STRIP */
+.trust-strip { background: var(--brown-deep); }
+.trust-items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.35rem 1.8rem;
+  border-right: 1px solid rgba(196,164,122,0.12);
+}
+.trust-item:last-child { border-right: none; }
+.trust-icon { font-size: 1.25rem; flex-shrink: 0; opacity: 0.85; }
+.trust-title { font-size: 0.7rem; font-weight: 500; color: var(--gold-pale); letter-spacing: 0.04em; margin-bottom: 0.12rem; }
+.trust-desc { font-size: 0.58rem; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; }
+
+/* CATEGORIES */
+.categories-section { padding: 5rem 0; background: var(--white); }
+.cats-header { text-align: center; margin-bottom: 3rem; }
+.cats-header .section-tag { justify-content: center; }
+.cats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem; }
+.cat-card { display: flex; flex-direction: column; align-items: center; text-decoration: none; gap: 0.8rem; }
+.cat-card:hover .cat-img { border-color: var(--gold); transform: translateY(-4px); }
+.cat-card:hover .cat-lbl { color: var(--gold); }
+.cat-img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--cream-dark);
+  border: 1.5px solid var(--gold-pale);
+  transition: border-color var(--transition), transform var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.cat-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cat-img-glyph { font-family: var(--font-serif); font-size: 3rem; color: var(--gold-pale); font-style: italic; position: relative; z-index: 1; }
+.cat-lbl { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-mid); transition: color var(--transition); }
+
+/* COLLECTIONS GRID */
+.collections { padding: 5rem 0; background: var(--white); }
+.collections-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; }
+
+/* BENEFITS STRIP */
+.benefits {
+  padding: 4.5rem 0;
+  background: linear-gradient(135deg, #fdf8f3 0%, #f5ede3 50%, #fdf8f3 100%);
+  border-top: 1px solid rgba(196,164,122,0.14);
+  border-bottom: 1px solid rgba(196,164,122,0.14);
+}
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+.benefit-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 0 1rem;
+  position: relative;
+}
+.benefit-item + .benefit-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 15%; bottom: 15%;
+  width: 1px;
+  background: rgba(196,164,122,0.22);
+}
+.benefit-icon {
+  width: 56px; height: 56px;
+  color: var(--gold-mid);
+  flex-shrink: 0;
+}
+.benefit-title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--brown-deep);
+  line-height: 1.3;
+}
+.benefit-desc {
+  font-size: 0.72rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  font-weight: 300;
+  margin-top: -0.3rem;
+}
+@media (max-width: 800px) {
+  .benefits-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+  .benefit-item + .benefit-item::before { display: none; }
+}
+.products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+
+/* TESTIMONIALS */
+.testimonials { padding: 6rem 0; background: var(--brown-deep); }
+.testimonials .section-tag { color: var(--gold-light); }
+.testimonials .section-tag::before { background: var(--gold); }
+.testimonials .section-title { color: var(--cream); }
+.testimonials .section-title em { color: var(--gold-light); }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.testimonial { background: rgba(255,255,255,0.04); border: 1px solid rgba(196,164,122,0.15); padding: 2rem; border-radius: 8px; transition: border-color var(--transition); }
+.testimonial:hover { border-color: rgba(196,164,122,0.35); }
+.testimonial-stars { color: var(--gold-light); font-size: 0.75rem; letter-spacing: 0.15em; margin-bottom: 1.2rem; }
+.testimonial-text { font-family: var(--font-serif); font-size: 1rem; font-style: italic; color: rgba(245,240,234,0.85); line-height: 1.75; font-weight: 300; margin-bottom: 1.5rem; }
+.testimonial-author { display: flex; align-items: center; gap: 0.8rem; }
+.author-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--white); font-weight: 500; letter-spacing: 0.05em; flex-shrink: 0; overflow: hidden; }
+.author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.author-name { font-size: 0.75rem; font-weight: 400; color: var(--gold-pale); letter-spacing: 0.04em; margin-bottom: 0.1rem; }
+.author-city { font-size: 0.6rem; color: var(--text-soft); letter-spacing: 0.1em; }
+
+/* INSTAGRAM */
+.instagram-section { padding: 5rem 0; background: var(--cream); }
+.instagram-section .section-tag { justify-content: center; }
+.instagram-section .section-title { text-align: center; }
+#instagram-embed-wrap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 2.5rem auto 0;
+  justify-items: center;
+}
+#instagram-embed-wrap iframe { border-radius: 8px !important; max-width: 100% !important; }
+@media (max-width: 1100px) { #instagram-embed-wrap { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { #instagram-embed-wrap { grid-template-columns: 1fr; } }
+
+/* NEWSLETTER */
+.newsletter { padding: 5.5rem 0; background: var(--cream-dark); text-align: center; }
+.newsletter .section-tag { justify-content: center; }
+.newsletter .section-title { margin-bottom: 0.8rem; }
+.newsletter-sub { font-size: 0.83rem; color: var(--text-soft); margin-bottom: 2.5rem; font-weight: 300; letter-spacing: 0.03em; }
+.newsletter-form { display: flex; max-width: 460px; margin: 0 auto; }
+.newsletter-input { flex: 1; padding: 0.9rem 1.4rem; border: 1px solid var(--gold-pale); border-right: none; background: var(--white); font-family: var(--font-sans); font-size: 0.82rem; color: var(--text); outline: none; transition: border-color var(--transition); }
+.newsletter-input:focus { border-color: var(--gold-light); }
+.newsletter-input::placeholder { color: var(--text-soft); }
+.newsletter-btn { padding: 0.9rem 2rem; background: var(--gold); color: var(--white); border: none; font-family: var(--font-sans); font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; transition: background var(--transition); white-space: nowrap; }
+.newsletter-btn:hover { background: var(--brown-mid); }
+.newsletter-privacy { font-size: 0.62rem; color: var(--text-soft); margin-top: 1rem; letter-spacing: 0.05em; }
+
+/* HERO FOTO (estilo C) — foto full-bleed + overlay de texto à esquerda */
+.hero-photo {
+  position: relative;
+  min-height: 100vh;
+  display: none;
+  align-items: center;
+  padding-top: var(--nav-h);
+  overflow: hidden;
+}
+.hp-bg { position: absolute; inset: 0; z-index: 0; background: var(--cream-dark); }
+.hp-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hp-glyph {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-size: 10rem; font-style: italic;
+  color: rgba(196,164,122,0.18);
+}
+.hp-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(100deg, rgba(253,248,243,0.97) 0%, rgba(253,248,243,0.85) 26%, rgba(253,248,243,0.4) 48%, transparent 64%);
+}
+.hp-content {
+  position: relative;
+  z-index: 2;
+  max-width: 580px;
+  padding: 2rem 2rem 2rem 6rem;
+}
+.hp-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-mid);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.hp-tag::before { content: ''; width: 32px; height: 1px; background: var(--gold-light); }
+.hp-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 300;
+  color: var(--brown-deep);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.6rem;
+}
+.hp-title em { font-style: italic; color: var(--gold); }
+.hp-sub {
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: var(--text-mid);
+  font-weight: 300;
+  max-width: 420px;
+  letter-spacing: 0.02em;
+  margin-bottom: 2.4rem;
+}
+.hp-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+  margin-bottom: 3rem;
+}
+.hp-link {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold-pale);
+  padding-bottom: 2px;
+  transition: color var(--transition), border-color var(--transition);
+}
+.hp-link:hover { color: var(--gold); border-color: var(--gold-light); }
+.hp-trust {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.hp-trust-item { display: flex; align-items: flex-start; gap: 0.7rem; max-width: 170px; }
+.hp-trust-icon {
+  width: 34px; height: 34px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--gold-pale);
+  border-radius: 50%;
+  color: var(--gold-mid);
+}
+.hp-trust-icon svg { width: 16px; height: 16px; }
+.hp-trust-title {
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brown-deep);
+  font-weight: 500;
+  margin-bottom: 0.15rem;
+  line-height: 1.3;
+}
+.hp-trust-desc { font-size: 0.66rem; color: var(--text-soft); line-height: 1.4; }
+@media (max-width: 900px) {
+  .hp-content { padding: 2rem 1.5rem; max-width: 100%; }
+  .hp-overlay { background: linear-gradient(180deg, rgba(253,248,243,0.92) 0%, rgba(253,248,243,0.92) 55%, transparent 90%); }
+  .hp-trust { gap: 1.2rem; }
+}
+
+/* HERO FULLSCREEN (estilo B) — Woopy style: 3 painéis + texto overlay */
+.hero-full {
+  position: relative;
+  overflow: hidden;
+  display: none;
+  padding-top: var(--nav-h);
+}
+.hf-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: calc(100vh - var(--nav-h));
+  min-height: 520px;
+}
+.hf-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--brown-deep);
+}
+.hf-panel img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.75s ease;
+}
+.hf-panel img.hf-fade { opacity: 0 !important; }
+.hf-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.18);
+  pointer-events: none;
+  z-index: 1;
+}
+.hf-panel-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 6rem;
+  color: rgba(196,164,122,0.15);
+  font-style: italic;
+  user-select: none;
+}
+/* Overlay de texto — centralizado em cima dos 3 painéis */
+.hf-text-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 10;
+  padding: 0 1.5rem;
+  pointer-events: none;
+}
+.hf-text-overlay > * { pointer-events: all; }
+.hf-over-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 0.6rem;
+}
+.hf-over-big {
+  font-family: var(--font-serif);
+  font-size: clamp(4.5rem, 11vw, 10rem);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  text-shadow: 0 6px 50px rgba(0,0,0,0.45);
+  margin-bottom: 2rem;
+}
+.hf-over-big em { font-style: italic; }
+.hf-over-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 48px; padding: 0 2.5rem;
+  border: 1.5px solid rgba(255,255,255,0.75);
+  color: var(--white); background: transparent;
+  font-family: var(--font-sans); font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.hf-over-btn:hover { background: var(--white); color: var(--brown-deep); border-color: var(--white); }
+/* Setas */
+.hf-arrow {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  z-index: 20;
+  width: 50px; height: 50px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 50%;
+  color: var(--white);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+  backdrop-filter: blur(6px);
+  transition: background var(--transition);
+}
+.hf-arrow:hover { background: rgba(255,255,255,0.28); }
+.hf-arrow-prev { left: 1.5rem; }
+.hf-arrow-next { right: 1.5rem; }
+/* Dots */
+.hf-dots {
+  position: absolute;
+  bottom: 1.6rem;
+  left: 50%; transform: translateX(-50%);
+  z-index: 20;
+  display: flex; gap: 0.45rem;
+}
+.hf-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.38);
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+}
+.hf-dot.active { background: var(--white); width: 22px; border-radius: 4px; }
+@media (max-width: 700px) {
+  .hf-panels { grid-template-columns: 1fr; }
+  .hf-panel:not(:nth-child(2)) { display: none; }
+  .hf-over-big { font-size: clamp(3.5rem, 18vw, 6rem); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-content { padding: 3rem 1.5rem; }
+  .hero-visual { height: 60vw; }
+  .trust-items { grid-template-columns: repeat(2, 1fr); }
+  .trust-item { border-bottom: 1px solid rgba(196,164,122,0.1); }
+  .cats-grid { grid-template-columns: repeat(3, 1fr); }
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .collections-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
+@media (max-width: 600px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .hero-stats { gap: 1.5rem; }
+  .cats-grid { grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+  .trust-items { grid-template-columns: 1fr; }
+  .trust-item { border-right: none; border-bottom: 1px solid rgba(196,164,122,0.1); }
+  .trust-item:last-child { border-bottom: none; }
+}
+</style>
+
+<style id="brinco3d-styles">
+/* ── Brinco 3D — showcase scroll-driven (TESTE) ── */
+.brinco3d-section { position: relative; background: var(--brown-deep); }
+.brinco3d-sticky { position: relative; height: 300vh; }
+.brinco3d-viewport {
+  position: sticky; top: 0; height: 100vh; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at 60% 45%, var(--brown-mid) 0%, var(--brown-deep) 65%, #241509 100%);
+}
+.brinco3d-bg {
+  position: absolute; inset: -10%; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(circle at 25% 30%, rgba(196,164,122,0.18) 0%, transparent 35%),
+    radial-gradient(circle at 75% 70%, rgba(224,206,187,0.12) 0%, transparent 40%);
+  will-change: transform;
+}
+#brinco3d-canvas { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; display: block; }
+.brinco3d-fallback {
+  position: absolute; inset: 0; z-index: 2; display: none;
+  align-items: center; justify-content: center;
+}
+.brinco3d-fallback.is-active { display: flex; }
+.b3d-stage { position: relative; width: min(70vw, 520px); height: min(70vw, 520px); perspective: 1400px; }
+.b3d-layer-back {
+  position: absolute; inset: 12%; border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,164,122,0.35), transparent 70%);
+  filter: blur(18px);
+}
+.b3d-earring {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 25px 45px rgba(0,0,0,0.45));
+  transform-style: preserve-3d; will-change: transform;
+  transform: translateZ(0) rotateY(0deg) scale(0.82);
+}
+.brinco3d-copy {
+  position: absolute; z-index: 3; left: 8%; top: 50%; transform: translateY(-50%);
+  max-width: 380px; opacity: 0; will-change: opacity, transform;
+}
+.brinco3d-tag {
+  font-family: var(--font-sans); font-size: 0.78rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold-light);
+}
+.brinco3d-title {
+  font-family: var(--font-serif); color: var(--cream); font-weight: 500;
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem); line-height: 1.15; margin: 0.6rem 0 1rem;
+}
+.brinco3d-sub { font-family: var(--font-sans); color: var(--gold-pale); font-size: 0.95rem; line-height: 1.6; }
+.brinco3d-scrollhint {
+  position: absolute; bottom: 2.2rem; left: 50%; transform: translateX(-50%);
+  z-index: 3; color: var(--gold-pale); font-family: var(--font-sans);
+  font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+  opacity: 0.75; transition: opacity 0.3s;
+}
+.brinco3d-scrollhint.is-hidden { opacity: 0; }
+.brinco3d-particles { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+@media (max-width: 720px) {
+  .brinco3d-copy { left: 6%; right: 6%; max-width: none; text-align: center; top: 12%; transform: none; }
+  .b3d-stage { width: min(86vw, 420px); height: min(86vw, 420px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brinco3d-sticky { height: auto; }
+  .brinco3d-viewport { position: relative; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── BRAND BAR (Firebase) ── -->
+<div class="brand-bar" id="faixa-bar">
+  <div class="brand-bar-track" id="bar-track"></div>
+</div>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Elenice Collection</a>
+    <ul class="nav-links">
+      <li><a href="catalogo.html">Coleções</a></li>
+      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="sobre.html">Nossa História</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-cart" onclick="openCart()">
+        Carrinho
+        <span class="cart-badge cart-count" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="hero-editorial">
+  <div class="hero-content">
+    <div class="hero-tag"><span id="hero-tag-txt">Nova Coleção · 2026</span></div>
+    <h1 class="hero-title">
+      <span id="hero-t1">Joias que<br>contam sua</span><br>
+      <em id="hero-t2">história</em>
+    </h1>
+    <p class="hero-subtitle" id="hero-sub">
+      Peças criadas com ouro 18k e pedras selecionadas,
+      inspiradas na elegância e sofisticação feminina.
+      Cada joia é única — como você.
+    </p>
+    <div class="hero-actions">
+      <a href="catalogo.html" class="btn btn-primary" id="hero-btn-el">Ver Coleção</a>
+      <a href="sobre.html" class="btn btn-ghost">Nossa história</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="num" id="stat1-val">18k</div>
+        <div class="lbl" id="stat1-lbl">Ouro garantido</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num" id="stat2-val">500+</div>
+        <div class="lbl" id="stat2-lbl">Clientes felizes</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num" id="stat3-val">1 ano</div>
+        <div class="lbl" id="stat3-lbl">De garantia</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-visual-main">
+      <img id="hero-main-img" alt="Elenice Collection" style="display:none;" />
+      <div class="hero-visual-glyph" id="hero-glyph">◈</div>
+      <div class="hero-visual-overlay">
+        <div class="feat-label">Destaque da coleção</div>
+        <div class="feat-name" id="box1-feat-name">Colar Lua Dourada</div>
+      </div>
+    </div>
+    <div class="hero-visual-bottom">
+      <div class="hero-sub-panel">
+        <img id="hero-box2-img" alt="" style="display:none;" />
+        <span class="hero-sub-panel-glyph" id="glyph-b2">✦</span>
+      </div>
+      <div class="hero-sub-panel">
+        <img id="hero-box3-img" alt="" style="display:none;" />
+        <span class="hero-sub-panel-glyph" id="glyph-b3">⊛</span>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">Explorar</div>
+  </div>
+</section>
+
+<!-- ── BRINCO 3D — showcase scroll-driven (TESTE) ── -->
+<section class="brinco3d-section" id="brinco3d" data-3d-intensity="1" data-3d-particles="true">
+  <div class="brinco3d-sticky">
+    <div class="brinco3d-viewport">
+      <div class="brinco3d-bg" aria-hidden="true"></div>
+
+      <canvas id="brinco3d-canvas" aria-hidden="true"></canvas>
+
+      <!-- Fallback CSS-3D (sem WebGL, prefers-reduced-motion, ou device fraco) -->
+      <div class="brinco3d-fallback" id="brinco3d-fallback">
+        <div class="b3d-stage">
+          <div class="b3d-layer b3d-layer-back" aria-hidden="true"></div>
+          <img class="b3d-earring" id="b3d-fallback-img" src="assets/img/brinco-3d.png" alt="Brinco Elenice Collection em ouro 18k">
+        </div>
+      </div>
+
+      <div class="brinco3d-copy">
+        <span class="brinco3d-tag">Detalhe Elenice</span>
+        <h2 class="brinco3d-title">Cada faceta,<br>em todos os ângulos.</h2>
+        <p class="brinco3d-sub">Role a página e veja o brinco ganhar profundidade — ouro 18k refletindo luz como na vitrine.</p>
+      </div>
+
+      <div class="brinco3d-scrollhint" id="brinco3d-scrollhint">Role para revelar</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HERO FOTO (Estilo C) — foto cheia + overlay texto ── -->
+<section class="hero-photo" id="hero-photo">
+  <div class="hp-bg">
+    <img id="hp-bg-img" alt="Elenice Collection" style="display:none;" />
+    <div class="hp-glyph" id="hp-glyph">◈</div>
+  </div>
+  <div class="hp-overlay"></div>
+  <div class="hp-content">
+    <div class="hp-tag"><span id="hp-tag-txt">Nova Coleção · 2026</span></div>
+    <h1 class="hp-title">
+      <span id="hp-t1">Joias que<br>contam sua</span><br>
+      <em id="hp-t2">história</em>
+    </h1>
+    <p class="hp-sub" id="hp-sub">
+      Peças criadas com ouro 18k e pedras selecionadas,
+      inspiradas na elegância e sofisticação feminina.
+      Cada joia é única — como você.
+    </p>
+    <div class="hp-actions">
+      <a href="catalogo.html" class="btn btn-primary" id="hp-btn-el">Ver Coleção</a>
+      <a href="sobre.html" class="hp-link">Nossa história</a>
+    </div>
+    <div class="hp-trust">
+      <div class="hp-trust-item">
+        <div class="hp-trust-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M28 8 L36 20 L50 22 L39 33 L42 47 L28 40 L14 47 L17 33 L6 22 L20 20 Z"/></svg>
+        </div>
+        <div>
+          <div class="hp-trust-title">Ouro 18k Certificado</div>
+          <div class="hp-trust-desc">Qualidade e autenticidade garantidas</div>
+        </div>
+      </div>
+      <div class="hp-trust-item">
+        <div class="hp-trust-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="20" width="36" height="26" rx="3"/><path d="M10 30 L46 30"/><path d="M20 8 L28 20 L36 8"/></svg>
+        </div>
+        <div>
+          <div class="hp-trust-title">Frete Grátis</div>
+          <div class="hp-trust-desc">Em compras acima de R$ 299</div>
+        </div>
+      </div>
+      <div class="hp-trust-item">
+        <div class="hp-trust-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M28 8 L42 14 L42 30 C42 38 35 44 28 48 C21 44 14 38 14 30 L14 14 Z"/><path d="M22 28 L26 32 L34 23"/></svg>
+        </div>
+        <div>
+          <div class="hp-trust-title">Garantia de 1 Ano</div>
+          <div class="hp-trust-desc">Em todas as peças da coleção</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HERO FULLSCREEN (Estilo B) — 3 painéis Woopy ── -->
+<section class="hero-full" id="hero-fullscreen">
+  <div class="hf-panels">
+    <div class="hf-panel" id="hf-panel-0">
+      <img id="hf-img-0" alt="" /><div class="hf-panel-placeholder">◈</div>
+    </div>
+    <div class="hf-panel" id="hf-panel-1">
+      <img id="hf-img-1" alt="" /><div class="hf-panel-placeholder">◈</div>
+    </div>
+    <div class="hf-panel" id="hf-panel-2">
+      <img id="hf-img-2" alt="" /><div class="hf-panel-placeholder">◈</div>
+    </div>
+  </div>
+  <div class="hf-text-overlay">
+    <div class="hf-over-tag" id="hf-tag-txt">Coleção 2026</div>
+    <div class="hf-over-big">
+      <span id="hf-t1" style="display:block;font-size:0.38em;font-style:normal;letter-spacing:0.12em;font-family:var(--font-sans);font-weight:300;margin-bottom:0.3em;">Sua via em direção à</span>
+      <em id="hf-t2">ELEGÂNCIA</em>
+    </div>
+    <a href="catalogo.html" class="hf-over-btn" id="hf-btn-el">Ver Coleção</a>
+  </div>
+  <button class="hf-arrow hf-arrow-prev" onclick="hfPrev()">&#8249;</button>
+  <button class="hf-arrow hf-arrow-next" onclick="hfNext()">&#8250;</button>
+  <div class="hf-dots" id="hf-dots"></div>
+</section>
+
+<!-- ── TRUST STRIP ── -->
+<div class="trust-strip">
+  <div class="trust-items container">
+    <div class="trust-item">
+      <span class="trust-icon">✦</span>
+      <div>
+        <div class="trust-title">Ouro 18k Certificado</div>
+        <div class="trust-desc">Qualidade e autenticidade garantidas</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">📦</span>
+      <div>
+        <div class="trust-title">Frete Grátis acima de R$ 299</div>
+        <div class="trust-desc">Para todo o Brasil</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">◈</span>
+      <div>
+        <div class="trust-title">Garantia de 1 Ano</div>
+        <div class="trust-desc">Em todas as peças da coleção</div>
+      </div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">💳</span>
+      <div>
+        <div class="trust-title">12× Sem Juros</div>
+        <div class="trust-desc">Pix com 5% de desconto</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CATEGORIAS ── -->
+<section class="categories-section">
+  <div class="container">
+    <div class="cats-header reveal">
+      <div class="section-tag">Explorar</div>
+      <h2 class="section-title">Nossas <em>Categorias</em></h2>
+    </div>
+    <div class="cats-grid reveal">
+      <a href="catalogo.html?cat=aneis" class="cat-card">
+        <div class="cat-img">
+          <img id="cat-img-aneis" alt="Anéis" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-aneis">◎</span>
+        </div>
+        <span class="cat-lbl">Anéis</span>
+      </a>
+      <a href="catalogo.html?cat=colares" class="cat-card">
+        <div class="cat-img">
+          <img id="cat-img-colares" alt="Colares" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-colares">∿</span>
+        </div>
+        <span class="cat-lbl">Colares</span>
+      </a>
+      <a href="catalogo.html?cat=pulseiras" class="cat-card">
+        <div class="cat-img">
+          <img id="cat-img-pulseiras" alt="Pulseiras" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-pulseiras">⊂</span>
+        </div>
+        <span class="cat-lbl">Pulseiras</span>
+      </a>
+      <a href="catalogo.html?cat=brincos" class="cat-card">
+        <div class="cat-img">
+          <img id="cat-img-brincos" alt="Brincos" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-brincos">⊕</span>
+        </div>
+        <span class="cat-lbl">Brincos</span>
+      </a>
+      <a href="catalogo.html?cat=conjuntos" class="cat-card">
+        <div class="cat-img">
+          <img id="cat-img-conjuntos" alt="Conjuntos" style="display:none;">
+          <span class="cat-img-glyph" id="cat-glyph-conjuntos">✦</span>
+        </div>
+        <span class="cat-lbl">Conjuntos</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── SPOTLIGHT (carousel auto-advance) ── -->
+<!-- ── COLEÇÃO ── -->
+<section class="collections" id="colecoes">
+  <div class="container">
+    <div class="collections-header reveal">
+      <div>
+        <div class="section-tag">Coleção completa</div>
+        <h2 class="section-title">Nossa <em>Coleção</em></h2>
+      </div>
+      <a href="catalogo.html" class="btn btn-ghost">Ver todos os produtos</a>
+    </div>
+    <div class="products-grid" id="products-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:3rem;">
+        <div style="width:24px;height:24px;border:2px solid var(--gold-pale);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INSTAGRAM ── -->
+<section class="instagram-section" id="instagram-section" style="display:none;">
+  <div class="container">
+    <div class="reveal" style="text-align:center;">
+      <div class="section-tag" style="justify-content:center;">Comunidade</div>
+      <h2 class="section-title">Marcou a <em>Elenice?</em></h2>
+      <p style="font-size:0.83rem;color:var(--text-soft);margin-top:0.8rem;margin-bottom:0;font-weight:300;">
+        Adoramos ver você usando nossas joias. Marque <strong>@elenicecollection</strong> no Instagram!
+      </p>
+    </div>
+    <div id="instagram-embed-wrap"></div>
+  </div>
+</section>
+
+<!-- ── DIFERENCIAIS ── -->
+<section class="benefits">
+  <div class="container">
+    <div class="benefits-grid">
+
+      <div class="benefit-item reveal">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M28 8 L36 20 L50 22 L39 33 L42 47 L28 40 L14 47 L17 33 L6 22 L20 20 Z"/>
+            <circle cx="28" cy="28" r="6"/>
+          </svg>
+        </div>
+        <div class="benefit-title">Ouro 18k Certificado</div>
+        <div class="benefit-desc">Cada peça é produzida com ouro 18k puro, com certificado de autenticidade incluso</div>
+      </div>
+
+      <div class="benefit-item reveal">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="10" y="20" width="36" height="26" rx="3"/>
+            <path d="M10 30 L46 30"/>
+            <path d="M20 8 L28 20 L36 8"/>
+            <circle cx="19" cy="38" r="2"/>
+            <circle cx="28" cy="38" r="2"/>
+          </svg>
+        </div>
+        <div class="benefit-title">Frete Grátis</div>
+        <div class="benefit-desc">Entrega gratuita para todo o Brasil em compras acima de R$ 299. Rápido e seguro</div>
+      </div>
+
+      <div class="benefit-item reveal">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M28 8 L42 14 L42 30 C42 38 35 44 28 48 C21 44 14 38 14 30 L14 14 Z"/>
+            <path d="M22 28 L26 32 L34 23"/>
+          </svg>
+        </div>
+        <div class="benefit-title">1 Ano de Garantia</div>
+        <div class="benefit-desc">Todas as peças têm garantia de 1 ano contra defeitos de fabricação e oxidação</div>
+      </div>
+
+      <div class="benefit-item reveal">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="8" y="16" width="40" height="26" rx="4"/>
+            <path d="M8 24 L48 24"/>
+            <path d="M16 34 L24 34"/>
+            <path d="M30 34 L36 34"/>
+            <circle cx="42" cy="34" r="3"/>
+          </svg>
+        </div>
+        <div class="benefit-title">Parcele em 12x</div>
+        <div class="benefit-desc">Compre sem preocupação em até 12 parcelas sem juros no cartão de crédito</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── DEPOIMENTOS ── -->
+<section class="testimonials" id="testimonials-section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Depoimentos</div>
+      <h2 class="section-title">O que nossas<br>clientes <em>dizem</em></h2>
+    </div>
+    <div class="testimonials-grid" id="testimonials-grid"></div>
+  </div>
+</section>
+
+<!-- ── NEWSLETTER ── -->
+<section class="newsletter">
+  <div class="container-sm">
+    <div class="reveal">
+      <div class="section-tag">Novidades</div>
+      <h2 class="section-title">Fique por <em>dentro</em></h2>
+      <p class="newsletter-sub">Receba em primeira mão nossas novas coleções, promoções exclusivas e dicas de estilo.</p>
+      <div class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="Seu melhor e-mail" id="newsletter-email">
+        <button class="newsletter-btn" onclick="subscribeNewsletter()">Assinar</button>
+      </div>
+      <p class="newsletter-privacy">Sem spam. Cancele quando quiser.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Elenice Collection</div>
+        <div class="tagline">Elegância que transforma</div>
+        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado. Baseada em Balneário Camboriú, entregamos para todo o Brasil.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Coleções</h4>
+        <ul>
+          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+          <li><a href="catalogo.html?cat=colares">Colares</a></li>
+          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+          <li><a href="catalogo.html?cat=conjuntos">Conjuntos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="politica-de-entrega.html">Política de entrega</a></li>
+          <li><a href="politica-de-trocas-e-devolucoes.html">Trocas e devoluções</a></li>
+          <li><a href="politica-de-privacidade.html">Política de privacidade</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>📱 (47) 99725-9678</li>
+          <li>✉ contato@elenicecollection.com.br</li>
+          <li>📍 Balneário Camboriú, SC</li>
+        </ul>
+        <div style="margin-top:1.2rem;font-size:0.65rem;color:var(--text-soft);letter-spacing:0.05em;line-height:1.8;">
+          Seg–Sex: 9h às 18h<br>Sáb: 9h às 13h
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Elenice Collection. Todos os direitos reservados.</p>
+      <div class="social-links">
+        <a class="social-link" href="#" title="Instagram">ig</a>
+        <a class="social-link" href="#" title="Facebook">fb</a>
+        <a class="social-link" href="#" title="TikTok">tt</a>
+        <a class="social-link" href="https://wa.me/5547997259678" title="WhatsApp">wa</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── CART DRAWER ── -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-header">
+    <h2>Seu Carrinho</h2>
+    <button class="cart-close" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body">
+    <div class="cart-empty" id="cart-empty" style="display:flex;">
+      <div class="cart-empty-icon">◈</div>
+      <p>Seu carrinho está vazio</p>
+      <a href="catalogo.html" class="btn btn-outline" onclick="closeCart()" style="margin-top:0.5rem;font-size:0.62rem;">Ver produtos</a>
+    </div>
+    <div id="cart-items"></div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none;">
+    <div class="free-shipping-bar" id="free-shipping-bar"></div>
+    <div class="cart-totals">
+      <div class="cart-total-row">
+        <span class="label">Subtotal</span>
+        <span class="value" id="cart-subtotal">R$ 0,00</span>
+      </div>
+      <div class="cart-total-row">
+        <span class="label">Frete</span>
+        <span class="value" id="cart-frete">Calcular no checkout</span>
+      </div>
+      <div class="cart-total-row final">
+        <span class="label">Total</span>
+        <span class="value" id="cart-total">R$ 0,00</span>
+      </div>
+    </div>
+    <div class="cart-cta">
+      <button class="btn btn-outline" style="justify-content:center;" onclick="closeCart()">Continuar Comprando</button>
+      <a href="checkout.html" class="btn btn-primary" style="justify-content:center;" onclick="closeCart()">Finalizar Compra</a>
+      <button class="btn-whatsapp" onclick="whatsappOrder()">🟢 Pedir pelo WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg">Produto adicionado!</span>
+</div>
+
+<!-- ── WHATSAPP FLUTUANTE ── -->
+<a class="whatsapp-float" href="https://wa.me/5547997259678?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20uma%20consultora%20da%20Elenice%20Collection." target="_blank" rel="noopener" aria-label="Falar com uma consultora no WhatsApp">
+  <svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 224.2 32 100.7 32 0 132.7 0 256c0 44.4 13 86.4 37.4 122.9L8 480l103.3-29.1C145.7 469 184.5 480 224.2 480c123.5 0 224.2-100.7 224.2-224.2 0-59-23-114.7-65.5-156.7zm-156.7 343c-34.6 0-68.6-9.3-98.3-26.9l-7-4.2-60.9 17.1 16.3-59.5-4.6-7.3c-19.3-30.7-29.6-66.2-29.6-102.5 0-104.5 85.1-189.6 189.6-189.6 50.6 0 98.1 19.7 133.9 55.5 35.8 35.8 55.5 83.3 55.5 133.9 0 104.5-85.1 189.6-189.6 189.6zm101.4-138.5c-5.6-2.8-33.1-16.3-38.2-18.2-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.4 18.2-17.7 21.9-3.3 3.7-6.5 4.2-12.1 1.4-32.7-16.3-54.1-29.1-75.6-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.9-9.7-1.9-2.8-9.3-22.4-12.8-30.7-3.4-8.2-6.9-7.1-9.5-7.2-2.5-.1-5.4-.1-8.3-.1-2.9 0-7.6 1.1-11.6 5.5-4 4.4-15.3 15-15.3 36.5 0 21.5 15.6 42.3 17.8 45.2 2.2 2.9 30 47.6 75.6 64.8 37.4 14.2 45 11.4 53.1 9.5 8.1-1.9 26.1-10.6 29.8-20.9 3.7-10.3 3.7-19.1 2.6-21z"/></svg>
+</a>
+
+<script src="assets/js/cart.js?v=3"></script>
+
+<script>
+/* Nav offset para a faixa de avisos */
+(function () {
+  const nav = document.querySelector('.nav');
+  const faixa = document.getElementById('faixa-bar');
+  if (!nav || !faixa) return;
+  const faixaH = faixa.offsetHeight || 36;
+  function updateNav() {
+    const rem = Math.max(0, faixaH - window.scrollY);
+    nav.style.top = rem + 'px';
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+})();
+</script>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, getDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const FB_CFG = {
+  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
+  authDomain: "selene-joias.firebaseapp.com",
+  projectId: "selene-joias",
+  storageBucket: "selene-joias.firebasestorage.app",
+  messagingSenderId: "395713731584",
+  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
+};
+const app = getApps().length ? getApps()[0] : initializeApp(FB_CFG);
+const db  = getFirestore(app);
+
+/* ─── HELPERS ─── */
+const fmt = v => Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+function cardHTML(p) {
+  const preco     = Number(p.preco);
+  const precoOrig = p.precoOriginal ? Number(p.precoOriginal) : null;
+  const parcela   = fmt(preco / 12);
+  const precoFmt  = fmt(preco);
+  const origFmt   = precoOrig ? fmt(precoOrig) : '';
+  const descPct   = precoOrig ? Math.round((1 - preco / precoOrig) * 100) : 0;
+  const cat       = p.categoria || 'Joia';
+  const mat       = p.material  || 'Ouro 18k';
+  const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${mat.replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
+  const estoque   = Number(p.estoque) || 0;
+  const esgotado  = !!p.esgotado;
+  return `
+  <div class="product-card reveal${esgotado ? ' product-card--esgotado' : ''}">
+    <div class="product-card-img">
+      <div class="product-badges">
+        ${esgotado ? `<span class="product-badge esgotado">Esgotado</span>`
+          : (estoque > 0 && estoque <= 3) ? `<span class="product-badge ultimas">Últimas Peças</span>` : ''}
+        ${!esgotado && p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
+        ${!esgotado && descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
+      </div>
+      <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
+      <a href="produto.html?id=${p.id}">
+        ${p.fotos?.[0]
+          ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy">`
+          : `<div class="product-card-placeholder">◈</div>`}
+      </a>
+    </div>
+    <div class="product-card-info">
+      <div class="product-cat">${cat} · ${mat}</div>
+      <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
+      <div class="product-price-block">
+        ${precoOrig ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
+        <span class="product-price-main">R$ ${precoFmt}</span>
+        <span class="product-price-installment">12× de R$ ${parcela} sem juros</span>
+      </div>
+      <div class="product-actions">
+        ${esgotado
+          ? `<button class="product-add-btn" disabled>Indisponível</button>`
+          : `<button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">Adicionar ao Carrinho</button>`}
+        <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver Detalhes</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ─── APPLY ADMIN CONFIG ─── */
+const DEFAULT_FAIXA = ['Ouro 18k Certificado', 'Frete Grátis acima de R$299', 'Garantia de 1 Ano', 'Parcele em até 12x', 'Pix com 5% de Desconto'];
+const DEFAULT_DEPS  = [
+  { nome: 'Ana Martins',    cidade: 'Florianópolis, SC',       texto: 'Recebi o colar de aniversário e fiquei encantada. A embalagem é linda, a peça é impecável. Com certeza voltarei a comprar!', estrelas: 5 },
+  { nome: 'Juliana Silva',  cidade: 'Balneário Camboriú, SC',  texto: 'Comprei o anel personalizado e ficou perfeito. O atendimento foi incrível, super atencioso do início ao fim. Recomendo demais!', estrelas: 5 },
+  { nome: 'Camila Ferreira', cidade: 'Itajaí, SC',             texto: 'Presente perfeito para minha mãe. Ela amou o conjunto de brincos. Qualidade incrível, superou todas as expectativas!', estrelas: 5 },
+];
+
+function renderFaixa(itens) {
+  const track = document.getElementById('bar-track');
+  if (!track) return;
+  const todos = [...itens, ...itens];
+  track.innerHTML = todos.map(txt =>
+    `<span class="brand-bar-item">${txt}</span><span class="brand-bar-dot"></span>`
+  ).join('');
+  track.style.animationDuration = Math.max(18, itens.length * 4) + 's';
+}
+
+function renderTestimonials(deps) {
+  const grid = document.getElementById('testimonials-grid');
+  if (!grid) return;
+  grid.innerHTML = deps.slice(0, 3).map(d => {
+    const stars    = '★'.repeat(Math.min(5, Math.max(1, d.estrelas || 5)));
+    const initials = (d.nome || '?').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+    const avatar   = d.foto ? `<img src="${d.foto}" alt="${d.nome}">` : initials;
+    return `
+    <div class="testimonial reveal">
+      <div class="testimonial-stars">${stars.split('').join(' ')}</div>
+      <p class="testimonial-text">"${d.texto}"</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">${avatar}</div>
+        <div>
+          <div class="author-name">${d.nome}</div>
+          <div class="author-city">${d.cidade || ''}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ─── HERO B SLIDESHOW ─── */
+let hfGroup = 0;
+let hfTimer = null;
+let hfPhotos = [];
+
+function hfBuildDots() {
+  const total = Math.max(1, Math.ceil(hfPhotos.length / 3));
+  const el = document.getElementById('hf-dots');
+  if (!el) return;
+  el.innerHTML = Array.from({ length: total }, (_, i) =>
+    `<button class="hf-dot${i === 0 ? ' active' : ''}" onclick="hfGoTo(${i})"></button>`
+  ).join('');
+}
+
+function hfGoTo(group) {
+  const total = Math.max(1, Math.ceil(hfPhotos.length / 3));
+  hfGroup = ((group % total) + total) % total;
+  for (let col = 0; col < 3; col++) {
+    const img = document.getElementById('hf-img-' + col);
+    if (!img) continue;
+    const url = hfPhotos[hfGroup * 3 + col] || '';
+    if (!url) { img.style.opacity = '0'; continue; }
+    img.classList.add('hf-fade');
+    setTimeout(() => {
+      img.src = url;
+      img.style.display = 'block';
+      img.classList.remove('hf-fade');
+    }, 200);
+  }
+  document.querySelectorAll('.hf-dot').forEach((d, i) => d.classList.toggle('active', i === hfGroup));
+}
+
+function hfStartTimer() {
+  clearInterval(hfTimer);
+  hfTimer = setInterval(() => hfGoTo(hfGroup + 1), 5000);
+}
+
+window.hfPrev = () => { hfGoTo(hfGroup - 1); hfStartTimer(); };
+window.hfNext = () => { hfGoTo(hfGroup + 1); hfStartTimer(); };
+
+function initHeroB(photos) {
+  hfPhotos = photos.filter(Boolean);
+  if (!hfPhotos.length) return;
+  for (let col = 0; col < 3; col++) {
+    const img = document.getElementById('hf-img-' + col);
+    if (img && hfPhotos[col]) { img.src = hfPhotos[col]; img.style.display = 'block'; }
+  }
+  hfBuildDots();
+  hfStartTimer();
+}
+
+function applyConfig(d) {
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
+
+  /* Hero estilo — toggle A/B/C */
+  const estilo = d.hero?.estilo || 'editorial';
+  const heroEd = document.getElementById('hero-editorial');
+  const heroFs = document.getElementById('hero-fullscreen');
+  const heroPh = document.getElementById('hero-photo');
+  if (heroEd) heroEd.style.display = estilo === 'editorial' ? '' : 'none';
+  if (heroFs) heroFs.style.display = estilo === 'fullscreen' ? 'block' : 'none';
+  if (heroPh) heroPh.style.display = estilo === 'foto' ? 'flex' : 'none';
+
+  /* Hero A — texto */
+  if (d.hero?.label)     set('hero-tag-txt', d.hero.label);
+  if (d.hero?.titulo1)   { const el = document.getElementById('hero-t1'); if (el) el.innerHTML = d.hero.titulo1.replace(/\n/g, '<br>'); }
+  if (d.hero?.titulo2)   set('hero-t2', d.hero.titulo2);
+  if (d.hero?.subtitulo) set('hero-sub', d.hero.subtitulo);
+  if (d.hero?.btn)       set('hero-btn-el', d.hero.btn);
+
+  /* Hero A — imagem */
+  if (d.hero?.img) {
+    const img = document.getElementById('hero-main-img');
+    if (img) { img.src = d.hero.img; img.style.display = 'block'; }
+    const g = document.getElementById('hero-glyph');
+    if (g) g.style.opacity = '0.03';
+  }
+
+  /* Hero C — espelha texto do hero A + foto de fundo própria */
+  if (d.hero?.label)     set('hp-tag-txt', d.hero.label);
+  if (d.hero?.titulo1)   { const el = document.getElementById('hp-t1'); if (el) el.innerHTML = d.hero.titulo1.replace(/\n/g, '<br>'); }
+  if (d.hero?.titulo2)   set('hp-t2', d.hero.titulo2);
+  if (d.hero?.subtitulo) set('hp-sub', d.hero.subtitulo);
+  if (d.hero?.btn)       set('hp-btn-el', d.hero.btn);
+  if (d.hero?.imgFundo) {
+    const img = document.getElementById('hp-bg-img');
+    if (img) { img.src = d.hero.imgFundo; img.style.display = 'block'; }
+    const g = document.getElementById('hp-glyph');
+    if (g) g.style.display = 'none';
+  }
+
+  /* Hero A — boxes laterais */
+  if (d.box1?.nome) set('box1-feat-name', d.box1.nome);
+  if (d.box2?.img) {
+    const img = document.getElementById('hero-box2-img');
+    if (img) { img.src = d.box2.img; img.style.display = 'block'; }
+    const g = document.getElementById('glyph-b2'); if (g) g.style.display = 'none';
+  }
+  if (d.box3?.img) {
+    const img = document.getElementById('hero-box3-img');
+    if (img) { img.src = d.box3.img; img.style.display = 'block'; }
+    const g = document.getElementById('glyph-b3'); if (g) g.style.display = 'none';
+  }
+
+  /* Hero B — texto próprio */
+  if (d.heroB) {
+    set('hf-tag-txt', d.heroB.titulo);
+    set('hf-t2',      d.heroB.tituloGrande);
+    set('hf-t1',      d.heroB.subtitulo);
+    set('hf-btn-el',  d.heroB.btn);
+    const fotos = [1,2,3,4,5,6,7,8,9].map(i => d.heroB['foto' + i] || '');
+    initHeroB(fotos);
+  }
+
+  /* Stats */
+  if (d.stats) {
+    set('stat1-val', d.stats.s1num);   set('stat1-lbl', d.stats.s1label);
+    set('stat2-val', d.stats.s2num);   set('stat2-lbl', d.stats.s2label);
+    set('stat3-val', d.stats.s3num);   set('stat3-lbl', d.stats.s3label);
+  }
+
+  /* Categorias */
+  if (d.categorias) {
+    ['aneis','colares','pulseiras','brincos','conjuntos'].forEach(cat => {
+      const url = d.categorias[cat]?.img;
+      if (!url) return;
+      const el = document.getElementById('cat-img-' + cat);
+      if (el) { el.src = url; el.style.display = 'block'; }
+      const glyph = document.getElementById('cat-glyph-' + cat);
+      if (glyph) glyph.style.display = 'none';
+    });
+  }
+
+  /* Depoimentos */
+  const testimonialsSection = document.getElementById('testimonials-section');
+  if (testimonialsSection) testimonialsSection.style.display = d.depoimentosAtivo === false ? 'none' : '';
+  const deps = (d.depoimentos || []).filter(dep => dep.nome && dep.texto);
+  renderTestimonials(deps.length ? deps : DEFAULT_DEPS);
+
+  /* Instagram */
+  const igPosts = (d.instagram?.posts || []).filter(Boolean);
+  if (d.instagram?.ativo && igPosts.length) {
+    renderInstagramPosts(igPosts);
+  }
+
+  /* Faixa */
+  renderFaixa(d.faixa?.length ? d.faixa : DEFAULT_FAIXA);
+}
+
+function renderInstagramPosts(urls) {
+  const section = document.getElementById('instagram-section');
+  const wrap    = document.getElementById('instagram-embed-wrap');
+  if (!section || !wrap || !urls.length) return;
+  wrap.innerHTML = urls.map(url =>
+    `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="width:100%;margin:0;"></blockquote>`
+  ).join('');
+  section.style.display = 'block';
+  if (window.instgrm) {
+    window.instgrm.Embeds.process();
+  } else {
+    const script = document.createElement('script');
+    script.src = 'https://www.instagram.com/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+  }
+}
+
+/* ─── NEWSLETTER ─── */
+window.subscribeNewsletter = function () {
+  const email = document.getElementById('newsletter-email').value;
+  if (!email || !email.includes('@')) { showToast('Digite um e-mail válido'); return; }
+  showToast('Obrigada! Você está na nossa lista VIP ✦');
+  document.getElementById('newsletter-email').value = '';
+};
+
+/* ─── INIT ─── */
+async function init() {
+  try {
+    const [prodSnap, cfgSnap] = await Promise.all([
+      getDocs(collection(db, 'produtos')),
+      getDoc(doc(db, 'configuracoes', 'loja'))
+    ]);
+
+    const todos = prodSnap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(p => p.status === 'ativo')
+      .reverse();
+
+    applyConfig(cfgSnap.exists() ? cfgSnap.data() : {});
+
+    if (!todos.length) {
+      const msg = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-soft);"><p style="font-size:0.85rem;">Em breve novos produtos. Acompanhe nossas novidades!</p></div>`;
+      document.getElementById('products-grid').innerHTML = msg;
+      return;
+    }
+
+    /* Grid: 8 produtos mais recentes */
+    const grid = document.getElementById('products-grid');
+    if (grid) grid.innerHTML = todos.slice(0, 8).map(cardHTML).join('');
+
+  } catch (e) {
+    console.error('init error:', e);
+    renderFaixa(DEFAULT_FAIXA);
+    renderTestimonials(DEFAULT_DEPS);
+    const errMsg = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-soft);"><p style="font-size:0.78rem;">Não foi possível carregar os produtos.</p></div>`;
+    const grid = document.getElementById('products-grid');
+    if (grid) grid.innerHTML = errMsg;
+  } finally {
+    /* Conteúdo dinâmico (produtos, depoimentos etc.) é injetado depois do
+       observer de scroll já ter sido configurado em cart.js — reobserva os
+       elementos .reveal novos para que animem ao entrar na tela. */
+    if (window.observeReveals) window.observeReveals();
+  }
+}
+
+init();
+</script>
+
+<!-- ── Brinco 3D — libs (TESTE) ── -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script type="module" src="assets/js/brinco-3d.js"></script>
+</body>
+</html>

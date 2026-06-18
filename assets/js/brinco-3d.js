@@ -37,7 +37,13 @@ function boot() {
 }
 
 function detectCapability() {
-  const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // ?force3d=1 na URL ignora o prefers-reduced-motion do sistema — só pra
+  // permitir avaliar o efeito completo nesta página de teste; a versão que
+  // for pro site final deve continuar respeitando a preferência real do
+  // usuário (por isso esse override não decide nada sozinho, só aqui).
+  const forceMotion = new URLSearchParams(location.search).get('force3d') === '1';
+  if (forceMotion) section.classList.add('force-motion');
+  const reducedMotion = !forceMotion && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasWebGL = (() => {
     try {
       const c = document.createElement('canvas');

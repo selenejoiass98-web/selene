@@ -599,8 +599,8 @@
   .b3d-stage { width: min(86vw, 420px); height: min(86vw, 420px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .brinco3d-sticky { height: auto; }
-  .brinco3d-viewport { position: relative; }
+  .brinco3d-section:not(.force-motion) .brinco3d-sticky { height: auto; }
+  .brinco3d-section:not(.force-motion) .brinco3d-viewport { position: relative; }
 }
 </style>
 </head>

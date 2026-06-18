@@ -130,8 +130,8 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 <div class="main">
   <div class="topbar">
     <div class="topbar-title">Configurações da Loja</div>
-    <button class="btn-save" onclick="salvarTudo()" id="btn-salvar">
-      <span id="btn-txt">💾 Salvar tudo</span>
+    <button class="btn-save" onclick="salvarTudo()" id="btn-salvar" disabled>
+      <span id="btn-txt">Carregando dados...</span>
     </button>
   </div>
 
@@ -726,7 +726,17 @@ async function carregarConfigs() {
     setVal('stat2-num', d.stats?.s2num); setVal('stat2-label', d.stats?.s2label);
     setVal('stat3-num', d.stats?.s3num); setVal('stat3-label', d.stats?.s3label);
 
-  } catch(e) { console.error(e); }
+  } catch(e) {
+    console.error(e);
+    toast('Erro ao carregar configurações salvas — não clique em Salvar até recarregar a página', 'err');
+  } finally {
+    // Só libera o "Salvar tudo" depois que os dados salvos terminarem de
+    // carregar nos campos — clicar em Salvar antes disso gravaria tudo em
+    // branco por cima do que já existia (foi o que apagou hero/categorias/
+    // caixas em 18/06/2026).
+    const btn = document.getElementById('btn-salvar');
+    if (btn) { btn.disabled = false; document.getElementById('btn-txt').textContent = '💾 Salvar tudo'; }
+  }
 }
 
 // ── SALVAR ──

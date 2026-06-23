@@ -85,7 +85,7 @@
 }
 .gallery-badge.novo { background: var(--gold); color: var(--white); }
 .gallery-badge.esgotado { background: #1A1A1A; color: #F2F2F2; }
-.gallery-badge.ultimas { background: var(--gold); color: var(--white); }
+.gallery-badge.ultimas { background: var(--cream-dark); color: var(--gold-mid); border-left: 2px solid var(--gold); }
 .gallery-main--esgotado .gallery-main-img { filter: grayscale(1); }
 
 .gallery-zoom-hint {
@@ -1136,7 +1136,7 @@ function renderProduct() {
     badgeEl.classList.add('esgotado');
     badgeEl.style.display = 'block';
   } else if (estoque > 0 && estoque <= 3) {
-    badgeEl.textContent = 'Últimas Peças';
+    badgeEl.textContent = 'Últimas Unidades';
     badgeEl.classList.add('ultimas');
     badgeEl.style.display = 'block';
   } else if (badge) {
@@ -1316,9 +1316,9 @@ function renderRelated() {
       <div class="product-card-img">
         <div class="product-badges">
           ${esgotadoRel ? `<span class="product-badge esgotado">Esgotado</span>`
-            : (estoqueRel > 0 && estoqueRel <= 3) ? `<span class="product-badge ultimas">Últimas Peças</span>` : ''}
+            : (estoqueRel > 0 && estoqueRel <= 3) ? `<span class="product-badge ultimas">Últimas Unidades</span>` : ''}
           ${!esgotadoRel && p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
-          ${!esgotadoRel && descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
+          ${!esgotadoRel && descPct >= 5 ? `<span class="product-badge off">Economize ${descPct}% off</span>` : ''}
         </div>
         <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         <a href="produto.html?id=${p.id}">

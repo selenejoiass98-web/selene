@@ -1059,9 +1059,9 @@ function cardHTML(p) {
     <div class="product-card-img">
       <div class="product-badges">
         ${esgotado ? `<span class="product-badge esgotado">Esgotado</span>`
-          : (estoque > 0 && estoque <= 3) ? `<span class="product-badge ultimas">Últimas Peças</span>` : ''}
+          : (estoque > 0 && estoque <= 3) ? `<span class="product-badge ultimas">Últimas Unidades</span>` : ''}
         ${!esgotado && p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
-        ${!esgotado && descPct >= 5 ? `<span class="product-badge off">−${descPct}% OFF</span>` : ''}
+        ${!esgotado && descPct >= 5 ? `<span class="product-badge off">Economize ${descPct}% off</span>` : ''}
       </div>
       <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
       <a href="produto.html?id=${p.id}">

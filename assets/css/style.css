@@ -626,16 +626,16 @@ ul { list-style: none; }
 }
 .product-badge.novo { color: var(--gold); }
 .product-badge.off {
-  background: #8B2233;
-  color: #FFE2E6;
-  animation: badgePulse 2.2s ease-in-out infinite;
-}
-@keyframes badgePulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(139,34,51,0.45); }
-  50% { box-shadow: 0 0 0 6px rgba(139,34,51,0); }
+  background: var(--cream-dark);
+  color: var(--gold-mid);
+  border-left: 2px solid var(--gold-light);
 }
 .product-badge.esgotado { background: #1A1A1A; color: #F2F2F2; }
-.product-badge.ultimas { background: var(--gold); color: var(--white); }
+.product-badge.ultimas {
+  background: var(--cream-dark);
+  color: var(--gold-mid);
+  border-left: 2px solid var(--gold);
+}
 
 /* Peça esgotada (sem faixa) — fica em preto e branco */
 .product-card--esgotado .product-card-img img,

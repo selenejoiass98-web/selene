@@ -897,7 +897,7 @@ function montarEmailStatus(status, ctx) {
       subject: `📦 Seu pedido ${numero} foi enviado!`,
       html: emailWrapper('Seu pedido foi enviado! 📦', `
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Olá, <strong>${primeiroNome}</strong>!</p>
-        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Sua joia já está a caminho! Preparamos tudo com muito cuidado e o pedido <strong>${numero}</strong> foi despachado hoje.</p>
+        <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Sua semijoia já está a caminho! Preparamos tudo com muito cuidado e o pedido <strong>${numero}</strong> foi despachado hoje.</p>
         <div style="background:#FFF8E7;border:2px solid #C4A47A;padding:20px 24px;margin:8px 0 20px;text-align:center;border-radius:4px;">
           <p style="margin:0 0 4px;font-size:11px;color:#7A5500;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Código de rastreio</p>
           <p style="margin:0;font-family:Georgia,serif;font-size:22px;color:#3D2B1A;letter-spacing:1px;">${codigo}</p>
@@ -912,7 +912,7 @@ function montarEmailStatus(status, ctx) {
   if (status === 'entregue') {
     return {
       subject: `✦ Seu pedido ${numero} chegou!`,
-      html: emailWrapper('Esperamos que você ame sua nova joia ✦', `
+      html: emailWrapper('Esperamos que você ame sua nova semijoia ✦', `
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Olá, <strong>${primeiroNome}</strong>!</p>
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Nosso sistema indica que seu pedido <strong>${numero}</strong> foi entregue — que alegria! Esperamos que cada detalhe da sua nova peça tenha encantado você.</p>
         <div style="background:#F0F9F4;border-left:3px solid #2D6A4F;padding:16px 20px;margin-bottom:20px;">

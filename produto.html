@@ -689,7 +689,7 @@
       <div class="product-info">
         <div class="product-info-tag" id="info-cat">Colares</div>
         <h1 class="product-info-name" id="info-name">Colar Lua Dourada</h1>
-        <p class="product-info-subtitle" id="info-subtitle">Disco em ouro 18k maciço com corrente veneziana</p>
+        <p class="product-info-subtitle" id="info-subtitle">Disco banhado a ouro 18k com corrente veneziana</p>
 
         <div class="product-rating">
           <div class="rating-stars">★ ★ ★ ★ ★</div>
@@ -795,9 +795,9 @@
       <!-- DESCRIÇÃO -->
       <div class="tab-content active" id="tab-descricao">
         <div class="tab-desc">
-          <p>O <strong>Colar Lua Dourada</strong> é uma das peças mais especiais da Elenice Collection. O disco em ouro 18k maciço captura a luz de um jeito único — delicado durante o dia, marcante à noite.</p>
+          <p>O <strong>Colar Lua Dourada</strong> é uma das peças mais especiais da Elenice Collection. O disco banhado a ouro 18k captura a luz de um jeito único — delicado durante o dia, marcante à noite.</p>
           <p>Inspirado na serenidade e na força da lua cheia, este colar foi criado para mulheres que carregam sua elegância com leveza. O acabamento polido reflete cada detalhe com precisão, enquanto a corrente veneziana fina garante conforto durante o uso prolongado.</p>
-          <p>Cada peça é produzida artesanalmente e acompanha certificado de autenticidade do ouro e embalagem exclusiva Elenice Collection — perfeita como presente.</p>
+          <p>Cada peça é produzida artesanalmente e acompanha certificado de qualidade do banho de ouro e embalagem exclusiva Elenice Collection — perfeita como presente.</p>
         </div>
       </div>
 
@@ -843,7 +843,7 @@
       <div class="tab-content" id="tab-cuidados">
         <div class="care-list">
           <div class="care-item"><span class="care-ico">✓</span> Guarde separado em caixinha ou saquinho para evitar arranhões.</div>
-          <div class="care-item"><span class="care-ico">✓</span> Evite contato com perfumes, cremes e produtos químicos — aplique-os antes de colocar a joia.</div>
+          <div class="care-item"><span class="care-ico">✓</span> Evite contato com perfumes, cremes e produtos químicos — aplique-os antes de colocar a semijoia.</div>
           <div class="care-item"><span class="care-ico">✓</span> Retire antes de praticar esportes, dormir ou tomar banho prolongado.</div>
           <div class="care-item"><span class="care-ico">✓</span> Para limpar, use um pano macio e seco. Se necessário, água morna e sabão neutro.</div>
           <div class="care-item"><span class="care-ico">✓</span> Evite exposição prolongada ao sol e piscina com cloro.</div>
@@ -937,7 +937,7 @@
       <div class="footer-brand">
         <div class="logo">Elenice Collection</div>
         <div class="tagline">Elegância que transforma</div>
-        <p>Joias em ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+        <p>Semijoias banhadas a ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
       </div>
       <div class="footer-col">
         <h4>Coleções</h4>
@@ -1192,7 +1192,7 @@ function renderProduct() {
   document.querySelector('#tab-descricao .tab-desc').innerHTML =
     descricao
       ? descricao.split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('')
-      : `<p>${descricaoCurta || 'Joia em ouro 18k de alta qualidade.'}</p>`;
+      : `<p>${descricaoCurta || 'Semijoia banhada a ouro 18k de alta qualidade.'}</p>`;
 
   // Especificações
   document.querySelector('#tab-especificacoes').innerHTML = `
@@ -1276,7 +1276,7 @@ window.toggleWishlist = function(btn) {
 // ── SHARE ──
 window.shareProduct = function() {
   if (navigator.share) {
-    navigator.share({ title: currentProduct?.nome, text: 'Olha essa joia linda da Elenice Collection!', url: window.location.href });
+    navigator.share({ title: currentProduct?.nome, text: 'Olha essa semijoia linda da Elenice Collection!', url: window.location.href });
   } else {
     navigator.clipboard.writeText(window.location.href);
     showToast('Link copiado!');
@@ -1306,7 +1306,7 @@ function renderRelated() {
     const precoFmt  = preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const origFmt   = precoOrig ? precoOrig.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
     const descPct   = precoOrig ? Math.round((1 - preco / precoOrig) * 100) : 0;
-    const cat       = p.categoria || 'Joia';
+    const cat       = p.categoria || 'Semijoia';
     const mat       = p.material  || 'Ouro 18k';
     const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${mat.replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
     const estoqueRel  = Number(p.estoque) || 0;

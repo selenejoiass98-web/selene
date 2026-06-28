@@ -450,7 +450,7 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, doc, addDoc, getDoc, updateDoc, serverTimestamp }
+import { getFirestore, collection, doc, addDoc, getDoc, getDocs, updateDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 // Cloudinary config
 const CLOUDINARY_CLOUD = 'ddmxyguk0';
@@ -478,6 +478,7 @@ onAuthStateChanged(auth, user => {
 // ── STATE ──
 let uploadedPhotos = []; // { url, path }
 let editingId = null;
+let existingSlug = '';
 
 // ── EDIT MODE: load existing product ──
 const params = new URLSearchParams(window.location.search);
@@ -494,6 +495,7 @@ async function loadProduct(id) {
     const snap = await getDoc(doc(db,'produtos',id));
     if (!snap.exists()) return;
     const p = snap.data();
+    existingSlug = p.slug || '';
     document.getElementById('nome').value = p.nome||'';
     document.getElementById('descricao-curta').value = p.descricaoCurta||'';
     document.getElementById('descricao').value = p.descricao||'';
@@ -610,6 +612,31 @@ uploadArea.addEventListener('drop', e => {
   handleFiles(e.dataTransfer.files);
 });
 
+// ── SLUG ──
+function slugify(text) {
+  return (text || '').toString()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+async function gerarSlugUnico(nome, excludeId) {
+  const base = slugify(nome);
+  if (base.length === 0) return base;
+  const snap = await getDocs(collection(db, 'produtos'));
+  const existentes = new Set(
+    snap.docs.filter(d => d.id !== excludeId).map(d => d.data().slug).filter(Boolean)
+  );
+  if (!existentes.has(base)) return base;
+  let i = 2;
+  while (existentes.has(base + '-' + i)) i++;
+  return base + '-' + i;
+}
+
 // ── VALIDATE ──
 function validate() {
   let ok = true;
@@ -647,8 +674,12 @@ window.salvarProduto = async function(status) {
   const tamanhos = document.getElementById('tamanhos').value
     .split(',').map(t => t.trim()).filter(Boolean);
 
+  const nome = document.getElementById('nome').value.trim();
+  const slug = existingSlug || await gerarSlugUnico(nome, editingId);
+
   const data = {
-    nome: document.getElementById('nome').value.trim(),
+    nome,
+    slug,
     descricaoCurta: document.getElementById('descricao-curta').value.trim(),
     descricao: document.getElementById('descricao').value.trim(),
     categoria: document.getElementById('categoria').value,

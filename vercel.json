@@ -6,7 +6,9 @@
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/catalogo", "destination": "/catalogo.html" },
+    { "source": "/colecao/:cat", "destination": "/catalogo.html?cat=:cat" },
     { "source": "/produto", "destination": "/produto.html" },
+    { "source": "/produto/:slug", "destination": "/produto.html?slug=:slug" },
     { "source": "/checkout", "destination": "/checkout.html" },
     { "source": "/rastreio", "destination": "/rastreio.html" },
     { "source": "/sobre", "destination": "/sobre.html" },

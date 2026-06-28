@@ -3,7 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Produto — Elenice Collection</title>
+<meta id="meta-description" name="description" content="Semijoia banhada a ouro 18k da Elenice Collection.">
+<title id="page-title">Produto — Elenice Collection</title>
+<link rel="canonical" id="canonical-link" href="https://www.elenicecollection.com.br/catalogo">
+
+<!-- Open Graph -->
+<meta id="og-title" property="og:title" content="Produto — Elenice Collection">
+<meta id="og-description" property="og:description" content="Semijoia banhada a ouro 18k da Elenice Collection.">
+<meta id="og-image" property="og:image" content="">
+<meta id="og-url" property="og:url" content="">
+<meta property="og:type" content="product">
+<meta property="og:site_name" content="Elenice Collection">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta id="tw-title" name="twitter:title" content="Produto — Elenice Collection">
+<meta id="tw-description" name="twitter:description" content="Semijoia banhada a ouro 18k da Elenice Collection.">
+<meta id="tw-image" name="twitter:image" content="">
+
 <link rel="stylesheet" href="assets/css/style.css?v=6">
 <style>
 /* ── PRODUCT PAGE ── */
@@ -634,10 +651,10 @@
     <a href="index.html" class="nav-logo">Elenice Collection</a>
     <ul class="nav-links">
       <li><a href="catalogo.html">Coleções</a></li>
-      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
-      <li><a href="catalogo.html?cat=colares">Colares</a></li>
-      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
-      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="/colecao/aneis">Anéis</a></li>
+      <li><a href="/colecao/colares">Colares</a></li>
+      <li><a href="/colecao/pulseiras">Pulseiras</a></li>
+      <li><a href="/colecao/brincos">Brincos</a></li>
     </ul>
     <div class="nav-actions">
       <button class="nav-cart" onclick="openCart()">
@@ -941,10 +958,10 @@
       <div class="footer-col">
         <h4>Coleções</h4>
         <ul>
-          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
-          <li><a href="catalogo.html?cat=colares">Colares</a></li>
-          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
-          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+          <li><a href="/colecao/aneis">Anéis</a></li>
+          <li><a href="/colecao/colares">Colares</a></li>
+          <li><a href="/colecao/pulseiras">Pulseiras</a></li>
+          <li><a href="/colecao/brincos">Brincos</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1035,7 +1052,7 @@
 </script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc, collection, getDocs }
+import { getFirestore, doc, getDoc, collection, getDocs, query, where }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1061,28 +1078,67 @@ let wishlisted = false;
 // ── LOAD PRODUTO DO FIREBASE ──
 async function loadProduct() {
   const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug');
   const id = params.get('id');
 
-  if (!id) { window.location.href = 'catalogo.html'; return; }
+  if (!slug && !id) { window.location.href = 'catalogo.html'; return; }
 
   try {
-    // Carrega produto principal
-    const snap = await getDoc(doc(db, 'produtos', id));
-    if (!snap.exists()) { window.location.href = 'catalogo.html'; return; }
+    let found = null;
 
-    currentProduct = { id: snap.id, ...snap.data() };
+    if (slug) {
+      const slugSnap = await getDocs(query(collection(db, 'produtos'), where('slug', '==', slug)));
+      if (!slugSnap.empty) found = { id: slugSnap.docs[0].id, ...slugSnap.docs[0].data() };
+    }
+    if (!found && id) {
+      const snap = await getDoc(doc(db, 'produtos', id));
+      if (snap.exists()) found = { id: snap.id, ...snap.data() };
+    }
+    if (!found) { window.location.href = 'catalogo.html'; return; }
+
+    currentProduct = found;
 
     // Carrega todos para relacionados
     const allSnap = await getDocs(collection(db, 'produtos'));
     allProducts = allSnap.docs
       .map(d => ({ id: d.id, ...d.data() }))
-      .filter(p => p.status === 'ativo' && p.id !== id);
+      .filter(p => p.status === 'ativo' && p.id !== currentProduct.id);
 
     renderProduct();
   } catch(e) {
     console.error(e);
     showToast('Erro ao carregar produto.');
   }
+}
+
+// ── SEO: meta tags + JSON-LD ──
+function produtoUrl(p) {
+  return p.slug
+    ? `https://www.elenicecollection.com.br/produto/${p.slug}`
+    : `https://www.elenicecollection.com.br/produto.html?id=${p.id}`;
+}
+
+function injectProductJsonLd(p, url) {
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": p.nome || '',
+    "image": p.fotos || [],
+    "description": p.descricaoCurta || p.descricao || '',
+    "sku": p.sku || p.id,
+    "brand": { "@type": "Brand", "name": "Elenice Collection" },
+    "offers": {
+      "@type": "Offer",
+      "url": url,
+      "priceCurrency": "BRL",
+      "price": Number(p.preco || 0).toFixed(2),
+      "availability": p.esgotado ? "https://schema.org/OutOfStock" : "https://schema.org/InStock"
+    }
+  };
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(ld);
+  document.head.appendChild(script);
 }
 
 // ── RENDER PRODUTO ──
@@ -1100,7 +1156,20 @@ function renderProduct() {
   const badge = p.badge || null;
 
   // Meta
-  document.title = `${nome} — Elenice Collection`;
+  const seoTitle = `${nome} — Elenice Collection`;
+  const seoDesc  = (descricaoCurta || descricao || `Semijoia ${nome} banhada a ouro 18k da Elenice Collection.`).slice(0, 155);
+  const prodUrl  = produtoUrl(p);
+  document.getElementById('page-title').textContent = seoTitle;
+  document.getElementById('meta-description').setAttribute('content', seoDesc);
+  document.getElementById('canonical-link').setAttribute('href', prodUrl);
+  document.getElementById('og-title').setAttribute('content', seoTitle);
+  document.getElementById('og-description').setAttribute('content', seoDesc);
+  document.getElementById('og-image').setAttribute('content', fotos[0] || '');
+  document.getElementById('og-url').setAttribute('content', prodUrl);
+  document.getElementById('tw-title').setAttribute('content', seoTitle);
+  document.getElementById('tw-description').setAttribute('content', seoDesc);
+  document.getElementById('tw-image').setAttribute('content', fotos[0] || '');
+  injectProductJsonLd(p, prodUrl);
   document.getElementById('breadcrumb-cat').textContent = cat;
   document.getElementById('breadcrumb-name').textContent = nome;
   document.getElementById('info-cat').innerHTML =
@@ -1311,6 +1380,7 @@ function renderRelated() {
     const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${mat.replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
     const estoqueRel  = Number(p.estoque) || 0;
     const esgotadoRel = !!p.esgotado;
+    const hrefRel     = produtoUrl(p).replace('https://www.elenicecollection.com.br', '');
     return `
     <div class="product-card${esgotadoRel ? ' product-card--esgotado' : ''}">
       <div class="product-card-img">
@@ -1321,7 +1391,7 @@ function renderRelated() {
           ${!esgotadoRel && descPct >= 5 ? `<span class="product-badge off">Economize ${descPct}% off</span>` : ''}
         </div>
         <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
-        <a href="produto.html?id=${p.id}">
+        <a href="${hrefRel}">
           ${p.fotos?.[0]
             ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy">`
             : `<div class="product-card-placeholder">◈</div>`}
@@ -1329,7 +1399,7 @@ function renderRelated() {
       </div>
       <div class="product-card-info">
         <div class="product-cat">${cat} · ${mat}</div>
-        <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
+        <a href="${hrefRel}"><div class="product-name">${p.nome}</div></a>
         <div class="product-price-block">
           ${precoOrig ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
           <span class="product-price-main">R$ ${precoFmt}</span>
@@ -1339,7 +1409,7 @@ function renderRelated() {
           ${esgotadoRel
             ? `<button class="product-add-btn" disabled>Indisponível</button>`
             : `<button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">Adicionar ao Carrinho</button>`}
-          <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver Detalhes</a>
+          <a href="${hrefRel}" class="product-btn-ver">Ver Detalhes</a>
         </div>
       </div>
     </div>`;

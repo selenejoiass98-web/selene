@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Elenice Collection — Semijoias banhadas a ouro 18k criadas para mulheres que valorizam elegância, qualidade e significado. Balneário Camboriú, SC.">
 <title>Elenice Collection — Elegância que transforma</title>
+<link rel="canonical" href="https://www.elenicecollection.com.br/" />
 <link rel="stylesheet" href="assets/css/style.css?v=6">
 <style>
 /* ── PAGE-SPECIFIC: INDEX ── */
@@ -552,10 +553,10 @@
     <a href="index.html" class="nav-logo">Elenice Collection</a>
     <ul class="nav-links">
       <li><a href="catalogo.html">Coleções</a></li>
-      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
-      <li><a href="catalogo.html?cat=colares">Colares</a></li>
-      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
-      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
+      <li><a href="/colecao/aneis">Anéis</a></li>
+      <li><a href="/colecao/colares">Colares</a></li>
+      <li><a href="/colecao/pulseiras">Pulseiras</a></li>
+      <li><a href="/colecao/brincos">Brincos</a></li>
     </ul>
     <div class="nav-actions">
       <button class="nav-cart" onclick="openCart()">
@@ -743,35 +744,35 @@
       <h2 class="section-title">Nossas <em>Categorias</em></h2>
     </div>
     <div class="cats-grid reveal">
-      <a href="catalogo.html?cat=aneis" class="cat-card">
+      <a href="/colecao/aneis" class="cat-card">
         <div class="cat-img">
           <img id="cat-img-aneis" alt="Anéis" style="display:none;">
           <span class="cat-img-glyph" id="cat-glyph-aneis">◎</span>
         </div>
         <span class="cat-lbl">Anéis</span>
       </a>
-      <a href="catalogo.html?cat=colares" class="cat-card">
+      <a href="/colecao/colares" class="cat-card">
         <div class="cat-img">
           <img id="cat-img-colares" alt="Colares" style="display:none;">
           <span class="cat-img-glyph" id="cat-glyph-colares">∿</span>
         </div>
         <span class="cat-lbl">Colares</span>
       </a>
-      <a href="catalogo.html?cat=pulseiras" class="cat-card">
+      <a href="/colecao/pulseiras" class="cat-card">
         <div class="cat-img">
           <img id="cat-img-pulseiras" alt="Pulseiras" style="display:none;">
           <span class="cat-img-glyph" id="cat-glyph-pulseiras">⊂</span>
         </div>
         <span class="cat-lbl">Pulseiras</span>
       </a>
-      <a href="catalogo.html?cat=brincos" class="cat-card">
+      <a href="/colecao/brincos" class="cat-card">
         <div class="cat-img">
           <img id="cat-img-brincos" alt="Brincos" style="display:none;">
           <span class="cat-img-glyph" id="cat-glyph-brincos">⊕</span>
         </div>
         <span class="cat-lbl">Brincos</span>
       </a>
-      <a href="catalogo.html?cat=conjuntos" class="cat-card">
+      <a href="/colecao/conjuntos" class="cat-card">
         <div class="cat-img">
           <img id="cat-img-conjuntos" alt="Conjuntos" style="display:none;">
           <span class="cat-img-glyph" id="cat-glyph-conjuntos">✦</span>
@@ -913,11 +914,11 @@
       <div class="footer-col">
         <h4>Coleções</h4>
         <ul>
-          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
-          <li><a href="catalogo.html?cat=colares">Colares</a></li>
-          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
-          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
-          <li><a href="catalogo.html?cat=conjuntos">Conjuntos</a></li>
+          <li><a href="/colecao/aneis">Anéis</a></li>
+          <li><a href="/colecao/colares">Colares</a></li>
+          <li><a href="/colecao/pulseiras">Pulseiras</a></li>
+          <li><a href="/colecao/brincos">Brincos</a></li>
+          <li><a href="/colecao/conjuntos">Conjuntos</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1054,6 +1055,7 @@ function cardHTML(p) {
   const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${mat.replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
   const estoque   = Number(p.estoque) || 0;
   const esgotado  = !!p.esgotado;
+  const href      = p.slug ? `/produto/${p.slug}` : `produto.html?id=${p.id}`;
   return `
   <div class="product-card reveal${esgotado ? ' product-card--esgotado' : ''}">
     <div class="product-card-img">
@@ -1064,7 +1066,7 @@ function cardHTML(p) {
         ${!esgotado && descPct >= 5 ? `<span class="product-badge off">Economize ${descPct}% off</span>` : ''}
       </div>
       <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
-      <a href="produto.html?id=${p.id}">
+      <a href="${href}">
         ${p.fotos?.[0]
           ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy">`
           : `<div class="product-card-placeholder">◈</div>`}
@@ -1072,7 +1074,7 @@ function cardHTML(p) {
     </div>
     <div class="product-card-info">
       <div class="product-cat">${cat} · ${mat}</div>
-      <a href="produto.html?id=${p.id}"><div class="product-name">${p.nome}</div></a>
+      <a href="${href}"><div class="product-name">${p.nome}</div></a>
       <div class="product-price-block">
         ${precoOrig ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
         <span class="product-price-main">R$ ${precoFmt}</span>
@@ -1082,7 +1084,7 @@ function cardHTML(p) {
         ${esgotado
           ? `<button class="product-add-btn" disabled>Indisponível</button>`
           : `<button class="product-add-btn" onclick="event.stopPropagation();addToCart(${cp})">Adicionar ao Carrinho</button>`}
-        <a href="produto.html?id=${p.id}" class="product-btn-ver">Ver Detalhes</a>
+        <a href="${href}" class="product-btn-ver">Ver Detalhes</a>
       </div>
     </div>
   </div>`;

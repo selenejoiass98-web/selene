@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     produtos
       .filter(p => p.status === 'ativo')
       .forEach(p => urls.push({
-        loc: `${SITE_URL}/produto.html?id=${p.id}`,
+        loc: p.slug ? `${SITE_URL}/produto/${p.slug}` : `${SITE_URL}/produto.html?id=${p.id}`,
         lastmod: p.atualizadoEm || p.criadoEm,
         priority: '0.7',
       }));

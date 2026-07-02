@@ -54,6 +54,7 @@
   letter-spacing: -0.01em;
   margin-bottom: 1.8rem;
   animation: fadeUp 0.8s 0.25s ease both;
+  transition: opacity 0.4s ease;
 }
 .hero-title em { font-style: italic; color: var(--gold); }
 .hero-subtitle {
@@ -572,8 +573,8 @@
   <div class="hero-content">
     <div class="hero-tag"><span id="hero-tag-txt">Nova Coleção · 2026</span></div>
     <h1 class="hero-title">
-      <span id="hero-t1">Semijoias que<br>contam sua</span><br>
-      <em id="hero-t2">história</em>
+      <span id="hero-t1">Para</span><br>
+      <em id="hero-t2">mulheres únicas</em>
     </h1>
     <p class="hero-subtitle" id="hero-sub">
       Peças criadas com ouro 18k e pedras selecionadas,
@@ -632,8 +633,8 @@
   <div class="hp-content">
     <div class="hp-tag"><span id="hp-tag-txt">Nova Coleção · 2026</span></div>
     <h1 class="hp-title">
-      <span id="hp-t1">Semijoias que<br>contam sua</span><br>
-      <em id="hp-t2">história</em>
+      <span id="hp-t1">Para</span><br>
+      <em id="hp-t2">mulheres únicas</em>
     </h1>
     <p class="hp-sub" id="hp-sub">
       Peças criadas com ouro 18k e pedras selecionadas,
@@ -741,7 +742,7 @@
   <div class="container">
     <div class="cats-header reveal">
       <div class="section-tag">Explorar</div>
-      <h2 class="section-title">Nossas <em>Categorias</em></h2>
+      <h2 class="section-title">Explore nossas <em>coleções</em></h2>
     </div>
     <div class="cats-grid reveal">
       <a href="/colecao/aneis" class="cat-card">
@@ -790,7 +791,7 @@
     <div class="collections-header reveal">
       <div>
         <div class="section-tag">Coleção completa</div>
-        <h2 class="section-title">Peças em <em>Destaque</em></h2>
+        <h2 class="section-title">Seleção <em>exclusiva</em></h2>
       </div>
       <a href="catalogo.html" class="btn btn-ghost">Ver todos os produtos</a>
     </div>
@@ -1181,6 +1182,37 @@ function initHeroB(photos) {
   hfStartTimer();
 }
 
+/* ─── HERO A — FRASE ALTERNADA (título grande trocando a cada 4s) ─── */
+let heroTituloTimer = null;
+
+function initHeroTituloRotativo(d) {
+  clearInterval(heroTituloTimer);
+  if (!d.hero?.tituloRotativo) return;
+
+  const t1 = document.getElementById('hero-t1');
+  const t2 = document.getElementById('hero-t2');
+  const titleEl = document.querySelector('#hero-editorial .hero-title');
+  if (!t1 || !t2 || !titleEl) return;
+
+  const frases = [
+    { l1: t1.innerHTML, l2: t2.innerHTML },
+    {
+      l1: (d.hero.titulo1b || 'Elegância | Exclusividade').replace(/\n/g, '<br>'),
+      l2: d.hero.titulo2b || 'Atemporalidade',
+    },
+  ];
+  let idx = 0;
+  heroTituloTimer = setInterval(() => {
+    idx = (idx + 1) % frases.length;
+    titleEl.style.opacity = '0';
+    setTimeout(() => {
+      t1.innerHTML = frases[idx].l1;
+      t2.innerHTML = frases[idx].l2;
+      titleEl.style.opacity = '1';
+    }, 400);
+  }, 4000);
+}
+
 function applyConfig(d) {
   const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
 
@@ -1199,6 +1231,7 @@ function applyConfig(d) {
   if (d.hero?.titulo2)   set('hero-t2', d.hero.titulo2);
   if (d.hero?.subtitulo) set('hero-sub', d.hero.subtitulo);
   if (d.hero?.btn)       set('hero-btn-el', d.hero.btn);
+  initHeroTituloRotativo(d);
 
   /* Hero A — imagem */
   if (d.hero?.img) {

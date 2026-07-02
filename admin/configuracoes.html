@@ -148,11 +148,27 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <div class="form-row">
           <div class="form-group">
             <label>Título linha 1</label>
-            <input type="text" id="hero-titulo1" placeholder="Semijoias que contam sua" />
+            <input type="text" id="hero-titulo1" placeholder="Para" />
           </div>
           <div class="form-group">
             <label>Título linha 2 (itálico dourado)</label>
-            <input type="text" id="hero-titulo2" placeholder="história" />
+            <input type="text" id="hero-titulo2" placeholder="mulheres únicas" />
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:0.5rem;">
+          <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:400;">
+            <input type="checkbox" id="hero-titulo-rotativo" />
+            <span>Alternar com uma segunda frase (troca a cada ~4 segundos)</span>
+          </label>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Segunda frase — linha 1</label>
+            <input type="text" id="hero-titulo1b" placeholder="Elegância | Exclusividade" />
+          </div>
+          <div class="form-group">
+            <label>Segunda frase — linha 2 (itálico dourado)</label>
+            <input type="text" id="hero-titulo2b" placeholder="Atemporalidade" />
           </div>
         </div>
         <div class="form-group">
@@ -659,6 +675,10 @@ async function carregarConfigs() {
     // Hero
     setVal('hero-titulo1', d.hero?.titulo1);
     setVal('hero-titulo2', d.hero?.titulo2);
+    setVal('hero-titulo1b', d.hero?.titulo1b);
+    setVal('hero-titulo2b', d.hero?.titulo2b);
+    const heroRot = document.getElementById('hero-titulo-rotativo');
+    if (heroRot) heroRot.checked = !!d.hero?.tituloRotativo;
     setVal('hero-subtitulo', d.hero?.subtitulo);
     setVal('hero-btn', d.hero?.btn);
     setVal('hero-label', d.hero?.label);
@@ -754,6 +774,9 @@ window.salvarTudo = async function() {
       hero: {
         titulo1:   getVal('hero-titulo1'),
         titulo2:   getVal('hero-titulo2'),
+        titulo1b:  getVal('hero-titulo1b'),
+        titulo2b:  getVal('hero-titulo2b'),
+        tituloRotativo: document.getElementById('hero-titulo-rotativo')?.checked || false,
         subtitulo: getVal('hero-subtitulo'),
         btn:       getVal('hero-btn'),
         label:     getVal('hero-label'),

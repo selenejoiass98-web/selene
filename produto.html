@@ -1205,7 +1205,7 @@ function renderProduct() {
     badgeEl.classList.add('esgotado');
     badgeEl.style.display = 'block';
   } else if (estoque > 0 && estoque <= 3) {
-    badgeEl.textContent = 'Últimas Unidades';
+    badgeEl.textContent = 'Coleção Limitada';
     badgeEl.classList.add('ultimas');
     badgeEl.style.display = 'block';
   } else if (badge) {
@@ -1386,7 +1386,7 @@ function renderRelated() {
       <div class="product-card-img">
         <div class="product-badges">
           ${esgotadoRel ? `<span class="product-badge esgotado">Esgotado</span>`
-            : (estoqueRel > 0 && estoqueRel <= 3) ? `<span class="product-badge ultimas">Últimas Unidades</span>` : ''}
+            : (estoqueRel > 0 && estoqueRel <= 3) ? `<span class="product-badge ultimas">Coleção Limitada</span>` : ''}
           ${!esgotadoRel && p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
           ${!esgotadoRel && descPct >= 5 ? `<span class="product-badge off">Economize ${descPct}% off</span>` : ''}
         </div>

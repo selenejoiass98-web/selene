@@ -577,7 +577,7 @@
       <em id="hero-t2">mulheres únicas</em>
     </h1>
     <p class="hero-subtitle" id="hero-sub">
-      Peças criadas com ouro 18k e pedras selecionadas,
+      Peças exclusivas, feitas de forma unitária com pedras selecionadas,
       inspiradas na elegância e sofisticação feminina.
       Cada semijoia é única — como você.
     </p>
@@ -637,7 +637,7 @@
       <em id="hp-t2">mulheres únicas</em>
     </h1>
     <p class="hp-sub" id="hp-sub">
-      Peças criadas com ouro 18k e pedras selecionadas,
+      Peças exclusivas, feitas de forma unitária com pedras selecionadas,
       inspiradas na elegância e sofisticação feminina.
       Cada semijoia é única — como você.
     </p>
@@ -651,8 +651,8 @@
           <svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M28 8 L36 20 L50 22 L39 33 L42 47 L28 40 L14 47 L17 33 L6 22 L20 20 Z"/></svg>
         </div>
         <div>
-          <div class="hp-trust-title">Banho de Ouro 18k</div>
-          <div class="hp-trust-desc">Acabamento sofisticado e alta durabilidade</div>
+          <div class="hp-trust-title">Peças Exclusivas</div>
+          <div class="hp-trust-desc">Acabamento refinado, brilho duradouro e alta resistência</div>
         </div>
       </div>
       <div class="hp-trust-item">
@@ -670,7 +670,7 @@
         </div>
         <div>
           <div class="hp-trust-title">Garantia de 1 Ano</div>
-          <div class="hp-trust-desc">Em todas as peças da coleção</div>
+          <div class="hp-trust-desc">Contra defeitos de fabricação e oxidação</div>
         </div>
       </div>
     </div>
@@ -709,8 +709,8 @@
     <div class="trust-item">
       <span class="trust-icon">✦</span>
       <div>
-        <div class="trust-title">Banho de Ouro 18k</div>
-        <div class="trust-desc">Acabamento sofisticado e alta durabilidade</div>
+        <div class="trust-title">Peças Exclusivas</div>
+        <div class="trust-desc">Acabamento refinado, brilho duradouro e alta resistência</div>
       </div>
     </div>
     <div class="trust-item">
@@ -724,14 +724,14 @@
       <span class="trust-icon">◈</span>
       <div>
         <div class="trust-title">Garantia de 1 Ano</div>
-        <div class="trust-desc">Em todas as peças da coleção</div>
+        <div class="trust-desc">Contra defeitos de fabricação e oxidação</div>
       </div>
     </div>
     <div class="trust-item">
       <span class="trust-icon">💳</span>
       <div>
-        <div class="trust-title">Até 6× Sem Juros</div>
-        <div class="trust-desc">5% de desconto no Pix</div>
+        <div class="trust-title">Parcelamento</div>
+        <div class="trust-desc">Até 6x sem juros ou 5% de desconto no Pix</div>
       </div>
     </div>
   </div>
@@ -829,8 +829,8 @@
             <circle cx="28" cy="28" r="6"/>
           </svg>
         </div>
-        <div class="benefit-title">Banho de Ouro 18k</div>
-        <div class="benefit-desc">Acabamento sofisticado e alta durabilidade em todas as peças da coleção</div>
+        <div class="benefit-title">Peças Exclusivas</div>
+        <div class="benefit-desc">Acabamento refinado, brilho duradouro e alta resistência em cada peça</div>
       </div>
 
       <div class="benefit-item reveal">
@@ -844,7 +844,7 @@
           </svg>
         </div>
         <div class="benefit-title">Envio para Todo Brasil</div>
-        <div class="benefit-desc">Entrega segura com rastreamento, rápida e protegida até a sua porta</div>
+        <div class="benefit-desc">Entrega segura com rastreamento</div>
       </div>
 
       <div class="benefit-item reveal">
@@ -854,8 +854,8 @@
             <path d="M22 28 L26 32 L34 23"/>
           </svg>
         </div>
-        <div class="benefit-title">1 Ano de Garantia</div>
-        <div class="benefit-desc">Todas as peças têm garantia de 1 ano contra defeitos de fabricação e oxidação</div>
+        <div class="benefit-title">Garantia de 1 Ano</div>
+        <div class="benefit-desc">Contra defeitos de fabricação e oxidação</div>
       </div>
 
       <div class="benefit-item reveal">
@@ -868,8 +868,8 @@
             <circle cx="42" cy="34" r="3"/>
           </svg>
         </div>
-        <div class="benefit-title">Até 6x Sem Juros</div>
-        <div class="benefit-desc">Parcele no cartão sem juros ou pague no Pix com 5% de desconto</div>
+        <div class="benefit-title">Parcelamento</div>
+        <div class="benefit-desc">Até 6x sem juros ou 5% de desconto no Pix</div>
       </div>
 
     </div>
@@ -1062,7 +1062,7 @@ function cardHTML(p) {
     <div class="product-card-img">
       <div class="product-badges">
         ${esgotado ? `<span class="product-badge esgotado">Esgotado</span>`
-          : (estoque > 0 && estoque <= 3) ? `<span class="product-badge ultimas">Últimas Unidades</span>` : ''}
+          : (estoque > 0 && estoque <= 3) ? `<span class="product-badge ultimas">Coleção Limitada</span>` : ''}
         ${!esgotado && p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
         ${!esgotado && descPct >= 5 ? `<span class="product-badge off">Economize ${descPct}% off</span>` : ''}
       </div>
@@ -1092,7 +1092,7 @@ function cardHTML(p) {
 }
 
 /* ─── APPLY ADMIN CONFIG ─── */
-const DEFAULT_FAIXA = ['Banho de Ouro 18k', 'Envio para Todo Brasil', 'Garantia de 1 Ano', 'Até 6x Sem Juros', 'Pix com 5% de Desconto'];
+const DEFAULT_FAIXA = ['Peças Exclusivas', 'Envio para Todo Brasil', 'Garantia de 1 Ano', 'Até 6x Sem Juros ou 5% de Desconto no Pix'];
 const DEFAULT_DEPS  = [
   { nome: 'Ana Martins',    cidade: 'Florianópolis, SC',       texto: 'Recebi o colar de aniversário e fiquei encantada. A embalagem é linda, a peça é impecável. Com certeza voltarei a comprar!', estrelas: 5 },
   { nome: 'Juliana Silva',  cidade: 'Balneário Camboriú, SC',  texto: 'Comprei o anel personalizado e ficou perfeito. O atendimento foi incrível, super atencioso do início ao fim. Recomendo demais!', estrelas: 5 },

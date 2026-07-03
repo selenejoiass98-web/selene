@@ -40,7 +40,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .main { margin-left:var(--sidebar); flex:1; }
 .topbar { background:var(--white); border-bottom:1px solid var(--gold-pale); padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
 .topbar-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300; color:var(--brown); }
-.content { padding:2rem; max-width:900px; }
+.content { padding:2rem; }
 
 /* ── CARDS ── */
 .config-card { background:var(--white); border:1px solid var(--gold-pale); border-radius:10px; margin-bottom:1.5rem; overflow:hidden; }
@@ -92,8 +92,8 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 @keyframes spin { to { transform:rotate(360deg); } }
 
 /* ── LAYOUT 2 COLUNAS + PREVIEW ── */
-.content-layout { display:grid; grid-template-columns:minmax(0,1fr) 420px; gap:2rem; align-items:start; }
-.cards-col { max-width:900px; }
+.content-layout { display:grid; grid-template-columns:minmax(0,1fr) 460px; gap:2.5rem; align-items:start; max-width:1560px; margin:0 auto; }
+.cards-col { max-width:1000px; }
 .preview-pane { position:sticky; top:1.5rem; }
 .preview-pane-inner { background:var(--white); border:1px solid var(--gold-pale); border-radius:10px; overflow:hidden; box-shadow:0 4px 24px rgba(61,43,26,0.06); }
 .preview-select { padding:0.8rem 1rem; font-size:0.66rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-s); border-bottom:1px solid var(--gold-pale); display:flex; align-items:center; justify-content:space-between; gap:0.5rem; }
@@ -107,8 +107,8 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .preview-open-link:hover { background:var(--cream); }
 @media(max-width:1150px){
   .content-layout { grid-template-columns:1fr; }
-  .preview-pane { position:static; margin-bottom:1.5rem; }
-  #preview-iframe { height:420px; }
+  .preview-pane { display:none; }
+  .cards-col { max-width:none; }
 }
 
 /* ── SUBSEÇÕES DENTRO DE UM CARD (ex: Seções da Home) ── */

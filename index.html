@@ -792,25 +792,80 @@
 
 <!-- ── DIVISOR ORNAMENTAL ── -->
 <div class="ornament-divider reveal" aria-hidden="true">
-  <svg width="100%" viewBox="0 0 1200 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-    <!-- Linha horizontal principal -->
-    <line x1="50" y1="40" x2="1150" y2="40" stroke="#C4A47A" stroke-width="2"/>
-    <!-- Círculos nas extremidades -->
-    <circle cx="50" cy="40" r="6" fill="#C4A47A"/>
-    <circle cx="1150" cy="40" r="6" fill="#C4A47A"/>
-    <!-- Chevrons (setas abertas) nas extremidades -->
-    <path d="M34 33 L42 40 L34 47" stroke="#C4A47A" stroke-width="2" stroke-linejoin="round" fill="none"/>
-    <path d="M1166 33 L1158 40 L1166 47" stroke="#C4A47A" stroke-width="2" stroke-linejoin="round" fill="none"/>
-    <!-- Ornamento central: fita ondulada com efeito de volume (duplo traçado) -->
-    <!-- Camada externa: faixa dourada espessa -->
-    <path d="M480 22 Q548 22 576 40 Q604 58 648 40 Q672 22 720 22"
-          fill="none" stroke="#C4A47A" stroke-width="18" stroke-linecap="round"/>
-    <!-- Camada interna: faixa da cor de fundo recortando o centro -->
-    <path d="M480 22 Q548 22 576 40 Q604 58 648 40 Q672 22 720 22"
-          fill="none" stroke="#FEFCF9" stroke-width="8" stroke-linecap="round"/>
-    <!-- Pontos de acento nos inflexos da fita -->
-    <circle cx="576" cy="40" r="5" fill="#C4A47A"/>
-    <circle cx="648" cy="40" r="5" fill="#C4A47A"/>
+  <svg viewBox="0 0 900 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#C4A47A" stroke-linecap="round" stroke-linejoin="round" fill="none">
+
+      <!-- ── CENTRO: FLEUR-DE-LIS ── -->
+      <path d="M 450 50 C 449 44,447 38,450 33 C 453 38,451 44,450 50" stroke-width="1.5"/>
+      <path d="M 450 47 C 450 39,443 35,440 39 C 437 43,440 48,447 49" stroke-width="1.5"/>
+      <path d="M 450 47 C 450 39,457 35,460 39 C 463 43,460 48,453 49" stroke-width="1.5"/>
+      <line x1="435" y1="55" x2="465" y2="55" stroke-width="1.5"/>
+      <path d="M 435 55 C 429 55,425 51,427 47 C 429 43,433 44,431 48" stroke-width="1.5"/>
+      <path d="M 465 55 C 471 55,475 51,473 47 C 471 43,467 44,469 48" stroke-width="1.5"/>
+      <path d="M 450 52 L 455 58 L 450 64 L 445 58 Z" fill="#C4A47A" stroke="none"/>
+      <path d="M 450 64 C 447 69,447 76,450 80 C 453 76,453 69,450 64" fill="#C4A47A" stroke="none"/>
+
+      <!-- ── LADO DIREITO ── -->
+      <!-- Braço grosso: centro → entrada do scroll -->
+      <path d="M 465 63 C 492 59,520 52,542 43" stroke-width="3.5"/>
+      <!-- Linha fina paralela -->
+      <path d="M 465 68 C 492 65,520 58,542 50" stroke-width="1.5"/>
+
+      <!-- Scroll em G (loop grande + espiral interna) -->
+      <path d="M 542 43
+               C 560 36,580 29,600 28
+               C 622 27,641 36,647 53
+               C 653 70,644 89,626 96
+               C 608 103,586 100,572 88
+               C 558 76,557 60,568 51
+               C 576 44,585 46,584 56
+               C 583 64,575 67,568 63"
+            stroke-width="3.5"/>
+      <!-- Linha fina: borda externa do scroll -->
+      <path d="M 542 50 C 560 44,578 38,596 37" stroke-width="1.5"/>
+
+      <!-- Braço externo: topo do scroll → curl externo -->
+      <path d="M 600 28 C 624 22,648 18,672 18 C 694 18,712 24,722 34" stroke-width="2.5"/>
+      <!-- Linha fina paralela do braço externo -->
+      <path d="M 596 37 C 618 32,642 28,666 28 C 688 28,706 33,718 42" stroke-width="1.5"/>
+
+      <!-- Curl externo (espiral de fechamento) -->
+      <path d="M 722 34
+               C 735 26,750 19,764 18
+               C 778 17,787 24,787 36
+               C 787 48,776 56,762 56
+               C 748 56,740 47,742 39
+               C 744 31,752 28,758 33"
+            stroke-width="2"/>
+      <path d="M 718 42 C 728 37,740 33,752 32" stroke-width="1.5"/>
+
+      <!-- ── LADO ESQUERDO (espelho perfeito) ── -->
+      <g transform="translate(900,0) scale(-1,1)">
+        <path d="M 465 63 C 492 59,520 52,542 43" stroke-width="3.5"/>
+        <path d="M 465 68 C 492 65,520 58,542 50" stroke-width="1.5"/>
+        <path d="M 542 43
+                 C 560 36,580 29,600 28
+                 C 622 27,641 36,647 53
+                 C 653 70,644 89,626 96
+                 C 608 103,586 100,572 88
+                 C 558 76,557 60,568 51
+                 C 576 44,585 46,584 56
+                 C 583 64,575 67,568 63"
+              stroke-width="3.5"/>
+        <path d="M 542 50 C 560 44,578 38,596 37" stroke-width="1.5"/>
+        <path d="M 600 28 C 624 22,648 18,672 18 C 694 18,712 24,722 34" stroke-width="2.5"/>
+        <path d="M 596 37 C 618 32,642 28,666 28 C 688 28,706 33,718 42" stroke-width="1.5"/>
+        <path d="M 722 34
+                 C 735 26,750 19,764 18
+                 C 778 17,787 24,787 36
+                 C 787 48,776 56,762 56
+                 C 748 56,740 47,742 39
+                 C 744 31,752 28,758 33"
+              stroke-width="2"/>
+        <path d="M 718 42 C 728 37,740 33,752 32" stroke-width="1.5"/>
+      </g>
+
+    </g>
   </svg>
 </div>
 

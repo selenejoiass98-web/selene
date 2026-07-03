@@ -806,61 +806,60 @@
       <path d="M 450 64 C 447 69,447 76,450 80 C 453 76,453 69,450 64" fill="#C4A47A" stroke="none"/>
 
       <!-- ── LADO DIREITO ── -->
-      <!-- Braço grosso: centro → entrada do scroll -->
-      <path d="M 465 63 C 492 59,520 52,542 43" stroke-width="3.5"/>
-      <!-- Linha fina paralela -->
-      <path d="M 465 68 C 492 65,520 58,542 50" stroke-width="1.5"/>
+      <!-- Braço grosso -->
+      <path d="M 465 63 C 490 58,518 51,542 43" stroke-width="3.5"/>
+      <!-- Braço fino paralelo -->
+      <path d="M 465 68 C 490 64,518 57,542 50" stroke-width="1.5"/>
 
-      <!-- Scroll em G (loop grande + espiral interna) -->
+      <!-- Scroll em G — junções matematicamente suaves (cp final refletido = cp inicial do próximo) -->
       <path d="M 542 43
-               C 560 36,580 29,600 28
-               C 622 27,641 36,647 53
-               C 653 70,644 89,626 96
-               C 608 103,586 100,572 88
-               C 558 76,557 60,568 51
-               C 576 44,585 46,584 56
-               C 583 64,575 67,568 63"
+               C 568 32,596 26,610 28
+               C 624 30,648 44,648 62
+               C 648 80,628 100,608 100
+               C 588 100,558 90,556 72
+               C 554 54,564 44,574 46
+               C 584 48,582 60,572 62"
             stroke-width="3.5"/>
-      <!-- Linha fina: borda externa do scroll -->
+      <!-- Linha fina da borda externa do scroll -->
       <path d="M 542 50 C 560 44,578 38,596 37" stroke-width="1.5"/>
 
-      <!-- Braço externo: topo do scroll → curl externo -->
-      <path d="M 600 28 C 624 22,648 18,672 18 C 694 18,712 24,722 34" stroke-width="2.5"/>
-      <!-- Linha fina paralela do braço externo -->
-      <path d="M 596 37 C 618 32,642 28,666 28 C 688 28,706 33,718 42" stroke-width="1.5"/>
+      <!-- Braço externo (suave, 2 segmentos) -->
+      <path d="M 600 28 C 624 22,648 18,672 18 C 696 18,712 24,722 34" stroke-width="2.5"/>
+      <!-- Linha fina paralela -->
+      <path d="M 596 37 C 618 32,642 28,666 28 C 690 28,706 33,718 42" stroke-width="1.5"/>
 
-      <!-- Curl externo (espiral de fechamento) -->
+      <!-- Curl externo — espiral suave -->
       <path d="M 722 34
-               C 735 26,750 19,764 18
-               C 778 17,787 24,787 36
-               C 787 48,776 56,762 56
-               C 748 56,740 47,742 39
-               C 744 31,752 28,758 33"
+               C 736 25,754 18,766 18
+               C 778 18,786 26,786 38
+               C 786 50,774 58,762 58
+               C 750 58,740 50,742 40
+               C 744 30,754 28,758 34"
             stroke-width="2"/>
+      <!-- Linha fina do curl -->
       <path d="M 718 42 C 728 37,740 33,752 32" stroke-width="1.5"/>
 
-      <!-- ── LADO ESQUERDO (espelho perfeito) ── -->
+      <!-- ── LADO ESQUERDO (espelho) ── -->
       <g transform="translate(900,0) scale(-1,1)">
-        <path d="M 465 63 C 492 59,520 52,542 43" stroke-width="3.5"/>
-        <path d="M 465 68 C 492 65,520 58,542 50" stroke-width="1.5"/>
+        <path d="M 465 63 C 490 58,518 51,542 43" stroke-width="3.5"/>
+        <path d="M 465 68 C 490 64,518 57,542 50" stroke-width="1.5"/>
         <path d="M 542 43
-                 C 560 36,580 29,600 28
-                 C 622 27,641 36,647 53
-                 C 653 70,644 89,626 96
-                 C 608 103,586 100,572 88
-                 C 558 76,557 60,568 51
-                 C 576 44,585 46,584 56
-                 C 583 64,575 67,568 63"
+                 C 568 32,596 26,610 28
+                 C 624 30,648 44,648 62
+                 C 648 80,628 100,608 100
+                 C 588 100,558 90,556 72
+                 C 554 54,564 44,574 46
+                 C 584 48,582 60,572 62"
               stroke-width="3.5"/>
         <path d="M 542 50 C 560 44,578 38,596 37" stroke-width="1.5"/>
-        <path d="M 600 28 C 624 22,648 18,672 18 C 694 18,712 24,722 34" stroke-width="2.5"/>
-        <path d="M 596 37 C 618 32,642 28,666 28 C 688 28,706 33,718 42" stroke-width="1.5"/>
+        <path d="M 600 28 C 624 22,648 18,672 18 C 696 18,712 24,722 34" stroke-width="2.5"/>
+        <path d="M 596 37 C 618 32,642 28,666 28 C 690 28,706 33,718 42" stroke-width="1.5"/>
         <path d="M 722 34
-                 C 735 26,750 19,764 18
-                 C 778 17,787 24,787 36
-                 C 787 48,776 56,762 56
-                 C 748 56,740 47,742 39
-                 C 744 31,752 28,758 33"
+                 C 736 25,754 18,766 18
+                 C 778 18,786 26,786 38
+                 C 786 50,774 58,762 58
+                 C 750 58,740 50,742 40
+                 C 744 30,754 28,758 34"
               stroke-width="2"/>
         <path d="M 718 42 C 728 37,740 33,752 32" stroke-width="1.5"/>
       </g>
@@ -1517,41 +1516,39 @@ async function init() {
 init();
 </script>
 
-<!-- Linhas do divisor ornamental "correndo" proporcionalmente ao scroll -->
+<!-- Divisor ornamental: efeito de desenho ao entrar na viewport -->
 <script>
-(function() {
+(function () {
   var ornament = document.querySelector('.ornament-divider');
   if (!ornament) return;
-  var lines = ornament.querySelectorAll('.orn-line');
-  if (!lines.length) return;
 
-  var lastY = window.scrollY;
-  var velocity = 0;
-  var offset = 0;
-  var active = false;
-  var rafId = null;
+  /* Apenas elementos com traçado visível */
+  var els = Array.from(ornament.querySelectorAll('path, line'))
+    .filter(function (el) { return el.getAttribute('stroke') !== 'none'; });
 
-  function tick() {
-    var y = window.scrollY;
-    var delta = y - lastY;
-    lastY = y;
-    velocity += (delta - velocity) * 0.3;
-    offset -= velocity * 0.5;
-    for (var i = 0; i < lines.length; i++) lines[i].style.strokeDashoffset = offset + 'px';
-    velocity *= 0.92;
-    rafId = (active || Math.abs(velocity) > 0.03) ? requestAnimationFrame(tick) : null;
-  }
+  /* Inicializa todos invisíveis */
+  els.forEach(function (el) {
+    try {
+      var len = el.getTotalLength();
+      el.style.strokeDasharray = len;
+      el.style.strokeDashoffset = len;
+    } catch (e) {}
+  });
 
-  function ensureLoop() {
-    if (rafId === null) rafId = requestAnimationFrame(tick);
-  }
-
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      active = entry.isIntersecting;
-      if (active) { lastY = window.scrollY; ensureLoop(); }
+  /* Quando entra na viewport, dispara o desenho com stagger simétrico:
+     centro → braços → scrolls → braços externos → curls */
+  var io = new IntersectionObserver(function (entries) {
+    if (!entries[0].isIntersecting) return;
+    els.forEach(function (el, i) {
+      /* Os elementos do lado esquerdo (i >= 16) espelham o timing do lado direito */
+      var idx = i >= 16 ? i - 8 : i;
+      var delay = idx * 0.045;
+      el.style.transition = 'stroke-dashoffset 1.1s cubic-bezier(0.4,0,0.2,1) ' + delay + 's';
+      el.style.strokeDashoffset = '0';
     });
-  }, { threshold: 0, rootMargin: '100px 0px' });
+    io.disconnect();
+  }, { threshold: 0.25 });
+
   io.observe(ornament);
 })();
 </script>

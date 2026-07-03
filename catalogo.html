@@ -396,10 +396,10 @@
     <a href="index.html" class="nav-logo">Elenice Collection</a>
     <ul class="nav-links">
       <li><a href="catalogo.html" style="color:var(--gold);">Coleções</a></li>
-      <li><a href="/colecao/aneis">Anéis</a></li>
-      <li><a href="/colecao/colares">Colares</a></li>
-      <li><a href="/colecao/pulseiras">Pulseiras</a></li>
-      <li><a href="/colecao/brincos">Brincos</a></li>
+      <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+      <li><a href="catalogo.html?cat=colares">Colares</a></li>
+      <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+      <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
     </ul>
     <div class="nav-actions">
       <button class="nav-cart" onclick="openCart()">
@@ -537,10 +537,10 @@
       <div class="footer-col">
         <h4>Coleções</h4>
         <ul>
-          <li><a href="/colecao/aneis">Anéis</a></li>
-          <li><a href="/colecao/colares">Colares</a></li>
-          <li><a href="/colecao/pulseiras">Pulseiras</a></li>
-          <li><a href="/colecao/brincos">Brincos</a></li>
+          <li><a href="catalogo.html?cat=aneis">Anéis</a></li>
+          <li><a href="catalogo.html?cat=colares">Colares</a></li>
+          <li><a href="catalogo.html?cat=pulseiras">Pulseiras</a></li>
+          <li><a href="catalogo.html?cat=brincos">Brincos</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -848,7 +848,7 @@ function render() {
       const origFmt  = p.oldPrice ? fmt(p.oldPrice) : '';
       const descPct  = p.oldPrice ? Math.round((1 - p.price/p.oldPrice)*100) : 0;
       const cartPayload = `{id:'${p.id}',name:'${p.name.replace(/'/g,"\\'")}',variant:'${p.variant.replace(/'/g,"\\'")}',price:${p.price},symbol:'${p.symbol}',image:'${p.fotos[0]||''}'}`;
-      const href = p.slug ? `/produto/${p.slug}` : `produto.html?id=${p.id}`;
+      const href = p.slug ? `produto.html?slug=${p.slug}` : `produto.html?id=${p.id}`;
       return `
       <div class="product-card reveal${p.esgotado ? ' product-card--esgotado' : ''}">
         <div class="product-card-img">

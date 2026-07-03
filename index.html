@@ -180,28 +180,21 @@
 .cat-lbl { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-mid); transition: color var(--transition); }
 
 /* ORNAMENT DIVIDER */
-.ornament-divider { max-width: 640px; margin: 0 auto; padding: 0 1.5rem; }
+.ornament-divider { max-width: 660px; margin: 0 auto; padding: 0 2rem; }
 .ornament-divider svg { width: 100%; height: 50px; display: block; overflow: visible; }
 .ornament-divider .orn-line {
   fill: none;
-  stroke: var(--gold-pale);
-  stroke-width: 1;
-  stroke-dasharray: 10 5;
+  stroke: var(--gold-light);
+  stroke-width: 0.75;
 }
-.ornament-divider .orn-circle {
+.ornament-divider .orn-shape {
   fill: none;
-  stroke: var(--gold-pale);
-  stroke-width: 1;
+  stroke: var(--gold-light);
+  stroke-width: 0.8;
 }
-.ornament-divider .orn-dot {
-  fill: var(--gold);
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(0);
-  opacity: 0;
-  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s, opacity 0.4s ease 0.2s;
+.ornament-divider .orn-fill {
+  fill: var(--gold-light);
 }
-.ornament-divider.visible .orn-dot { transform: scale(1); opacity: 1; }
 
 /* COLLECTIONS GRID */
 .collections { padding: 5rem 0; background: var(--white); }
@@ -812,13 +805,32 @@
 
 <!-- ── DIVISOR ORNAMENTAL ── -->
 <div class="ornament-divider reveal" aria-hidden="true">
-  <svg viewBox="0 0 600 50" xmlns="http://www.w3.org/2000/svg">
-    <line class="orn-line orn-line-l" x1="0" y1="25" x2="250" y2="25"></line>
-    <line class="orn-line orn-line-r" x1="350" y1="25" x2="600" y2="25"></line>
-    <circle class="orn-circle" cx="270" cy="25" r="15"></circle>
-    <circle class="orn-dot" cx="270" cy="25" r="4"></circle>
-    <circle class="orn-circle" cx="330" cy="25" r="15"></circle>
-    <circle class="orn-dot" cx="330" cy="25" r="4"></circle>
+  <svg viewBox="0 0 600 50" fill="none" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+    <!-- Linhas horizontais -->
+    <line class="orn-line orn-line-l" x1="30" y1="25" x2="258" y2="25"/>
+    <line class="orn-line orn-line-r" x1="342" y1="25" x2="570" y2="25"/>
+    <!-- Cap esquerdo: gota arredondada à esquerda, ponta à direita -->
+    <path class="orn-shape" d="M 28 25 C 22 19,8 19,8 25 C 8 31,22 31,28 25 Z"/>
+    <circle class="orn-fill" cx="17" cy="25" r="1.8"/>
+    <!-- Anel acento na linha esquerda -->
+    <circle class="orn-shape" cx="124" cy="25" r="3.5"/>
+    <!-- Inner gota esquerda (transição linha → lemniscata) -->
+    <path class="orn-shape" d="M 256 25 C 250 19,236 19,236 25 C 236 31,250 31,256 25 Z"/>
+    <circle class="orn-fill" cx="244" cy="25" r="1.5"/>
+    <!-- Lemniscata — loop esquerdo -->
+    <path class="orn-shape" d="M 300 25 C 295 11,258 11,258 25 C 258 39,295 39,300 25"/>
+    <!-- Oval interno do loop esquerdo -->
+    <ellipse class="orn-shape" cx="274" cy="25" rx="7.5" ry="5"/>
+    <!-- Lemniscata — loop direito -->
+    <path class="orn-shape" d="M 300 25 C 305 11,342 11,342 25 C 342 39,305 39,300 25"/>
+    <!-- Inner gota direita (transição lemniscata → linha) -->
+    <path class="orn-shape" d="M 344 25 C 350 19,364 19,364 25 C 364 31,350 31,344 25 Z"/>
+    <circle class="orn-fill" cx="356" cy="25" r="1.5"/>
+    <!-- Anel acento na linha direita -->
+    <circle class="orn-shape" cx="476" cy="25" r="3.5"/>
+    <!-- Cap direito: ponta à esquerda, arredondado à direita -->
+    <path class="orn-shape" d="M 572 25 C 578 19,592 19,592 25 C 592 31,578 31,572 25 Z"/>
+    <circle class="orn-fill" cx="583" cy="25" r="1.8"/>
   </svg>
 </div>
 

@@ -188,10 +188,6 @@
 .ornament-divider.orn-on .orn-centro { transform: scaleX(1); }
 .ornament-divider.orn-on .orn-caps { opacity: 1; transition-delay: 0.55s; }
 .ornament-divider.orn-on .orn-ponta { opacity: 1; transition-delay: 1.7s; }
-@media (prefers-reduced-motion: reduce) {
-  .ornament-divider .orn-centro { transform: none; transition: none; }
-  .ornament-divider .orn-caps, .ornament-divider .orn-ponta { opacity: 1; transition: none; }
-}
 
 /* COLLECTIONS GRID */
 .collections { padding: 5rem 0; background: var(--white); }
@@ -1481,14 +1477,12 @@ async function init() {
 init();
 </script>
 
-<!-- Divisor ornamental: sequência seguindo o fluxo do desenho (centro -> linhas -> pontas) -->
+<!-- Divisor ornamental: sequência (centro -> linhas -> pontas) roda toda vez que entra na tela -->
 <script>
 (function () {
   var orn = document.querySelector('.ornament-divider');
   if (!orn) return;
   var lines = orn.querySelectorAll('.orn-line');
-  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced) { orn.classList.add('orn-on'); return; }
 
   var lens = [];
   for (var i = 0; i < lines.length; i++) {
@@ -1498,15 +1492,29 @@ init();
     lines[i].style.strokeDashoffset = L;
   }
 
-  var io = new IntersectionObserver(function (entries) {
-    if (!entries[0].isIntersecting) return;
+  function reset() {
+    orn.classList.remove('orn-on');
+    for (var i = 0; i < lines.length; i++) {
+      lines[i].style.transition = 'none';
+      lines[i].style.strokeDashoffset = lens[i];
+    }
+    void orn.offsetWidth; /* aplica o estado inicial antes da próxima animação */
+  }
+
+  function play() {
     orn.classList.add('orn-on');
     for (var i = 0; i < lines.length; i++) {
       lines[i].style.transition = 'stroke-dashoffset 1.15s cubic-bezier(0.4, 0, 0.2, 1) 0.7s';
       lines[i].style.strokeDashoffset = '0';
     }
-    io.disconnect();
-  }, { threshold: 0.35 });
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    for (var e = 0; e < entries.length; e++) {
+      if (entries[e].isIntersecting) play();
+      else reset();
+    }
+  }, { threshold: 0.3 });
   io.observe(orn);
 })();
 </script>

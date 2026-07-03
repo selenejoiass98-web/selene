@@ -385,6 +385,16 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <span class="chevron">▾</span>
       </div>
       <div class="config-card-body">
+        <div class="subsection" data-preview-target="#categories-section">
+          <div class="subsection-title">📐 Título da seção</div>
+          <div class="form-row">
+            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-cat-tag" placeholder="Explorar" /></div>
+            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-cat-titulo1" placeholder="Explore nossas" /></div>
+          </div>
+          <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-cat-titulo2" placeholder="coleções" /></div>
+        </div>
+        <div class="subsection">
+        <div class="subsection-title">🗂️ Fotos por categoria</div>
         <div class="boxes-grid" style="grid-template-columns:repeat(5,1fr);">
           <div class="box-item">
             <h4>Anéis</h4>
@@ -436,6 +446,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
             </div>
             <input type="hidden" id="cat-conjuntos-img-url" />
           </div>
+        </div>
         </div>
       </div>
     </div>
@@ -522,6 +533,16 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <span class="chevron">▾</span>
       </div>
       <div class="config-card-body">
+        <div class="subsection" data-preview-target="#testimonials-section">
+          <div class="subsection-title">📐 Título da seção</div>
+          <div class="form-row">
+            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-dep-tag" placeholder="Depoimentos" /></div>
+            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-dep-titulo1" placeholder="O que nossas clientes" /></div>
+          </div>
+          <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-dep-titulo2" placeholder="dizem" /></div>
+        </div>
+        <div class="subsection">
+        <div class="subsection-title">⭐ Depoimentos</div>
         <div class="form-group">
           <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:400;">
             <input type="checkbox" id="dep-ativo" checked style="width:18px;height:18px;cursor:pointer;" />
@@ -533,6 +554,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <button class="btn-save" onclick="adicionarDepoimento()" style="background:var(--cream-d);color:var(--gold);border:1px solid var(--gold-pale);margin-top:0.5rem;">
           + Adicionar depoimento
         </button>
+        </div>
       </div>
     </div>
 
@@ -544,6 +566,19 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <span class="chevron">▾</span>
       </div>
       <div class="config-card-body">
+        <div class="subsection" data-preview-target="#instagram-section">
+          <div class="subsection-title">📐 Título da seção</div>
+          <div class="form-row">
+            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-ig-tag" placeholder="Comunidade" /></div>
+            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-ig-titulo1" placeholder="Marcou a" /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-ig-titulo2" placeholder="Elenice?" /></div>
+            <div class="form-group"><label>Texto</label><input type="text" id="sec-ig-texto" placeholder="Adoramos ver você usando nossas semijoias. Marque @elenicecollection no Instagram!" /></div>
+          </div>
+        </div>
+        <div class="subsection">
+        <div class="subsection-title">📷 Posts</div>
         <p style="font-size:0.78rem;color:var(--text-s);margin-bottom:1.25rem;">
           Alguém marcou a Elenice em uma foto linda? Cole os links dos posts abaixo e ative para exibi-los na página inicial. Eles aparecem em fileiras de 4.
         </p>
@@ -557,6 +592,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <button class="btn-save" onclick="adicionarIgPost()" style="background:var(--cream-d);color:var(--gold);border:1px solid var(--gold-pale);margin-top:0.5rem;">
           + Adicionar link
         </button>
+        </div>
       </div>
     </div>
 
@@ -691,65 +727,44 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
       </div>
     </div>
 
-    <!-- SEÇÕES DA HOME -->
-    <div class="config-card collapsed">
+    <!-- COLEÇÃO / DESTAQUE -->
+    <div class="config-card collapsed" data-preview-target="#colecoes">
       <div class="config-card-header" onclick="toggleCard(this)">
-        <span class="icon">📐</span>
-        <h2>Títulos das Seções (página inicial)</h2>
+        <span class="icon">💍</span>
+        <h2>Seção "Peças em Destaque"</h2>
         <span class="chevron">▾</span>
       </div>
       <div class="config-card-body">
-        <div class="subsection" data-preview-target="#categories-section">
-          <div class="subsection-title">🗂️ Categorias</div>
-          <div class="form-row">
-            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-cat-tag" placeholder="Explorar" /></div>
-            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-cat-titulo1" placeholder="Explore nossas" /></div>
-          </div>
-          <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-cat-titulo2" placeholder="coleções" /></div>
+        <p style="font-size:0.75rem;color:var(--text-s);margin-bottom:1.25rem;">Os produtos exibidos aqui vêm automaticamente do seu catálogo — esse card controla só o título da seção.</p>
+        <div class="form-row">
+          <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-col-tag" placeholder="Coleção completa" /></div>
+          <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-col-titulo1" placeholder="Seleção" /></div>
         </div>
-        <div class="subsection" data-preview-target="#colecoes">
-          <div class="subsection-title">💍 Coleção / Destaque</div>
-          <div class="form-row">
-            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-col-tag" placeholder="Coleção completa" /></div>
-            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-col-titulo1" placeholder="Seleção" /></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-col-titulo2" placeholder="exclusiva" /></div>
-            <div class="form-group"><label>Texto do link</label><input type="text" id="sec-col-link" placeholder="Ver todos os produtos" /></div>
-          </div>
+        <div class="form-row">
+          <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-col-titulo2" placeholder="exclusiva" /></div>
+          <div class="form-group"><label>Texto do link</label><input type="text" id="sec-col-link" placeholder="Ver todos os produtos" /></div>
         </div>
-        <div class="subsection" data-preview-target="#testimonials-section">
-          <div class="subsection-title">⭐ Depoimentos</div>
-          <div class="form-row">
-            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-dep-tag" placeholder="Depoimentos" /></div>
-            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-dep-titulo1" placeholder="O que nossas clientes" /></div>
-          </div>
-          <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-dep-titulo2" placeholder="dizem" /></div>
+      </div>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="config-card collapsed" data-preview-target="#newsletter-section">
+      <div class="config-card-header" onclick="toggleCard(this)">
+        <span class="icon">✉</span>
+        <h2>Newsletter</h2>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="config-card-body">
+        <div class="form-row">
+          <div class="form-group"><label>Etiqueta</label><input type="text" id="news-tag" placeholder="Novidades" /></div>
+          <div class="form-group"><label>Título — linha normal</label><input type="text" id="news-titulo1" placeholder="Fique por" /></div>
         </div>
-        <div class="subsection" data-preview-target="#instagram-section">
-          <div class="subsection-title">📷 Instagram</div>
-          <div class="form-row">
-            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-ig-tag" placeholder="Comunidade" /></div>
-            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-ig-titulo1" placeholder="Marcou a" /></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-ig-titulo2" placeholder="Elenice?" /></div>
-            <div class="form-group"><label>Texto</label><input type="text" id="sec-ig-texto" placeholder="Adoramos ver você usando nossas semijoias. Marque @elenicecollection no Instagram!" /></div>
-          </div>
+        <div class="form-row">
+          <div class="form-group"><label>Título — parte dourada</label><input type="text" id="news-titulo2" placeholder="dentro" /></div>
+          <div class="form-group"><label>Texto do botão</label><input type="text" id="news-botao" placeholder="Assinar" /></div>
         </div>
-        <div class="subsection" data-preview-target="#newsletter-section">
-          <div class="subsection-title">✉ Newsletter</div>
-          <div class="form-row">
-            <div class="form-group"><label>Etiqueta</label><input type="text" id="news-tag" placeholder="Novidades" /></div>
-            <div class="form-group"><label>Título — linha normal</label><input type="text" id="news-titulo1" placeholder="Fique por" /></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Título — parte dourada</label><input type="text" id="news-titulo2" placeholder="dentro" /></div>
-            <div class="form-group"><label>Texto do botão</label><input type="text" id="news-botao" placeholder="Assinar" /></div>
-          </div>
-          <div class="form-group"><label>Subtítulo</label><input type="text" id="news-sub" placeholder="Receba em primeira mão nossas novas coleções, promoções exclusivas e dicas de estilo." /></div>
-          <div class="form-group"><label>Aviso de privacidade</label><input type="text" id="news-privacidade" placeholder="Sem spam. Cancele quando quiser." /></div>
-        </div>
+        <div class="form-group"><label>Subtítulo</label><input type="text" id="news-sub" placeholder="Receba em primeira mão nossas novas coleções, promoções exclusivas e dicas de estilo." /></div>
+        <div class="form-group"><label>Aviso de privacidade</label><input type="text" id="news-privacidade" placeholder="Sem spam. Cancele quando quiser." /></div>
       </div>
     </div>
 

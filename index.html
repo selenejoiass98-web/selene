@@ -192,7 +192,7 @@
   stroke-dashoffset: 1;
   transition: stroke-dashoffset 1s cubic-bezier(0.65,0,0.35,1);
 }
-.ornament-divider .orn-loop { stroke: var(--gold); transition-delay: 0.5s; }
+.ornament-divider .orn-loop { stroke: var(--gold); transition-duration: 1.5s; transition-delay: 0.5s; }
 .ornament-divider .orn-loop-r { transition-delay: 0.65s; }
 .ornament-divider .orn-drop {
   fill: var(--gold-mid);
@@ -820,8 +820,8 @@
     <line class="orn-line orn-line-r" x1="600" y1="28" x2="344" y2="28" pathLength="1"></line>
     <path class="orn-loop" d="M256,28 A22,22 0 1,1 300,28 A22,22 0 1,1 256,28" pathLength="1"></path>
     <path class="orn-loop orn-loop-r" d="M344,28 A22,22 0 1,0 300,28 A22,22 0 1,0 344,28" pathLength="1"></path>
-    <g transform="translate(278,28) rotate(-20)"><path class="orn-drop" d="M0,-9 C5,-9 5,4 0,7 C-5,4 -5,-9 0,-9 Z"></path></g>
-    <g transform="translate(322,28) rotate(160)"><path class="orn-drop" d="M0,-9 C5,-9 5,4 0,7 C-5,4 -5,-9 0,-9 Z"></path></g>
+    <circle class="orn-drop" cx="278" cy="28" r="4"></circle>
+    <circle class="orn-drop" cx="322" cy="28" r="4"></circle>
   </svg>
 </div>
 

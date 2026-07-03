@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta id="meta-description" name="description" content="Semijoia banhada a ouro 18k da Elenice Collection.">
+<meta id="meta-description" name="description" content="Semijoia exclusiva da Elenice Collection.">
 <title id="page-title">Produto — Elenice Collection</title>
 <link rel="canonical" id="canonical-link" href="https://www.elenicecollection.com.br/catalogo">
 
 <!-- Open Graph -->
 <meta id="og-title" property="og:title" content="Produto — Elenice Collection">
-<meta id="og-description" property="og:description" content="Semijoia banhada a ouro 18k da Elenice Collection.">
+<meta id="og-description" property="og:description" content="Semijoia exclusiva da Elenice Collection.">
 <meta id="og-image" property="og:image" content="">
 <meta id="og-url" property="og:url" content="">
 <meta property="og:type" content="product">
@@ -18,7 +18,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta id="tw-title" name="twitter:title" content="Produto — Elenice Collection">
-<meta id="tw-description" name="twitter:description" content="Semijoia banhada a ouro 18k da Elenice Collection.">
+<meta id="tw-description" name="twitter:description" content="Semijoia exclusiva da Elenice Collection.">
 <meta id="tw-image" name="twitter:image" content="">
 
 <link rel="stylesheet" href="assets/css/style.css?v=6">
@@ -705,7 +705,7 @@
       <div class="product-info">
         <div class="product-info-tag" id="info-cat">Colares</div>
         <h1 class="product-info-name" id="info-name">Colar Lua Dourada</h1>
-        <p class="product-info-subtitle" id="info-subtitle">Disco banhado a ouro 18k com corrente veneziana</p>
+        <p class="product-info-subtitle" id="info-subtitle">Disco exclusivo com corrente veneziana</p>
 
         <div class="product-rating">
           <div class="rating-stars">★ ★ ★ ★ ★</div>
@@ -746,15 +746,11 @@
           <div class="material-options">
             <button class="material-btn active" onclick="selectMaterial(this)">
               <div class="mat-color" style="background:linear-gradient(135deg,#C4A47A,#7C5C35);"></div>
-              Ouro 18k
-            </button>
-            <button class="material-btn" onclick="selectMaterial(this)">
-              <div class="mat-color" style="background:linear-gradient(135deg,#E8E8E8,#B0B0B0);"></div>
-              Ouro Branco
+              Dourado 18k
             </button>
             <button class="material-btn" onclick="selectMaterial(this)">
               <div class="mat-color" style="background:linear-gradient(135deg,#E8B4A0,#C47858);"></div>
-              Ouro Rosé
+              Rosé 18k
             </button>
           </div>
         </div>
@@ -811,9 +807,9 @@
       <!-- DESCRIÇÃO -->
       <div class="tab-content active" id="tab-descricao">
         <div class="tab-desc">
-          <p>O <strong>Colar Lua Dourada</strong> é uma das peças mais especiais da Elenice Collection. O disco banhado a ouro 18k captura a luz de um jeito único — delicado durante o dia, marcante à noite.</p>
+          <p>O <strong>Colar Lua Dourada</strong> é uma das peças mais especiais da Elenice Collection. O disco de acabamento exclusivo captura a luz de um jeito único — delicado durante o dia, marcante à noite.</p>
           <p>Inspirado na serenidade e na força da lua cheia, este colar foi criado para mulheres que carregam sua elegância com leveza. O acabamento polido reflete cada detalhe com precisão, enquanto a corrente veneziana fina garante conforto durante o uso prolongado.</p>
-          <p>Cada peça é produzida artesanalmente e acompanha certificado de qualidade do banho de ouro e embalagem exclusiva Elenice Collection — perfeita como presente.</p>
+          <p>Cada peça é produzida artesanalmente e acompanha certificado de qualidade e embalagem exclusiva Elenice Collection — perfeita como presente.</p>
         </div>
       </div>
 
@@ -822,7 +818,7 @@
         <div class="spec-grid">
           <div class="spec-row">
             <div class="spec-key">Material</div>
-            <div class="spec-val">Ouro 18k (750‰)</div>
+            <div class="spec-val">Dourado 18k (750‰)</div>
           </div>
           <div class="spec-row">
             <div class="spec-key">Peso</div>
@@ -842,7 +838,7 @@
           </div>
           <div class="spec-row">
             <div class="spec-key">Fecho</div>
-            <div class="spec-val">Lagosta em ouro 18k</div>
+            <div class="spec-val">Lagosta dourada 18k</div>
           </div>
           <div class="spec-row">
             <div class="spec-key">Acabamento</div>
@@ -953,7 +949,7 @@
       <div class="footer-brand">
         <div class="logo">Elenice Collection</div>
         <div class="tagline">Elegância que transforma</div>
-        <p>Semijoias banhadas a ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+        <p>Semijoias exclusivas, criadas para mulheres que valorizam beleza, qualidade e significado.</p>
       </div>
       <div class="footer-col">
         <h4>Coleções</h4>
@@ -1072,8 +1068,9 @@ let currentProduct = null;
 let allProducts = [];
 let localQty = 1;
 let selectedSize = '';
-let selectedMaterial = 'Ouro 18k';
+let selectedMaterial = 'Dourado 18k';
 let wishlisted = false;
+let PIX_DESCONTO = 5;
 
 // ── LOAD PRODUTO DO FIREBASE ──
 async function loadProduct() {
@@ -1097,6 +1094,12 @@ async function loadProduct() {
     if (!found) { window.location.href = 'catalogo.html'; return; }
 
     currentProduct = found;
+
+    try {
+      const cfgSnap = await getDoc(doc(db, 'configuracoes', 'loja'));
+      const pd = Number(cfgSnap.exists() ? cfgSnap.data().geral?.pixDesconto : NaN);
+      if (pd > 0) PIX_DESCONTO = pd;
+    } catch(e) { console.warn('Desconto Pix:', e); }
 
     // Carrega todos para relacionados
     const allSnap = await getDocs(collection(db, 'produtos'));
@@ -1151,13 +1154,13 @@ function renderProduct() {
   const fotos = p.fotos || [];
   const descricaoCurta = p.descricaoCurta || '';
   const descricao = p.descricao || '';
-  const material = p.material || 'Ouro 18k';
+  const material = p.material || 'Dourado 18k';
   const tamanhos = p.tamanhos || [];
   const badge = p.badge || null;
 
   // Meta
   const seoTitle = `${nome} — Elenice Collection`;
-  const seoDesc  = (descricaoCurta || descricao || `Semijoia ${nome} banhada a ouro 18k da Elenice Collection.`).slice(0, 155);
+  const seoDesc  = (descricaoCurta || descricao || `Semijoia ${nome} exclusiva da Elenice Collection.`).slice(0, 155);
   const prodUrl  = produtoUrl(p);
   document.getElementById('page-title').textContent = seoTitle;
   document.getElementById('meta-description').setAttribute('content', seoDesc);
@@ -1224,14 +1227,14 @@ function renderProduct() {
   }
 
   // Preço
-  const pix = (preco * 0.95).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const pix = (preco * (1 - PIX_DESCONTO / 100)).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
   const install = (preco / 12).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
   document.getElementById('info-price').textContent =
     `R$ ${preco.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
   document.getElementById('info-installment').textContent =
     `ou 12× de R$ ${install} sem juros no cartão`;
   document.getElementById('info-pix').innerHTML =
-    `🟢 <span>À vista no <strong>Pix: R$ ${pix}</strong> (5% de desconto)</span>`;
+    `🟢 <span>À vista no <strong>Pix: R$ ${pix}</strong> (${PIX_DESCONTO}% de desconto)</span>`;
 
   if (precoOriginal) {
     const disc = Math.round((1 - preco/precoOriginal)*100);
@@ -1261,7 +1264,7 @@ function renderProduct() {
   document.querySelector('#tab-descricao .tab-desc').innerHTML =
     descricao
       ? descricao.split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('')
-      : `<p>${descricaoCurta || 'Semijoia banhada a ouro 18k de alta qualidade.'}</p>`;
+      : `<p>${descricaoCurta || 'Semijoia exclusiva de alta qualidade.'}</p>`;
 
   // Especificações
   document.querySelector('#tab-especificacoes').innerHTML = `
@@ -1376,7 +1379,7 @@ function renderRelated() {
     const origFmt   = precoOrig ? precoOrig.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '';
     const descPct   = precoOrig ? Math.round((1 - preco / precoOrig) * 100) : 0;
     const cat       = p.categoria || 'Semijoia';
-    const mat       = p.material  || 'Ouro 18k';
+    const mat       = p.material  || 'Dourado 18k';
     const cp        = `{id:'${p.id}',name:'${p.nome.replace(/'/g, "\\'")}',variant:'${mat.replace(/'/g, "\\'")}',price:${preco},symbol:'◈',image:'${p.fotos?.[0] || ''}'}`;
     const estoqueRel  = Number(p.estoque) || 0;
     const esgotadoRel = !!p.esgotado;
@@ -1388,7 +1391,7 @@ function renderRelated() {
           ${esgotadoRel ? `<span class="product-badge esgotado">Esgotado</span>`
             : (estoqueRel > 0 && estoqueRel <= 3) ? `<span class="product-badge ultimas">Coleção Limitada</span>` : ''}
           ${!esgotadoRel && p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
-          ${!esgotadoRel && descPct >= 5 ? `<span class="product-badge off">Economize ${descPct}% off</span>` : ''}
+          ${!esgotadoRel && descPct >= 5 ? `<span class="product-badge off">${p.seloOferta || `Economize ${descPct}% off`}</span>` : ''}
         </div>
         <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
         <a href="${hrefRel}">

@@ -85,7 +85,7 @@ function updateCartUI() {
       </div>
       <div class="cart-item-info">
         <h4>${item.name}</h4>
-        <div class="item-variant">${item.variant || 'Ouro 18k'}</div>
+        <div class="item-variant">${item.variant || 'Dourado 18k'}</div>
         <div class="qty-control">
           <button class="qty-btn" onclick="changeQty('${item.id}','${item.variant}',-1)">−</button>
           <span class="qty-num">${item.qty}</span>

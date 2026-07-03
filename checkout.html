@@ -857,7 +857,7 @@
         <!-- PIX -->
         <div class="payment-panel active" id="panel-pix">
           <div class="pix-panel">
-            <div class="pix-discount-badge">🎉 5% de desconto no Pix</div>
+            <div class="pix-discount-badge" id="pix-discount-badge">🎉 5% de desconto no Pix</div>
             <div class="pix-amount" id="pix-amount">R$ 0,00</div>
             <p class="pix-info">Após confirmar o pedido, o QR Code e o código copia-e-cola serão gerados automaticamente.<br>O pagamento é confirmado em até 5 minutos.</p>
             <div class="pix-qr" id="pix-qr-placeholder">QR Code<br>após pedido</div>
@@ -928,7 +928,7 @@
             <span class="s-value" id="s-subtotal">R$ 0,00</span>
           </div>
           <div class="summary-row" id="s-discount-row" style="display:none;">
-            <span class="s-label">Desconto Pix (5%)</span>
+            <span class="s-label" id="s-discount-label">Desconto Pix (5%)</span>
             <span class="s-value discount" id="s-discount">−R$ 0,00</span>
           </div>
           <div class="summary-row" id="s-coupon-row" style="display:none;">
@@ -1032,6 +1032,7 @@ let couponDiscountFixed = 0; // valor fixo em R$
 let couponType = null;       // 'percentual' ou 'fixo'
 let cupomAtivoId = null;     // id do documento no Firestore
 let shippingCost = 0;
+let PIX_DESCONTO = 5;        // percentual, sobrescrito pela config da loja
 
 // ── MASKS ──
 function maskCPF(el) {
@@ -1269,7 +1270,7 @@ function updateInstallments(total) {
 // ── SUMMARY ──
 function updateSummary() {
   const subtotal = getTotal();
-  const pixDisc = selectedPayment === 'pix' ? subtotal * 0.05 : 0;
+  const pixDisc = selectedPayment === 'pix' ? subtotal * (PIX_DESCONTO / 100) : 0;
   const couponDisc = couponType === 'fixo'
     ? Math.min(couponDiscountFixed, subtotal)
     : subtotal * (couponDiscount / 100);
@@ -1281,7 +1282,7 @@ function updateSummary() {
   document.getElementById('s-coupon-val').textContent = `−R$ ${couponDisc.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
   document.getElementById('s-frete').textContent = frete === 0 && selectedShipping ? '🎉 Grátis' : frete > 0 ? `R$ ${frete.toFixed(2).replace('.',',')}` : 'A calcular';
   document.getElementById('s-total').textContent = `R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
-  document.getElementById('pix-amount').textContent = `R$ ${(subtotal*0.95+frete).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+  document.getElementById('pix-amount').textContent = `R$ ${(subtotal*(1-PIX_DESCONTO/100)+frete).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 
   updateInstallments(total);
   renderSummaryItems();
@@ -1352,7 +1353,7 @@ const MP_PUBLIC_KEY = 'APP_USR-35df1778-8cf4-4a1a-98de-92e9d8b5f4e7';
 // Calcula total final com descontos
 function calcularTotalFinal() {
   const subtotal = getTotal();
-  const pixDisc = selectedPayment === 'pix' ? subtotal * 0.05 : 0;
+  const pixDisc = selectedPayment === 'pix' ? subtotal * (PIX_DESCONTO / 100) : 0;
   const couponDisc = couponType === 'fixo'
     ? Math.min(couponDiscountFixed, subtotal)
     : subtotal * (couponDiscount / 100);
@@ -1687,7 +1688,7 @@ async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens,
         </tr>
         <tr>
           <td style="background:#F5F0EA;padding:24px 40px;text-align:center;border-top:1px solid #E0CEBB;">
-            <p style="margin:0;font-size:11px;color:#9C8070;letter-spacing:1px;">© 2026 Elenice Collection • Semijoias Banhadas a Ouro 18k</p>
+            <p style="margin:0;font-size:11px;color:#9C8070;letter-spacing:1px;">© 2026 Elenice Collection • Semijoias Exclusivas</p>
             <p style="margin:4px 0 0;font-size:11px;color:#C4A47A;letter-spacing:1px;">elenicecollection.com.br</p>
           </td>
         </tr>
@@ -1714,11 +1715,22 @@ async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens,
 }
 
 // ── INIT ──
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   if (cart.length === 0) {
     // Redireciona se carrinho vazio
     // window.location.href = 'catalogo.html';
   }
+
+  if (window._db) {
+    try {
+      const cfgSnap = await window._fbGetDoc(window._fbDoc(window._db, 'configuracoes', 'loja'));
+      const pd = Number(cfgSnap.exists() ? cfgSnap.data().geral?.pixDesconto : NaN);
+      if (pd > 0) PIX_DESCONTO = pd;
+    } catch(e) { console.warn('Desconto Pix:', e); }
+  }
+  document.getElementById('pix-discount-badge').textContent = `🎉 ${PIX_DESCONTO}% de desconto no Pix`;
+  document.getElementById('s-discount-label').textContent = `Desconto Pix (${PIX_DESCONTO}%)`;
+
   updateSummary();
 
   // Inicializa MP Bricks para cartão

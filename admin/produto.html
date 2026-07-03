@@ -270,11 +270,10 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
             <div class="form-group">
               <label class="form-label">Material</label>
               <select class="form-input" id="material">
-                <option value="Ouro 18k">Ouro 18k</option>
-                <option value="Ouro Branco 18k">Ouro Branco 18k</option>
-                <option value="Ouro Rosé 18k">Ouro Rosé 18k</option>
-                <option value="Ouro 18k + Zircônia">Ouro 18k + Zircônia</option>
-                <option value="Ouro 18k + Esmalte">Ouro 18k + Esmalte</option>
+                <option value="Dourado 18k">Dourado 18k</option>
+                <option value="Rosé 18k">Rosé 18k</option>
+                <option value="Dourado 18k + Zircônia">Dourado 18k + Zircônia</option>
+                <option value="Dourado 18k + Esmalte">Dourado 18k + Esmalte</option>
               </select>
             </div>
           </div>
@@ -348,6 +347,19 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
                 <option value="Ed. Limitada">Ed. Limitada</option>
                 <option value="Promoção">Promoção</option>
               </select>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label">Selo de desconto</label>
+              <select class="form-input" id="selo-oferta">
+                <option value="">Padrão (Economize X% off)</option>
+                <option value="Oferta Especial">Oferta Especial</option>
+                <option value="Condição Exclusiva">Condição Exclusiva</option>
+                <option value="Preço de Lançamento">Preço de Lançamento</option>
+                <option value="Valor Especial">Valor Especial</option>
+              </select>
+              <div class="form-hint">Só aparece quando há Preço Original preenchido (produto com desconto)</div>
             </div>
           </div>
         </div>
@@ -500,7 +512,7 @@ async function loadProduct(id) {
     document.getElementById('descricao-curta').value = p.descricaoCurta||'';
     document.getElementById('descricao').value = p.descricao||'';
     document.getElementById('categoria').value = p.categoria||'';
-    document.getElementById('material').value = p.material||'Ouro 18k';
+    document.getElementById('material').value = p.material||'Dourado 18k';
     document.getElementById('preco').value = p.preco||'';
     document.getElementById('preco-original').value = p.precoOriginal||'';
     document.getElementById('estoque').value = p.estoque||'';
@@ -510,6 +522,7 @@ async function loadProduct(id) {
     document.getElementById('tamanhos').value = (p.tamanhos||[]).join(', ');
     document.getElementById('acabamento').value = p.acabamento||'Polido';
     document.getElementById('badge').value = p.badge||'';
+    document.getElementById('selo-oferta').value = p.seloOferta||'';
     if (p.status !== 'ativo') document.getElementById('toggle-ativo').classList.remove('on');
     if (p.destaque) document.getElementById('toggle-destaque').classList.add('on');
     if (p.freteGratis) document.getElementById('toggle-frete').classList.add('on');
@@ -693,6 +706,7 @@ window.salvarProduto = async function(status) {
     tamanhos,
     acabamento: document.getElementById('acabamento').value,
     badge: document.getElementById('badge').value || null,
+    seloOferta: document.getElementById('selo-oferta').value || null,
     status,
     destaque: document.getElementById('toggle-destaque').classList.contains('on'),
     freteGratis: document.getElementById('toggle-frete').classList.contains('on'),

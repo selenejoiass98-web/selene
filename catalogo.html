@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Catálogo Elenice Collection — Explore nossa coleção completa de semijoias banhadas a ouro 18k. Anéis, colares, pulseiras e brincos.">
+<meta name="description" content="Catálogo Elenice Collection — Explore nossa coleção completa de semijoias exclusivas. Anéis, colares, pulseiras e brincos.">
 <title>Coleção — Elenice Collection</title>
 <link rel="canonical" id="canonical-link" href="https://www.elenicecollection.com.br/catalogo" />
 <link rel="stylesheet" href="assets/css/style.css?v=6">
@@ -420,7 +420,7 @@
         <span id="breadcrumb-current">Coleção</span>
       </div>
       <h1 class="page-hero-title" id="page-title">Nossa <em>Coleção</em></h1>
-      <p class="page-hero-sub">Semijoias banhadas a ouro 18k criadas com exclusividade e elegância</p>
+      <p class="page-hero-sub">Semijoias exclusivas, criadas com esmero e elegância</p>
     </div>
   </div>
 </div>
@@ -483,15 +483,11 @@
         <div class="sidebar-options">
           <label class="sidebar-option">
             <div class="mat-dot" style="background:linear-gradient(135deg,#C4A47A,#7C5C35);"></div>
-            Ouro 18k
-          </label>
-          <label class="sidebar-option">
-            <div class="mat-dot" style="background:linear-gradient(135deg,#E8E8E8,#B0B0B0);"></div>
-            Ouro Branco
+            Dourado 18k
           </label>
           <label class="sidebar-option">
             <div class="mat-dot" style="background:linear-gradient(135deg,#E8B4A0,#C47858);"></div>
-            Ouro Rosé
+            Rosé 18k
           </label>
         </div>
       </div>
@@ -536,7 +532,7 @@
       <div class="footer-brand">
         <div class="logo">Elenice Collection</div>
         <div class="tagline">Elegância que transforma</div>
-        <p>Semijoias banhadas a ouro 18k criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+        <p>Semijoias exclusivas, criadas para mulheres que valorizam beleza, qualidade e significado.</p>
       </div>
       <div class="footer-col">
         <h4>Coleções</h4>
@@ -715,7 +711,8 @@ async function loadProdutos() {
           price: d.preco || 0,
           oldPrice: d.precoOriginal || null,
           badge: d.badge || null,
-          variant: `${d.material || 'Ouro 18k'}${d.tamanho ? ' · ' + d.tamanho : ''}`,
+          seloOferta: d.seloOferta || null,
+          variant: `${d.material || 'Dourado 18k'}${d.tamanho ? ' · ' + d.tamanho : ''}`,
           fotos: d.fotos || [],
           symbol: '◈',
           novo: d.badge === 'Novo',
@@ -768,7 +765,7 @@ function initFromURL() {
       document.getElementById('page-title').innerHTML = `<em>${titles[cat]}</em>`;
       document.getElementById('breadcrumb-current').textContent = titles[cat];
       document.title = `${titles[cat]} — Elenice Collection`;
-      const desc = `Coleção de ${titles[cat].toLowerCase()} Elenice Collection — semijoias banhadas a ouro 18k. Frete grátis acima de R$ 299 e 12x sem juros.`;
+      const desc = `Coleção de ${titles[cat].toLowerCase()} Elenice Collection — semijoias exclusivas. Frete grátis acima de R$ 299 e 12x sem juros.`;
       document.querySelector('meta[name="description"]')?.setAttribute('content', desc);
     }
     document.getElementById('canonical-link')?.setAttribute('href', `https://www.elenicecollection.com.br/colecao/${cat}`);
@@ -859,7 +856,7 @@ function render() {
             ${p.esgotado ? `<span class="product-badge esgotado">Esgotado</span>`
               : (p.estoque > 0 && p.estoque <= 3) ? `<span class="product-badge ultimas">Coleção Limitada</span>` : ''}
             ${!p.esgotado && p.badge === 'Novo' ? `<span class="product-badge novo">Novo</span>` : ''}
-            ${!p.esgotado && descPct >= 5 ? `<span class="product-badge off">Economize ${descPct}% off</span>` : ''}
+            ${!p.esgotado && descPct >= 5 ? `<span class="product-badge off">${p.seloOferta || `Economize ${descPct}% off`}</span>` : ''}
           </div>
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
           <a href="${href}">

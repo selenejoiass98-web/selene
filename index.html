@@ -179,6 +179,34 @@
 .cat-img-glyph { font-family: var(--font-serif); font-size: 3rem; color: var(--gold-pale); font-style: italic; position: relative; z-index: 1; }
 .cat-lbl { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-mid); transition: color var(--transition); }
 
+/* ORNAMENT DIVIDER */
+.ornament-divider.reveal { opacity: 1; transform: none; transition: none; }
+.ornament-divider { max-width: 640px; margin: 0 auto; padding: 0 1.5rem; }
+.ornament-divider svg { width: 100%; height: 34px; display: block; overflow: visible; }
+.ornament-divider .orn-line,
+.ornament-divider .orn-flourish {
+  fill: none;
+  stroke: var(--gold-pale);
+  stroke-width: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.9s cubic-bezier(0.65,0,0.35,1);
+}
+.ornament-divider .orn-flourish { transition-delay: 0.55s; }
+.ornament-divider .orn-diamond {
+  fill: var(--white);
+  stroke: var(--gold);
+  stroke-width: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(45deg) scale(0);
+  opacity: 0;
+  transition: transform 0.55s cubic-bezier(0.34,1.56,0.64,1) 1.05s, opacity 0.4s ease 1.05s;
+}
+.ornament-divider.visible .orn-line,
+.ornament-divider.visible .orn-flourish { stroke-dashoffset: 0; }
+.ornament-divider.visible .orn-diamond { transform: rotate(45deg) scale(1); opacity: 1; }
+
 /* COLLECTIONS GRID */
 .collections { padding: 5rem 0; background: var(--white); }
 .collections-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; }
@@ -785,6 +813,17 @@
     </div>
   </div>
 </section>
+
+<!-- ── DIVISOR ORNAMENTAL ── -->
+<div class="ornament-divider reveal" aria-hidden="true">
+  <svg viewBox="0 0 600 32" xmlns="http://www.w3.org/2000/svg">
+    <line class="orn-line" x1="0" y1="16" x2="228" y2="16" pathLength="1"></line>
+    <path class="orn-flourish" d="M228,16 C244,2 264,30 288,16" pathLength="1"></path>
+    <path class="orn-flourish" d="M372,16 C356,30 336,2 312,16" pathLength="1"></path>
+    <line class="orn-line" x1="600" y1="16" x2="372" y2="16" pathLength="1"></line>
+    <rect class="orn-diamond" x="292" y="8" width="16" height="16"></rect>
+  </svg>
+</div>
 
 <!-- ── SPOTLIGHT (carousel auto-advance) ── -->
 <!-- ── COLEÇÃO ── -->

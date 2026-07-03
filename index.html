@@ -180,31 +180,28 @@
 .cat-lbl { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-mid); transition: color var(--transition); }
 
 /* ORNAMENT DIVIDER */
-.ornament-divider.reveal { opacity: 1; transform: none; transition: none; }
 .ornament-divider { max-width: 640px; margin: 0 auto; padding: 0 1.5rem; }
-.ornament-divider svg { width: 100%; height: 56px; display: block; overflow: visible; }
-.ornament-divider .orn-line,
-.ornament-divider .orn-loop {
+.ornament-divider svg { width: 100%; height: 50px; display: block; overflow: visible; }
+.ornament-divider .orn-line {
   fill: none;
-  stroke: var(--gold-light);
+  stroke: var(--gold-pale);
   stroke-width: 1;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transition: stroke-dashoffset 1s cubic-bezier(0.65,0,0.35,1);
+  stroke-dasharray: 10 5;
 }
-.ornament-divider .orn-loop { stroke: var(--gold); transition-duration: 1.5s; transition-delay: 0.5s; }
-.ornament-divider .orn-loop-r { transition-delay: 0.65s; }
-.ornament-divider .orn-drop {
-  fill: var(--gold-mid);
+.ornament-divider .orn-circle {
+  fill: none;
+  stroke: var(--gold-pale);
+  stroke-width: 1;
+}
+.ornament-divider .orn-dot {
+  fill: var(--gold);
   transform-box: fill-box;
   transform-origin: center;
   transform: scale(0);
   opacity: 0;
-  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.35s, opacity 0.4s ease 1.35s;
+  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s, opacity 0.4s ease 0.2s;
 }
-.ornament-divider.visible .orn-line,
-.ornament-divider.visible .orn-loop { stroke-dashoffset: 0; }
-.ornament-divider.visible .orn-drop { transform: scale(1); opacity: 1; }
+.ornament-divider.visible .orn-dot { transform: scale(1); opacity: 1; }
 
 /* COLLECTIONS GRID */
 .collections { padding: 5rem 0; background: var(--white); }
@@ -815,13 +812,13 @@
 
 <!-- ── DIVISOR ORNAMENTAL ── -->
 <div class="ornament-divider reveal" aria-hidden="true">
-  <svg viewBox="0 0 600 56" xmlns="http://www.w3.org/2000/svg">
-    <line class="orn-line" x1="0" y1="28" x2="256" y2="28" pathLength="1"></line>
-    <line class="orn-line orn-line-r" x1="600" y1="28" x2="344" y2="28" pathLength="1"></line>
-    <path class="orn-loop" d="M256,28 A22,22 0 1,1 300,28 A22,22 0 1,1 256,28" pathLength="1"></path>
-    <path class="orn-loop orn-loop-r" d="M344,28 A22,22 0 1,0 300,28 A22,22 0 1,0 344,28" pathLength="1"></path>
-    <circle class="orn-drop" cx="278" cy="28" r="4"></circle>
-    <circle class="orn-drop" cx="322" cy="28" r="4"></circle>
+  <svg viewBox="0 0 600 50" xmlns="http://www.w3.org/2000/svg">
+    <line class="orn-line orn-line-l" x1="0" y1="25" x2="250" y2="25"></line>
+    <line class="orn-line orn-line-r" x1="350" y1="25" x2="600" y2="25"></line>
+    <circle class="orn-circle" cx="270" cy="25" r="15"></circle>
+    <circle class="orn-dot" cx="270" cy="25" r="4"></circle>
+    <circle class="orn-circle" cx="330" cy="25" r="15"></circle>
+    <circle class="orn-dot" cx="330" cy="25" r="4"></circle>
   </svg>
 </div>
 
@@ -1471,6 +1468,45 @@ async function init() {
 }
 
 init();
+</script>
+
+<!-- Linhas do divisor ornamental "correndo" proporcionalmente ao scroll -->
+<script>
+(function() {
+  var ornament = document.querySelector('.ornament-divider');
+  if (!ornament) return;
+  var lines = ornament.querySelectorAll('.orn-line');
+  if (!lines.length) return;
+
+  var lastY = window.scrollY;
+  var velocity = 0;
+  var offset = 0;
+  var active = false;
+  var rafId = null;
+
+  function tick() {
+    var y = window.scrollY;
+    var delta = y - lastY;
+    lastY = y;
+    velocity += (delta - velocity) * 0.3;
+    offset -= velocity * 0.5;
+    for (var i = 0; i < lines.length; i++) lines[i].style.strokeDashoffset = offset + 'px';
+    velocity *= 0.92;
+    rafId = (active || Math.abs(velocity) > 0.03) ? requestAnimationFrame(tick) : null;
+  }
+
+  function ensureLoop() {
+    if (rafId === null) rafId = requestAnimationFrame(tick);
+  }
+
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      active = entry.isIntersecting;
+      if (active) { lastY = window.scrollY; ensureLoop(); }
+    });
+  }, { threshold: 0, rootMargin: '100px 0px' });
+  io.observe(ornament);
+})();
 </script>
 </body>
 </html>

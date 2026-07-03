@@ -12,11 +12,13 @@
 .nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
 
 /* BRAND BAR */
-.brand-bar { background: var(--brown-deep); height: 36px; overflow: hidden; position: relative; z-index: 200; width: 100%; }
-.brand-bar-track { display: flex; height: 100%; gap: 3.5rem; align-items: center; animation: marquee 22s linear infinite; white-space: nowrap; }
+.brand-bar { background: var(--brown-deep, #3D2B1A); color: #fff; height: 36px; overflow: hidden; position: relative; z-index: 200; width: 100%; }
+.brand-bar-track { display: flex; align-items: center; height: 100%; white-space: nowrap; animation: marquee 28s linear infinite; will-change: transform; }
+.brand-bar-track:hover { animation-play-state: paused; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.brand-bar-item { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(224,206,187,0.55); flex-shrink: 0; }
-.brand-bar-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+.brand-bar-item { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0 2.5rem; font-family: 'Jost', sans-serif; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.92; flex-shrink: 0; }
+.brand-bar-item::after { content: '◆'; font-size: 0.35rem; opacity: 0.4; margin-left: 2.5rem; }
+.brand-bar-item:last-child::after { display: none; }
 
 /* HERO */
 .hero {
@@ -1106,9 +1108,9 @@ function renderFaixa(itens) {
   if (!track) return;
   const todos = [...itens, ...itens];
   track.innerHTML = todos.map(txt =>
-    `<span class="brand-bar-item">${txt}</span><span class="brand-bar-dot"></span>`
+    `<span class="brand-bar-item">${txt}</span>`
   ).join('');
-  track.style.animationDuration = Math.max(18, itens.length * 4) + 's';
+  track.style.animationDuration = Math.max(18, itens.length * 7) + 's';
 }
 
 function renderTestimonials(deps) {

@@ -180,21 +180,8 @@
 .cat-lbl { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-mid); transition: color var(--transition); }
 
 /* ORNAMENT DIVIDER */
-.ornament-divider { max-width: 660px; margin: 0 auto; padding: 0 2rem; }
-.ornament-divider svg { width: 100%; height: 50px; display: block; overflow: visible; }
-.ornament-divider .orn-line {
-  fill: none;
-  stroke: var(--gold-light);
-  stroke-width: 0.75;
-}
-.ornament-divider .orn-shape {
-  fill: none;
-  stroke: var(--gold-light);
-  stroke-width: 0.8;
-}
-.ornament-divider .orn-fill {
-  fill: var(--gold-light);
-}
+.ornament-divider { max-width: 900px; margin: 0 auto; padding: 0; background: var(--white); }
+.ornament-divider svg { width: 100%; height: auto; display: block; }
 
 /* COLLECTIONS GRID */
 .collections { padding: 5rem 0; background: var(--white); }
@@ -805,30 +792,25 @@
 
 <!-- ── DIVISOR ORNAMENTAL ── -->
 <div class="ornament-divider reveal" aria-hidden="true">
-  <svg viewBox="0 0 600 50" fill="none" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-    <!-- Linhas horizontais -->
-    <line class="orn-line orn-line-l" x1="30" y1="25" x2="237" y2="25"/>
-    <line class="orn-line orn-line-r" x1="363" y1="25" x2="570" y2="25"/>
-    <!-- Cap esquerdo: arredondado à esquerda, ponta à direita -->
-    <path class="orn-shape" d="M 28 25 C 22 19,8 19,8 25 C 8 31,22 31,28 25 Z"/>
-    <circle class="orn-fill" cx="17" cy="25" r="1.8"/>
-    <!-- Anel acento linha esquerda -->
-    <circle class="orn-shape" cx="124" cy="25" r="3.5"/>
-    <!-- Inner gota esquerda -->
-    <path class="orn-shape" d="M 237 25 C 231 19,218 19,218 25 C 218 31,231 31,237 25 Z"/>
-    <circle class="orn-fill" cx="227" cy="25" r="1.5"/>
-    <!-- Lemniscata ∞ — caminho único com cruzamento em X no centro -->
-    <path class="orn-shape" d="M 365 25 C 365 13,315 17,300 25 C 285 33,235 37,235 25 C 235 13,285 17,300 25 C 315 33,365 37,365 25"/>
-    <!-- Oval interno no loop esquerdo -->
-    <ellipse class="orn-shape" cx="267" cy="25" rx="10" ry="5.5"/>
-    <!-- Inner gota direita (espelho) -->
-    <path class="orn-shape" d="M 363 25 C 369 19,382 19,382 25 C 382 31,369 31,363 25 Z"/>
-    <circle class="orn-fill" cx="373" cy="25" r="1.5"/>
-    <!-- Anel acento linha direita -->
-    <circle class="orn-shape" cx="476" cy="25" r="3.5"/>
-    <!-- Cap direito: ponta à esquerda, arredondado à direita -->
-    <path class="orn-shape" d="M 572 25 C 578 19,592 19,592 25 C 592 31,578 31,572 25 Z"/>
-    <circle class="orn-fill" cx="583" cy="25" r="1.8"/>
+  <svg width="100%" viewBox="0 0 1200 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <!-- Linha horizontal principal -->
+    <line x1="50" y1="40" x2="1150" y2="40" stroke="#C4A47A" stroke-width="2"/>
+    <!-- Círculos nas extremidades -->
+    <circle cx="50" cy="40" r="6" fill="#C4A47A"/>
+    <circle cx="1150" cy="40" r="6" fill="#C4A47A"/>
+    <!-- Chevrons (setas abertas) nas extremidades -->
+    <path d="M34 33 L42 40 L34 47" stroke="#C4A47A" stroke-width="2" stroke-linejoin="round" fill="none"/>
+    <path d="M1166 33 L1158 40 L1166 47" stroke="#C4A47A" stroke-width="2" stroke-linejoin="round" fill="none"/>
+    <!-- Ornamento central: fita ondulada com efeito de volume (duplo traçado) -->
+    <!-- Camada externa: faixa dourada espessa -->
+    <path d="M480 22 Q548 22 576 40 Q604 58 648 40 Q672 22 720 22"
+          fill="none" stroke="#C4A47A" stroke-width="18" stroke-linecap="round"/>
+    <!-- Camada interna: faixa da cor de fundo recortando o centro -->
+    <path d="M480 22 Q548 22 576 40 Q604 58 648 40 Q672 22 720 22"
+          fill="none" stroke="#FEFCF9" stroke-width="8" stroke-linecap="round"/>
+    <!-- Pontos de acento nos inflexos da fita -->
+    <circle cx="576" cy="40" r="5" fill="#C4A47A"/>
+    <circle cx="648" cy="40" r="5" fill="#C4A47A"/>
   </svg>
 </div>
 

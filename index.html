@@ -807,26 +807,24 @@
 <div class="ornament-divider reveal" aria-hidden="true">
   <svg viewBox="0 0 600 50" fill="none" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
     <!-- Linhas horizontais -->
-    <line class="orn-line orn-line-l" x1="30" y1="25" x2="258" y2="25"/>
-    <line class="orn-line orn-line-r" x1="342" y1="25" x2="570" y2="25"/>
-    <!-- Cap esquerdo: gota arredondada à esquerda, ponta à direita -->
+    <line class="orn-line orn-line-l" x1="30" y1="25" x2="237" y2="25"/>
+    <line class="orn-line orn-line-r" x1="363" y1="25" x2="570" y2="25"/>
+    <!-- Cap esquerdo: arredondado à esquerda, ponta à direita -->
     <path class="orn-shape" d="M 28 25 C 22 19,8 19,8 25 C 8 31,22 31,28 25 Z"/>
     <circle class="orn-fill" cx="17" cy="25" r="1.8"/>
-    <!-- Anel acento na linha esquerda -->
+    <!-- Anel acento linha esquerda -->
     <circle class="orn-shape" cx="124" cy="25" r="3.5"/>
-    <!-- Inner gota esquerda (transição linha → lemniscata) -->
-    <path class="orn-shape" d="M 256 25 C 250 19,236 19,236 25 C 236 31,250 31,256 25 Z"/>
-    <circle class="orn-fill" cx="244" cy="25" r="1.5"/>
-    <!-- Lemniscata — loop esquerdo -->
-    <path class="orn-shape" d="M 300 25 C 295 11,258 11,258 25 C 258 39,295 39,300 25"/>
-    <!-- Oval interno do loop esquerdo -->
-    <ellipse class="orn-shape" cx="274" cy="25" rx="7.5" ry="5"/>
-    <!-- Lemniscata — loop direito -->
-    <path class="orn-shape" d="M 300 25 C 305 11,342 11,342 25 C 342 39,305 39,300 25"/>
-    <!-- Inner gota direita (transição lemniscata → linha) -->
-    <path class="orn-shape" d="M 344 25 C 350 19,364 19,364 25 C 364 31,350 31,344 25 Z"/>
-    <circle class="orn-fill" cx="356" cy="25" r="1.5"/>
-    <!-- Anel acento na linha direita -->
+    <!-- Inner gota esquerda -->
+    <path class="orn-shape" d="M 237 25 C 231 19,218 19,218 25 C 218 31,231 31,237 25 Z"/>
+    <circle class="orn-fill" cx="227" cy="25" r="1.5"/>
+    <!-- Lemniscata ∞ — caminho único com cruzamento em X no centro -->
+    <path class="orn-shape" d="M 365 25 C 365 13,315 17,300 25 C 285 33,235 37,235 25 C 235 13,285 17,300 25 C 315 33,365 37,365 25"/>
+    <!-- Oval interno no loop esquerdo -->
+    <ellipse class="orn-shape" cx="267" cy="25" rx="10" ry="5.5"/>
+    <!-- Inner gota direita (espelho) -->
+    <path class="orn-shape" d="M 363 25 C 369 19,382 19,382 25 C 382 31,369 31,363 25 Z"/>
+    <circle class="orn-fill" cx="373" cy="25" r="1.5"/>
+    <!-- Anel acento linha direita -->
     <circle class="orn-shape" cx="476" cy="25" r="3.5"/>
     <!-- Cap direito: ponta à esquerda, arredondado à direita -->
     <path class="orn-shape" d="M 572 25 C 578 19,592 19,592 25 C 592 31,578 31,572 25 Z"/>

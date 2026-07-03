@@ -2,8 +2,11 @@
    ELENICE COLLECTION — Cart System
    ═══════════════════════════════════════════════ */
 
-const WHATSAPP_NUMBER = '5547997259678'; // ← trocar pelo número real
-const FREE_SHIPPING_THRESHOLD = 299;
+const WHATSAPP_NUMBER = '5547997259678'; // fallback — o valor real vem de window.SITE_CONFIG (painel admin)
+const FREE_SHIPPING_THRESHOLD = 299;      // fallback — idem
+
+function getWhatsappNumber() { return window.SITE_CONFIG?.geral?.whatsapp || WHATSAPP_NUMBER; }
+function getFreeShippingThreshold() { return Number(window.SITE_CONFIG?.geral?.freteGratis) || FREE_SHIPPING_THRESHOLD; }
 
 // ── STATE ──
 let cart = JSON.parse(localStorage.getItem('elenice_cart') || '[]');
@@ -100,8 +103,9 @@ function updateCartUI() {
   `).join('');
 
   // Totals
-  const remaining = FREE_SHIPPING_THRESHOLD - total;
-  const freeShipping = total >= FREE_SHIPPING_THRESHOLD;
+  const freeShippingThreshold = getFreeShippingThreshold();
+  const remaining = freeShippingThreshold - total;
+  const freeShipping = total >= freeShippingThreshold;
 
   const freeShippingBar = document.getElementById('free-shipping-bar');
   if (freeShippingBar) {
@@ -138,7 +142,7 @@ function whatsappOrder() {
   const items = cart.map(i => `• ${i.name} (${i.variant}) x${i.qty} — R$${(i.price*i.qty).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`).join('%0A');
   const total = getTotal();
   const msg = `Olá! Gostaria de fazer um pedido:%0A%0A${items}%0A%0ATotal: R$${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%0A%0APode me ajudar a finalizar?`;
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+  window.open(`https://wa.me/${getWhatsappNumber()}?text=${msg}`, '_blank');
 }
 
 // ── TOAST ──

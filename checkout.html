@@ -1770,34 +1770,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 </script>
 
-<script type="module">
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const _fbCfg = {
-  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
-  authDomain: "selene-joias.firebaseapp.com",
-  projectId: "selene-joias",
-  storageBucket: "selene-joias.firebasestorage.app",
-  messagingSenderId: "395713731584",
-  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
-};
-const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
-const _db  = getFirestore(_app);
-(async () => {
-  try {
-    const snap = await getDoc(doc(_db, 'configuracoes', 'loja'));
-    const faixa = snap.exists() && snap.data().faixa;
-    if (!faixa || !faixa.length) return;
-    const track = document.getElementById('faixa-track');
-    const bar   = document.getElementById('faixa-bar');
-    if (!track || !bar) return;
-    const items = [...faixa, ...faixa];
-    track.innerHTML = items.map(txt => `<span class="faixa-item">${txt}</span>`).join('');
-    bar.style.display = 'block';
-    track.style.animationDuration = Math.max(18, faixa.length * 4) + 's';
-  } catch(e) { console.warn('Faixa:', e); }
-})();
-</script>
+<script type="module" src="assets/js/site-config.js"></script>
 
 </body>
 </html>

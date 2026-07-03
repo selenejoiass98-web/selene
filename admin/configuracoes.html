@@ -90,6 +90,31 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 /* ── SPINNER ── */
 .spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
+
+/* ── LAYOUT 2 COLUNAS + PREVIEW ── */
+.content-layout { display:grid; grid-template-columns:minmax(0,1fr) 420px; gap:2rem; align-items:start; }
+.cards-col { max-width:900px; }
+.preview-pane { position:sticky; top:1.5rem; }
+.preview-pane-inner { background:var(--white); border:1px solid var(--gold-pale); border-radius:10px; overflow:hidden; box-shadow:0 4px 24px rgba(61,43,26,0.06); }
+.preview-select { padding:0.8rem 1rem; font-size:0.66rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-s); border-bottom:1px solid var(--gold-pale); display:flex; align-items:center; justify-content:space-between; gap:0.5rem; }
+.preview-select strong { color:var(--brown); font-weight:500; }
+.preview-hint { padding:0.6rem 1rem; font-size:0.68rem; color:var(--text-s); background:var(--cream); border-bottom:1px solid var(--gold-pale); line-height:1.5; }
+.browser-chrome-bar { background:var(--cream-d); padding:0.55rem 0.8rem; display:flex; align-items:center; gap:0.35rem; border-bottom:1px solid var(--gold-pale); }
+.chrome-dot { width:8px; height:8px; border-radius:50%; background:var(--gold-pale); flex-shrink:0; }
+.chrome-url { margin-left:0.5rem; font-size:0.65rem; color:var(--text-s); background:var(--white); padding:0.25rem 0.7rem; border-radius:20px; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; border:1px solid var(--gold-pale); }
+#preview-iframe { width:100%; height:calc(100vh - 280px); min-height:420px; border:none; display:block; background:var(--cream); }
+.preview-open-link { display:block; text-align:center; padding:0.7rem; font-size:0.66rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; border-top:1px solid var(--gold-pale); transition:background 0.2s; }
+.preview-open-link:hover { background:var(--cream); }
+@media(max-width:1150px){
+  .content-layout { grid-template-columns:1fr; }
+  .preview-pane { position:static; margin-bottom:1.5rem; }
+  #preview-iframe { height:420px; }
+}
+
+/* ── SUBSEÇÕES DENTRO DE UM CARD (ex: Seções da Home) ── */
+.subsection { padding:1rem 0; border-top:1px dashed var(--gold-pale); }
+.subsection:first-child { padding-top:0; border-top:none; }
+.subsection-title { font-family:'Cormorant Garamond',serif; font-size:0.95rem; font-weight:500; color:var(--gold); margin-bottom:0.75rem; display:flex; align-items:center; gap:0.4rem; }
 </style>
 </head>
 <body>
@@ -136,9 +161,11 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
   </div>
 
   <div class="content">
+  <div class="content-layout">
+  <div class="cards-col">
 
     <!-- HERO -->
-    <div class="config-card">
+    <div class="config-card" data-preview-target="#hero-editorial">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">🖼️</span>
         <h2>Banner Principal (Hero)</h2>
@@ -226,7 +253,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     </div>
 
     <!-- HERO B -->
-    <div class="config-card collapsed">
+    <div class="config-card collapsed" data-preview-target="#hero-fullscreen">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">🎞️</span>
         <h2>Banner Fullscreen — Estilo B (3 fotos + texto)</h2>
@@ -351,7 +378,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     </div>
 
     <!-- CATEGORIAS -->
-    <div class="config-card collapsed">
+    <div class="config-card collapsed" data-preview-target="#categories-section">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">🗂️</span>
         <h2>Fotos das Categorias (tela inicial)</h2>
@@ -414,7 +441,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     </div>
 
     <!-- CAIXAS DESTAQUE -->
-    <div class="config-card collapsed">
+    <div class="config-card collapsed" data-preview-target="#hero-editorial">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">◻️</span>
         <h2>Caixas de Destaque (3 fotos ao lado do Hero)</h2>
@@ -488,7 +515,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 
 
     <!-- DEPOIMENTOS -->
-    <div class="config-card collapsed">
+    <div class="config-card collapsed" data-preview-target="#testimonials-section">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">⭐</span>
         <h2>Depoimentos das Clientes</h2>
@@ -510,7 +537,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     </div>
 
     <!-- INSTAGRAM -->
-    <div class="config-card collapsed">
+    <div class="config-card collapsed" data-preview-target="#instagram-section">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">📷</span>
         <h2>Posts do Instagram (página inicial)</h2>
@@ -534,7 +561,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     </div>
 
     <!-- FAIXA SUPERIOR -->
-    <div class="config-card collapsed">
+    <div class="config-card collapsed" data-preview-target="#faixa-bar">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">📢</span>
         <h2>Faixa de Avisos (passa no topo do site)</h2>
@@ -553,7 +580,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     </div>
 
     <!-- INFORMAÇÕES GERAIS -->
-    <div class="config-card collapsed">
+    <div class="config-card collapsed" data-preview-target="#footer-section">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">📋</span>
         <h2>Informações Gerais</h2>
@@ -581,14 +608,153 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
           </div>
         </div>
         <div class="form-group">
-          <label>Aviso no topo do site (deixe vazio para ocultar)</label>
+          <label>Aviso no topo do site (deixe vazio para ocultar — entra como primeiro item da faixa acima)</label>
           <input type="text" id="cfg-aviso" placeholder="🎁 Frete grátis acima de R$ 299 | Parcele em até 12x" />
+        </div>
+        <div class="form-group">
+          <label>Horário de atendimento (aparece no rodapé)</label>
+          <textarea id="cfg-horario" placeholder="Seg–Sex: 9h às 18h&#10;Sáb: 9h às 13h" style="min-height:60px;"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Link do Instagram</label>
+            <input type="text" id="cfg-instagram-url" placeholder="https://instagram.com/elenicecollection" />
+          </div>
+          <div class="form-group">
+            <label>Link do Facebook</label>
+            <input type="text" id="cfg-facebook-url" placeholder="https://facebook.com/elenicecollection" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Link do TikTok</label>
+          <input type="text" id="cfg-tiktok-url" placeholder="https://tiktok.com/@elenicecollection" />
+        </div>
+      </div>
+    </div>
+
+    <!-- RODAPÉ -->
+    <div class="config-card collapsed" data-preview-target="#footer-section">
+      <div class="config-card-header" onclick="toggleCard(this)">
+        <span class="icon">📄</span>
+        <h2>Rodapé (aparece em todas as páginas)</h2>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="config-card-body">
+        <div class="form-group">
+          <label>Texto de apresentação (abaixo da logo)</label>
+          <textarea id="rodape-blurb" placeholder="Semijoias exclusivas, criadas para mulheres que valorizam beleza, qualidade e significado. Baseada em Balneário Camboriú, entregamos para todo o Brasil." style="min-height:80px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Texto de copyright</label>
+          <input type="text" id="rodape-copyright" placeholder="© 2026 Elenice Collection. Todos os direitos reservados." />
+        </div>
+      </div>
+    </div>
+
+    <!-- VANTAGENS / DIFERENCIAIS -->
+    <div class="config-card collapsed" data-preview-target="#trust-strip-section">
+      <div class="config-card-header" onclick="toggleCard(this)">
+        <span class="icon">✦</span>
+        <h2>Vantagens / Diferenciais</h2>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="config-card-body">
+        <p style="font-size:0.75rem;color:var(--text-s);margin-bottom:1.25rem;">Os 4 blocos que aparecem duas vezes na página inicial (logo abaixo do banner e na seção "Diferenciais"). Editar aqui atualiza os dois lugares de uma vez.</p>
+        <div class="subsection">
+          <div class="subsection-title">① Peças Exclusivas</div>
+          <div class="form-row">
+            <div class="form-group"><label>Título</label><input type="text" id="trust1-titulo" placeholder="Peças Exclusivas" /></div>
+            <div class="form-group"><label>Descrição</label><input type="text" id="trust1-desc" placeholder="Acabamento refinado, brilho duradouro e alta resistência" /></div>
+          </div>
+        </div>
+        <div class="subsection">
+          <div class="subsection-title">② Envio</div>
+          <div class="form-row">
+            <div class="form-group"><label>Título</label><input type="text" id="trust2-titulo" placeholder="Envio para Todo Brasil" /></div>
+            <div class="form-group"><label>Descrição</label><input type="text" id="trust2-desc" placeholder="Entrega segura com rastreamento" /></div>
+          </div>
+        </div>
+        <div class="subsection">
+          <div class="subsection-title">③ Garantia</div>
+          <div class="form-row">
+            <div class="form-group"><label>Título</label><input type="text" id="trust3-titulo" placeholder="Garantia de 1 Ano" /></div>
+            <div class="form-group"><label>Descrição</label><input type="text" id="trust3-desc" placeholder="Contra defeitos de fabricação e oxidação" /></div>
+          </div>
+        </div>
+        <div class="subsection">
+          <div class="subsection-title">④ Parcelamento</div>
+          <div class="form-row">
+            <div class="form-group"><label>Título</label><input type="text" id="trust4-titulo" placeholder="Parcelamento" /></div>
+            <div class="form-group"><label>Descrição (deixe vazio para usar o Desconto Pix automático)</label><input type="text" id="trust4-desc" placeholder="Até 6x sem juros ou 5% de desconto no Pix" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEÇÕES DA HOME -->
+    <div class="config-card collapsed">
+      <div class="config-card-header" onclick="toggleCard(this)">
+        <span class="icon">📐</span>
+        <h2>Títulos das Seções (página inicial)</h2>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="config-card-body">
+        <div class="subsection" data-preview-target="#categories-section">
+          <div class="subsection-title">🗂️ Categorias</div>
+          <div class="form-row">
+            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-cat-tag" placeholder="Explorar" /></div>
+            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-cat-titulo1" placeholder="Explore nossas" /></div>
+          </div>
+          <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-cat-titulo2" placeholder="coleções" /></div>
+        </div>
+        <div class="subsection" data-preview-target="#colecoes">
+          <div class="subsection-title">💍 Coleção / Destaque</div>
+          <div class="form-row">
+            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-col-tag" placeholder="Coleção completa" /></div>
+            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-col-titulo1" placeholder="Seleção" /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-col-titulo2" placeholder="exclusiva" /></div>
+            <div class="form-group"><label>Texto do link</label><input type="text" id="sec-col-link" placeholder="Ver todos os produtos" /></div>
+          </div>
+        </div>
+        <div class="subsection" data-preview-target="#testimonials-section">
+          <div class="subsection-title">⭐ Depoimentos</div>
+          <div class="form-row">
+            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-dep-tag" placeholder="Depoimentos" /></div>
+            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-dep-titulo1" placeholder="O que nossas clientes" /></div>
+          </div>
+          <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-dep-titulo2" placeholder="dizem" /></div>
+        </div>
+        <div class="subsection" data-preview-target="#instagram-section">
+          <div class="subsection-title">📷 Instagram</div>
+          <div class="form-row">
+            <div class="form-group"><label>Etiqueta</label><input type="text" id="sec-ig-tag" placeholder="Comunidade" /></div>
+            <div class="form-group"><label>Título — linha normal</label><input type="text" id="sec-ig-titulo1" placeholder="Marcou a" /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Título — parte dourada</label><input type="text" id="sec-ig-titulo2" placeholder="Elenice?" /></div>
+            <div class="form-group"><label>Texto</label><input type="text" id="sec-ig-texto" placeholder="Adoramos ver você usando nossas semijoias. Marque @elenicecollection no Instagram!" /></div>
+          </div>
+        </div>
+        <div class="subsection" data-preview-target="#newsletter-section">
+          <div class="subsection-title">✉ Newsletter</div>
+          <div class="form-row">
+            <div class="form-group"><label>Etiqueta</label><input type="text" id="news-tag" placeholder="Novidades" /></div>
+            <div class="form-group"><label>Título — linha normal</label><input type="text" id="news-titulo1" placeholder="Fique por" /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Título — parte dourada</label><input type="text" id="news-titulo2" placeholder="dentro" /></div>
+            <div class="form-group"><label>Texto do botão</label><input type="text" id="news-botao" placeholder="Assinar" /></div>
+          </div>
+          <div class="form-group"><label>Subtítulo</label><input type="text" id="news-sub" placeholder="Receba em primeira mão nossas novas coleções, promoções exclusivas e dicas de estilo." /></div>
+          <div class="form-group"><label>Aviso de privacidade</label><input type="text" id="news-privacidade" placeholder="Sem spam. Cancele quando quiser." /></div>
         </div>
       </div>
     </div>
 
     <!-- CONTADORES HERO -->
-    <div class="config-card collapsed">
+    <div class="config-card collapsed" data-preview-target="#hero-editorial">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">📊</span>
         <h2>Números de Credibilidade (abaixo do hero)</h2>
@@ -629,7 +795,30 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
     </div>
 
   </div>
+  <!-- /cards-col -->
+
+  <aside class="preview-pane">
+    <div class="preview-pane-inner">
+      <div class="preview-select">Visualizando <strong>Página Inicial</strong></div>
+      <div class="browser-chrome-bar">
+        <span class="chrome-dot" style="background:#E8A5A5;"></span>
+        <span class="chrome-dot" style="background:#F0D28A;"></span>
+        <span class="chrome-dot" style="background:#A8D5B5;"></span>
+        <span class="chrome-url">elenicecollection.com.br</span>
+      </div>
+      <iframe id="preview-iframe" src="../index.html" title="Preview do site"></iframe>
+      <a class="preview-open-link" href="../index.html" target="_blank">Abrir loja em nova aba ↗</a>
+    </div>
+    <p style="font-size:0.65rem;color:var(--text-s);margin-top:0.8rem;line-height:1.6;">
+      ✦ O que você digita aparece aqui na hora, mas só vale de verdade depois de clicar em <strong>Salvar tudo</strong>.
+    </p>
+  </aside>
+
+  </div>
+  <!-- /content-layout -->
 </div>
+</div>
+<!-- /main -->
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -740,6 +929,42 @@ async function carregarConfigs() {
     setVal('cfg-frete-gratis', d.geral?.freteGratis);
     setVal('cfg-pix-desc', d.geral?.pixDesconto);
     setVal('cfg-aviso', d.geral?.aviso);
+    setVal('cfg-horario', d.geral?.horario);
+    setVal('cfg-instagram-url', d.geral?.instagramUrl);
+    setVal('cfg-facebook-url', d.geral?.facebookUrl);
+    setVal('cfg-tiktok-url', d.geral?.tiktokUrl);
+
+    // Rodapé
+    setVal('rodape-blurb', d.rodape?.blurb);
+    setVal('rodape-copyright', d.rodape?.copyright);
+
+    // Vantagens / Diferenciais
+    [1, 2, 3, 4].forEach(n => {
+      setVal('trust' + n + '-titulo', d['trust' + n]?.titulo);
+      setVal('trust' + n + '-desc', d['trust' + n]?.desc);
+    });
+
+    // Títulos das seções da home
+    setVal('sec-cat-tag', d.secaoCategorias?.tag);
+    setVal('sec-cat-titulo1', d.secaoCategorias?.titulo1);
+    setVal('sec-cat-titulo2', d.secaoCategorias?.titulo2);
+    setVal('sec-col-tag', d.secaoColecao?.tag);
+    setVal('sec-col-titulo1', d.secaoColecao?.titulo1);
+    setVal('sec-col-titulo2', d.secaoColecao?.titulo2);
+    setVal('sec-col-link', d.secaoColecao?.linkTexto);
+    setVal('sec-dep-tag', d.secaoDepoimentos?.tag);
+    setVal('sec-dep-titulo1', d.secaoDepoimentos?.titulo1);
+    setVal('sec-dep-titulo2', d.secaoDepoimentos?.titulo2);
+    setVal('sec-ig-tag', d.secaoInstagram?.tag);
+    setVal('sec-ig-titulo1', d.secaoInstagram?.titulo1);
+    setVal('sec-ig-titulo2', d.secaoInstagram?.titulo2);
+    setVal('sec-ig-texto', d.secaoInstagram?.texto);
+    setVal('news-tag', d.newsletter?.tag);
+    setVal('news-titulo1', d.newsletter?.titulo1);
+    setVal('news-titulo2', d.newsletter?.titulo2);
+    setVal('news-sub', d.newsletter?.subtitulo);
+    setVal('news-botao', d.newsletter?.botao);
+    setVal('news-privacidade', d.newsletter?.privacidade);
 
     // Stats
     setVal('stat1-num', d.stats?.s1num); setVal('stat1-label', d.stats?.s1label);
@@ -759,6 +984,90 @@ async function carregarConfigs() {
   }
 }
 
+// ── MONTA O OBJETO DE CONFIGURAÇÃO ──
+// Usado tanto para salvar de verdade (salvarTudo) quanto para o preview ao
+// vivo (que só manda os dados pro iframe, sem tocar no Firestore).
+function buildConfigObject() {
+  return {
+    hero: {
+      titulo1:   getVal('hero-titulo1'),
+      titulo2:   getVal('hero-titulo2'),
+      titulo1b:  getVal('hero-titulo1b'),
+      titulo2b:  getVal('hero-titulo2b'),
+      tituloRotativo: document.getElementById('hero-titulo-rotativo')?.checked || false,
+      subtitulo: getVal('hero-subtitulo'),
+      btn:       getVal('hero-btn'),
+      label:     getVal('hero-label'),
+      img:       getVal('hero-img-url'),
+      imgFundo:  getVal('hero-foto-fundo-url'),
+      estilo:    document.querySelector('input[name="hero-estilo"]:checked')?.value || 'editorial',
+    },
+    box1: { label: getVal('box1-label'), nome: getVal('box1-nome'), img: getVal('box1-img-url') },
+    box2: { nome: getVal('box2-nome'), img: getVal('box2-img-url') },
+    box3: { nome: getVal('box3-nome'), img: getVal('box3-img-url') },
+    faixa: getVal('faixa-itens').split('\n').map(s => s.trim()).filter(Boolean),
+    depoimentos: Array.from(document.querySelectorAll('#depoimentos-lista .dep-row')).map(row => ({
+      nome: row.querySelector('.dep-nome').value.trim(),
+      cidade: row.querySelector('.dep-cidade').value.trim(),
+      texto: row.querySelector('.dep-texto').value.trim(),
+      estrelas: Number(row.querySelector('.dep-estrelas').value) || 5,
+      foto: row.querySelector('.dep-foto-url').value || null,
+    })).filter(d => d.nome && d.texto),
+    depoimentosAtivo: document.getElementById('dep-ativo')?.checked ?? true,
+    instagram: {
+      ativo: document.getElementById('ig-ativo')?.checked || false,
+      posts: Array.from(document.querySelectorAll('#ig-posts-lista input')).map(el => el.value.trim()).filter(Boolean),
+    },
+
+    geral: {
+      whatsapp:     getVal('cfg-whatsapp'),
+      email:        getVal('cfg-email'),
+      freteGratis:  Number(getVal('cfg-frete-gratis')) || 299,
+      pixDesconto:  Number(getVal('cfg-pix-desc')) || 5,
+      aviso:        getVal('cfg-aviso'),
+      horario:      getVal('cfg-horario'),
+      instagramUrl: getVal('cfg-instagram-url'),
+      facebookUrl:  getVal('cfg-facebook-url'),
+      tiktokUrl:    getVal('cfg-tiktok-url'),
+    },
+    rodape: {
+      blurb:     getVal('rodape-blurb'),
+      copyright: getVal('rodape-copyright'),
+    },
+    trust1: { titulo: getVal('trust1-titulo'), desc: getVal('trust1-desc') },
+    trust2: { titulo: getVal('trust2-titulo'), desc: getVal('trust2-desc') },
+    trust3: { titulo: getVal('trust3-titulo'), desc: getVal('trust3-desc') },
+    trust4: { titulo: getVal('trust4-titulo'), desc: getVal('trust4-desc') },
+    secaoCategorias: { tag: getVal('sec-cat-tag'), titulo1: getVal('sec-cat-titulo1'), titulo2: getVal('sec-cat-titulo2') },
+    secaoColecao: { tag: getVal('sec-col-tag'), titulo1: getVal('sec-col-titulo1'), titulo2: getVal('sec-col-titulo2'), linkTexto: getVal('sec-col-link') },
+    secaoDepoimentos: { tag: getVal('sec-dep-tag'), titulo1: getVal('sec-dep-titulo1'), titulo2: getVal('sec-dep-titulo2') },
+    secaoInstagram: { tag: getVal('sec-ig-tag'), titulo1: getVal('sec-ig-titulo1'), titulo2: getVal('sec-ig-titulo2'), texto: getVal('sec-ig-texto') },
+    newsletter: {
+      tag: getVal('news-tag'), titulo1: getVal('news-titulo1'), titulo2: getVal('news-titulo2'),
+      subtitulo: getVal('news-sub'), botao: getVal('news-botao'), privacidade: getVal('news-privacidade'),
+    },
+    stats: {
+      s1num: getVal('stat1-num'), s1label: getVal('stat1-label'),
+      s2num: getVal('stat2-num'), s2label: getVal('stat2-label'),
+      s3num: getVal('stat3-num'), s3label: getVal('stat3-label'),
+    },
+    heroB: {
+      titulo:        getVal('herob-titulo'),
+      subtitulo:     getVal('herob-subtitulo'),
+      tituloGrande:  getVal('herob-titulo-grande'),
+      btn:           getVal('herob-btn'),
+      ...[1,2,3,4,5,6,7,8,9].reduce((acc, i) => { acc['foto' + i] = getVal('herob-foto' + i + '-url'); return acc; }, {}),
+    },
+    categorias: {
+      aneis:     { img: getVal('cat-aneis-img-url') },
+      colares:   { img: getVal('cat-colares-img-url') },
+      pulseiras: { img: getVal('cat-pulseiras-img-url') },
+      brincos:   { img: getVal('cat-brincos-img-url') },
+      conjuntos: { img: getVal('cat-conjuntos-img-url') },
+    },
+  };
+}
+
 // ── SALVAR ──
 window.salvarTudo = async function() {
   const btn = document.getElementById('btn-salvar');
@@ -770,65 +1079,8 @@ window.salvarTudo = async function() {
     // Upload imagens pendentes
     await uploadPendentes();
 
-    const dados = {
-      hero: {
-        titulo1:   getVal('hero-titulo1'),
-        titulo2:   getVal('hero-titulo2'),
-        titulo1b:  getVal('hero-titulo1b'),
-        titulo2b:  getVal('hero-titulo2b'),
-        tituloRotativo: document.getElementById('hero-titulo-rotativo')?.checked || false,
-        subtitulo: getVal('hero-subtitulo'),
-        btn:       getVal('hero-btn'),
-        label:     getVal('hero-label'),
-        img:       getVal('hero-img-url'),
-        imgFundo:  getVal('hero-foto-fundo-url'),
-        estilo:    document.querySelector('input[name="hero-estilo"]:checked')?.value || 'editorial',
-      },
-      box1: { label: getVal('box1-label'), nome: getVal('box1-nome'), img: getVal('box1-img-url') },
-      box2: { nome: getVal('box2-nome'), img: getVal('box2-img-url') },
-      box3: { nome: getVal('box3-nome'), img: getVal('box3-img-url') },
-      faixa: getVal('faixa-itens').split('\n').map(s => s.trim()).filter(Boolean),
-      depoimentos: Array.from(document.querySelectorAll('#depoimentos-lista .dep-row')).map(row => ({
-        nome: row.querySelector('.dep-nome').value.trim(),
-        cidade: row.querySelector('.dep-cidade').value.trim(),
-        texto: row.querySelector('.dep-texto').value.trim(),
-        estrelas: Number(row.querySelector('.dep-estrelas').value) || 5,
-        foto: row.querySelector('.dep-foto-url').value || null,
-      })).filter(d => d.nome && d.texto),
-      depoimentosAtivo: document.getElementById('dep-ativo')?.checked ?? true,
-      instagram: {
-        ativo: document.getElementById('ig-ativo')?.checked || false,
-        posts: Array.from(document.querySelectorAll('#ig-posts-lista input')).map(el => el.value.trim()).filter(Boolean),
-      },
-
-      geral: {
-        whatsapp:     getVal('cfg-whatsapp'),
-        email:        getVal('cfg-email'),
-        freteGratis:  Number(getVal('cfg-frete-gratis')) || 299,
-        pixDesconto:  Number(getVal('cfg-pix-desc')) || 5,
-        aviso:        getVal('cfg-aviso'),
-      },
-      stats: {
-        s1num: getVal('stat1-num'), s1label: getVal('stat1-label'),
-        s2num: getVal('stat2-num'), s2label: getVal('stat2-label'),
-        s3num: getVal('stat3-num'), s3label: getVal('stat3-label'),
-      },
-      heroB: {
-        titulo:        getVal('herob-titulo'),
-        subtitulo:     getVal('herob-subtitulo'),
-        tituloGrande:  getVal('herob-titulo-grande'),
-        btn:           getVal('herob-btn'),
-        ...[1,2,3,4,5,6,7,8,9].reduce((acc, i) => { acc['foto' + i] = getVal('herob-foto' + i + '-url'); return acc; }, {}),
-      },
-      categorias: {
-        aneis:     { img: getVal('cat-aneis-img-url') },
-        colares:   { img: getVal('cat-colares-img-url') },
-        pulseiras: { img: getVal('cat-pulseiras-img-url') },
-        brincos:   { img: getVal('cat-brincos-img-url') },
-        conjuntos: { img: getVal('cat-conjuntos-img-url') },
-      },
-      atualizadoEm: new Date().toISOString()
-    };
+    const dados = buildConfigObject();
+    dados.atualizadoEm = new Date().toISOString();
 
     await setDoc(doc(db, 'configuracoes', 'loja'), dados, { merge: true });
     toast('✅ Configurações salvas!', 'ok');
@@ -895,8 +1147,56 @@ function toast(msg, tipo) {
 
 // ── ACCORDION ──
 window.toggleCard = function(headerEl) {
-  headerEl.closest('.config-card')?.classList.toggle('collapsed');
+  const card = headerEl.closest('.config-card');
+  const wasCollapsed = card?.classList.contains('collapsed');
+  card?.classList.toggle('collapsed');
+  if (wasCollapsed) scrollPreviewTo(card.dataset.previewTarget);
 };
+
+// ── PREVIEW AO VIVO ──
+function getPreviewFrame() {
+  const iframe = document.getElementById('preview-iframe');
+  return iframe?.contentWindow || null;
+}
+
+function scrollPreviewTo(selector) {
+  if (!selector) return;
+  const win = getPreviewFrame();
+  if (win) win.postMessage({ __scrollTo: selector }, window.location.origin);
+}
+
+function sendPreviewDraft() {
+  const win = getPreviewFrame();
+  if (!win) return;
+  win.postMessage({ __previewDraft: true, config: buildConfigObject() }, window.location.origin);
+}
+
+let previewDebounce = null;
+function schedulePreviewDraft() {
+  clearTimeout(previewDebounce);
+  previewDebounce = setTimeout(sendPreviewDraft, 200);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const cardsCol = document.querySelector('.cards-col');
+  if (!cardsCol) return;
+
+  // Qualquer digitação/seleção manda o rascunho pro preview
+  cardsCol.addEventListener('input', schedulePreviewDraft);
+  cardsCol.addEventListener('change', schedulePreviewDraft);
+
+  // Focar um campo dentro de uma subseção (ex: "Newsletter" dentro de
+  // "Títulos das Seções") rola o preview até aquela seção específica
+  cardsCol.addEventListener('focusin', e => {
+    const sub = e.target.closest('[data-preview-target]');
+    if (sub) scrollPreviewTo(sub.dataset.previewTarget);
+  });
+
+  // Preview carrega depois do painel — manda o rascunho atual assim que o
+  // iframe terminar de carregar, caso ela já tenha digitado algo antes.
+  const iframe = document.getElementById('preview-iframe');
+  if (iframe) iframe.addEventListener('load', () => setTimeout(sendPreviewDraft, 300));
+});
 
 // ── DEPOIMENTOS ──
 // Mesmo padrão não-destrutivo do Instagram: cada linha existente nunca é

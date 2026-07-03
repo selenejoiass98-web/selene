@@ -162,7 +162,7 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
         <div class="legal-cta">
           <p>Precisa solicitar uma troca, devolução ou tem dúvidas sobre a garantia da sua semijoia?</p>
           <div class="legal-cta-btns">
-            <a href="https://wa.me/5547997259678" class="btn btn-primary" target="_blank">💬 Falar no WhatsApp</a>
+            <a href="https://wa.me/5547997259678" data-cfg="whatsapp-link" class="btn btn-primary" target="_blank">💬 Falar no WhatsApp</a>
             <a href="catalogo.html" class="btn btn-outline">Ver Coleção</a>
           </div>
         </div>
@@ -179,7 +179,7 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
       <div class="footer-brand">
         <div class="logo">Elenice Collection</div>
         <div class="tagline">Elegância que transforma</div>
-        <p>Semijoias exclusivas, criadas para mulheres que valorizam beleza, qualidade e significado.</p>
+        <p data-cfg="footer-blurb">Semijoias exclusivas, criadas para mulheres que valorizam beleza, qualidade e significado.</p>
       </div>
       <div class="footer-col">
         <h4>Coleções</h4>
@@ -203,19 +203,19 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
       <div class="footer-col">
         <h4>Contato</h4>
         <ul>
-          <li>📱 (47) 99725-9678</li>
-          <li>✉ contato@elenicecollection.com.br</li>
+          <li>📱 <span data-cfg="footer-phone">(47) 99725-9678</span></li>
+          <li>✉ <span data-cfg="footer-email">contato@elenicecollection.com.br</span></li>
           <li>📍 Balneário Camboriú, SC</li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 Elenice Collection. Todos os direitos reservados.</p>
+      <p data-cfg="footer-copyright">© 2026 Elenice Collection. Todos os direitos reservados.</p>
       <a href="sobre.html" class="footer-history-link">Nossa História</a>
       <div class="social-links">
-        <a class="social-link" href="#">ig</a>
-        <a class="social-link" href="#">fb</a>
-        <a class="social-link" href="https://wa.me/5547997259678">wa</a>
+        <a class="social-link" data-cfg="social-ig" href="#">ig</a>
+        <a class="social-link" data-cfg="social-fb" href="#">fb</a>
+        <a class="social-link" data-cfg="whatsapp-link" href="https://wa.me/5547997259678">wa</a>
       </div>
     </div>
   </div>
@@ -272,34 +272,7 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
 })();
 </script>
 
-<script type="module">
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const _fbCfg = {
-  apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
-  authDomain: "selene-joias.firebaseapp.com",
-  projectId: "selene-joias",
-  storageBucket: "selene-joias.firebasestorage.app",
-  messagingSenderId: "395713731584",
-  appId: "1:395713731584:web:c29c4d3f53254e0ed10ce5"
-};
-const _app = getApps().length ? getApps()[0] : initializeApp(_fbCfg);
-const _db  = getFirestore(_app);
-(async () => {
-  try {
-    const snap = await getDoc(doc(_db, 'configuracoes', 'loja'));
-    const faixa = snap.exists() && snap.data().faixa;
-    if (!faixa || !faixa.length) return;
-    const track = document.getElementById('faixa-track');
-    const bar   = document.getElementById('faixa-bar');
-    if (!track || !bar) return;
-    const items = [...faixa, ...faixa];
-    track.innerHTML = items.map(txt => `<span class="faixa-item">${txt}</span>`).join('');
-    bar.style.display = 'block';
-    track.style.animationDuration = Math.max(18, faixa.length * 4) + 's';
-  } catch(e) { console.warn('Faixa:', e); }
-})();
-</script>
+<script type="module" src="assets/js/site-config.js"></script>
 
 </body>
 </html>

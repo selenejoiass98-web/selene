@@ -28,6 +28,7 @@
 - **Carrinho:** localStorage (`elenice_cart`), gerenciado por `assets/js/cart.js`, compartilhado entre todas as páginas públicas.
 - **Faixa de avisos:** componente dinâmico carregado do Firestore (`configuracoes/loja → faixa`), presente em todas as páginas públicas, com nav que acompanha o scroll sem deixar vão.
 - **Tracking:** GA4 + Meta Pixel centralizados em `assets/js/tracking.js`, carregado apenas nas páginas públicas (nunca no checkout/admin).
+- **Ornamentos/SVG decorativos:** a proprietária desenha no CorelDRAW e exporta SVG (fonte em `assets/`); o SVG entra inline no HTML recolorido para o dourado do site, com animação por grupos (detalhes na seção "Divisor Ornamental da Home").
 
 ---
 
@@ -81,6 +82,16 @@
 - [x] Admin: seção "Posts do Instagram" — toggle ativo/inativo + lista de links (até 12, botão "+ Adicionar link"), embed oficial (`embed.js` da Meta, sem API/App Review) exibido na home em grid de 4 por linha (wrap automático)
 - [x] Admin: toggle independente para a seção de Depoimentos (mostrar/ocultar na home), padrão ativo
 - [x] **Fix:** depoimentos não apareciam na home — causa: classe `.reveal` (scroll-fade-in) é observada uma única vez no `DOMContentLoaded` (cart.js), mas depoimentos chegam depois via Firestore e nunca eram observados, ficando com `opacity:0` permanente. Corrigido com fallback `querySelectorAll('.reveal:not(.visible))` no `finally` do `init()` do index.html (mesmo padrão que já existia em catalogo.html). **Atenção:** qualquer novo conteúdo dinâmico com classe `.reveal` precisa desse mesmo fallback ou nunca aparecerá
+
+### Divisor Ornamental da Home (sessão 03/07/2026)
+- [x] **Desenho feito pela proprietária no CorelDRAW** (lemniscata caligráfica com traços paralelos, gotas, losangos e anéis) — exportado como SVG e guardado em `assets/divisor.svg` (fonte original; o Corel salvou com extensão duplicada `.svg.svg`, foi renomeado)
+- [x] **SVG inline no `index.html`** entre a seção de categorias e a coleção — cor original `#6D8A91` trocada por `#C4A47A` (dourado do site); viewBox gigante do Corel (`0 0 33387.48 2463.53`) mantido como veio
+- [x] **Linhas horizontais**: o Corel exporta as linhas como `<polygon>` preenchido (não animável com dash) — foram convertidas em `<line>` com stroke, mantendo geometria exata (y esquerda 1357.53 ≠ y direita 1396.58, assimetria do desenho original preservada). O `x1` de cada linha fica no lado do centro, para o desenho "correr" do centro para as pontas
+- [x] **Estrutura em grupos para a coreografia**: `.orn-centro` (lemniscata + 2 traços paralelos), `.orn-caps` (gotas internas + anéis junto ao centro), `.orn-ponta` ×2 (terminais das extremidades), `.orn-line` ×2 (linhas)
+- [x] **Efeito (CSS + JS no final do index.html)**: IntersectionObserver (threshold 0.3) adiciona/remove a classe `orn-on` no wrapper `.ornament-divider`. Sequência: centro expande com `scaleX(0→1)` 0.9s (`transform-box: fill-box`) → caps fade delay 0.55s → linhas desenham com `stroke-dasharray/dashoffset` (comprimento via `getTotalLength()`) 1.15s delay 0.7s → pontas fade delay 1.7s. Ao sair da tela, `reset()` rearma tudo (transition none + reflow forçado) — **anima de novo em toda entrada na viewport**
+- [x] **`prefers-reduced-motion` NÃO é respeitado** — decisão explícita da proprietária: o Windows dela está com animações desativadas e a primeira versão (que respeitava a preferência) parecia "sem efeito nenhum". Se algum dia voltar a respeitar, ela não verá a animação de novo
+- [x] O divisor **não usa a classe `.reveal`** (a coreografia própria controla a entrada; `.reveal` por cima escondia o início da sequência)
+- [x] **Método de trabalho para ornamentos SVG**: desenhar/ajustar → renderizar com Chrome headless (`--headless --screenshot --virtual-time-budget`) → comparar com a imagem de referência → iterar. Estados intermediários da animação capturados com budgets pequenos (300ms) para validar que ela roda de verdade. Atenção: o Chrome headless se comporta como `prefers-reduced-motion: reduce`
 
 ### Blog (sessão 16/06/2026)
 - [x] **Público:** `blog.html` (listagem, grid 3 col, paginação 9/página) e `blog-post.html` (artigo individual)

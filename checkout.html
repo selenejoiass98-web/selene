@@ -298,7 +298,8 @@
 .pay-tab:last-child { border-right: 1px solid var(--gold-pale); }
 .pay-tab:hover { color: var(--gold); border-color: var(--gold-light); }
 .pay-tab.active { background: var(--gold); color: var(--white); border-color: var(--gold); }
-.pay-tab-icon { font-size: 1.2rem; }
+.pay-tab-icon { display: inline-flex; }
+.pay-tab-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
 .payment-panel { display: none; }
 .payment-panel.active { display: block; }
@@ -841,15 +842,21 @@
 
         <div class="payment-tabs">
           <button class="pay-tab active" onclick="selectPayTab('pix', this)">
-            <span class="pay-tab-icon">🟢</span>
+            <span class="pay-tab-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><path d="M14 14h3v3h-3z"/><path d="M21 14v.01M14 21h.01M17.5 17.5h.01M21 21v.01"/></svg>
+            </span>
             Pix
           </button>
           <button class="pay-tab" onclick="selectPayTab('cartao', this)">
-            <span class="pay-tab-icon">💳</span>
+            <span class="pay-tab-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 9.5h19"/><path d="M6 15h4"/></svg>
+            </span>
             Cartão
           </button>
           <button class="pay-tab" onclick="selectPayTab('boleto', this)">
-            <span class="pay-tab-icon">🧾</span>
+            <span class="pay-tab-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3.5 5v14M7 5v14M10 5v10M13 5v14M16.5 5v10M20.5 5v14M10 19v.01M16.5 19v.01"/></svg>
+            </span>
             Boleto
           </button>
         </div>

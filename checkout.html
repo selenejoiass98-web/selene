@@ -1398,6 +1398,17 @@ async function salvarPedidoFirebase(orderNum, paymentData) {
       status: 'novo',
       criadoEm: new Date().toISOString(),
     });
+    // Cadastra o cliente na lista "Clientes do Site" do Brevo — fire-and-forget,
+    // um erro aqui nunca pode atrapalhar a finalização do pedido
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: document.getElementById('email').value,
+        nome: document.getElementById('nome').value,
+        telefone: document.getElementById('telefone').value,
+      }),
+    }).catch(() => {});
     await atualizarEstoque();
   } catch(e) { console.error('Erro ao salvar pedido:', e); }
 }

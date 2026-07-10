@@ -1329,15 +1329,16 @@ function clearFieldError(id) {
 
 function validateForm() {
   let valid = true;
+  let firstInvalid = null;
   const fields = [
-    { id:'nome', check: v => v.length >= 3, msg:'Nome inválido' },
-    { id:'cpf', check: v => v.replace(/\D/g,'').length === 11, msg:'CPF inválido' },
-    { id:'email', check: v => v.includes('@') && v.includes('.'), msg:'E-mail inválido' },
-    { id:'telefone', check: v => v.replace(/\D/g,'').length >= 10, msg:'Telefone inválido' },
-    { id:'cep', check: v => v.replace(/\D/g,'').length === 8, msg:'CEP inválido' },
-    { id:'logradouro', check: v => v.length >= 3, msg:'Campo obrigatório' },
-    { id:'numero', check: v => v.length >= 1, msg:'Campo obrigatório' },
-    { id:'cidade', check: v => v.length >= 2, msg:'Campo obrigatório' },
+    { id:'nome', label:'Nome completo', check: v => v.length >= 3, msg:'Nome inválido' },
+    { id:'cpf', label:'CPF', check: v => v.replace(/\D/g,'').length === 11, msg:'CPF inválido' },
+    { id:'email', label:'E-mail', check: v => v.includes('@') && v.includes('.'), msg:'E-mail inválido' },
+    { id:'telefone', label:'WhatsApp', check: v => v.replace(/\D/g,'').length >= 10, msg:'Telefone inválido' },
+    { id:'cep', label:'CEP', check: v => v.replace(/\D/g,'').length === 8, msg:'CEP inválido' },
+    { id:'logradouro', label:'Endereço', check: v => v.length >= 3, msg:'Campo obrigatório' },
+    { id:'numero', label:'Número', check: v => v.length >= 1, msg:'Campo obrigatório' },
+    { id:'cidade', label:'Cidade', check: v => v.length >= 2, msg:'Campo obrigatório' },
   ];
   fields.forEach(f => {
     const el = document.getElementById(f.id);
@@ -1345,10 +1346,26 @@ function validateForm() {
     if (!f.check(el.value.trim())) {
       showFieldError(f.id, f.msg);
       valid = false;
+      if (!firstInvalid) firstInvalid = { el, label: f.label, msg: f.msg };
     } else clearFieldError(f.id);
   });
+
+  // Leva o cliente até o problema: rola até o primeiro campo inválido,
+  // foca nele e avisa no toast qual é o motivo
+  if (firstInvalid) {
+    const aviso = firstInvalid.msg === 'Campo obrigatório'
+      ? `Preencha o campo "${firstInvalid.label}"`
+      : firstInvalid.msg;
+    showToast(aviso);
+    firstInvalid.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => firstInvalid.el.focus({ preventScroll: true }), 450);
+    return false;
+  }
+
   if (!selectedShipping) {
     showToast('Selecione uma opção de frete');
+    const envio = document.getElementById('shipping-options');
+    if (envio) envio.scrollIntoView({ behavior: 'smooth', block: 'center' });
     valid = false;
   }
   return valid;

@@ -970,8 +970,8 @@
 <div class="success-overlay" id="success-overlay">
   <div class="success-modal">
     <div class="success-icon">✦</div>
-    <h2 class="success-title">Pedido realizado!</h2>
-    <p class="success-sub">Obrigada pela sua compra, <strong id="success-name"></strong>!<br>Você receberá um e-mail de confirmação em breve com todos os detalhes.</p>
+    <h2 class="success-title" id="success-title">Pedido realizado!</h2>
+    <p class="success-sub" id="success-sub">Obrigada pela sua compra, <strong id="success-name"></strong>!<br>Você receberá um e-mail de confirmação em breve com todos os detalhes.</p>
     <div class="success-order">
       Número do pedido: <strong id="success-order-num">#SJ-00001</strong>
     </div>
@@ -1462,7 +1462,29 @@ async function atualizarEstoque() {
 function mostrarSucesso(orderNum) {
   const nome  = document.getElementById('nome').value;
   const email = document.getElementById('email').value;
-  document.getElementById('success-name').textContent = nome.split(' ')[0];
+  const primeiroNome = nome.split(' ')[0];
+
+  // Boleto não é compra concluída — é pedido aguardando pagamento
+  const titulo = document.getElementById('success-title');
+  const sub = document.getElementById('success-sub');
+  if (selectedPayment === 'boleto') {
+    titulo.textContent = 'Pedido registrado!';
+    sub.innerHTML = '';
+    sub.append('Obrigada, ');
+    const b = document.createElement('strong'); b.textContent = primeiroNome; sub.append(b);
+    sub.append('! Seu pedido está aguardando o pagamento do boleto — ele foi aberto em outra aba e também enviado para o seu e-mail (confira o spam).');
+    sub.append(document.createElement('br'));
+    sub.append('Assim que o pagamento compensar, preparamos o envio da sua semijoia.');
+  } else {
+    titulo.textContent = 'Pedido realizado!';
+    sub.innerHTML = '';
+    sub.append('Obrigada pela sua compra, ');
+    const b = document.createElement('strong'); b.textContent = primeiroNome; sub.append(b);
+    sub.append('!');
+    sub.append(document.createElement('br'));
+    sub.append('Você receberá um e-mail de confirmação em breve com todos os detalhes.');
+  }
+
   document.getElementById('success-order-num').textContent = orderNum;
   document.getElementById('success-overlay').classList.add('open');
   // Boleto já enviou e-mail específico — enviar genérico só para pix e cartão
@@ -1476,6 +1498,95 @@ function mostrarSucesso(orderNum) {
     );
   }
   cart = []; saveCart(); updateCartUI();
+}
+
+// E-mail de confirmação para Pix e Cartão (o boleto tem template próprio)
+async function enviarEmailConfirmacao(orderNum, nome, email, itens, total, frete, metodo) {
+  const METODO_LABELS = { pix: 'Pix', cartao: 'Cartão' };
+  const metodoLabel = METODO_LABELS[metodo] || metodo;
+  const infoPagamento = metodo === 'pix'
+    ? 'Assim que o pagamento do Pix for confirmado, começamos a preparar o envio.'
+    : 'Seu pagamento no cartão foi recebido e o pedido já está em processamento.';
+
+  const itensHtml = itens.map(i => `
+    <tr>
+      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#2A1F14;">${i.name}${i.variant ? ' (' + i.variant + ')' : ''}</td>
+      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#2A1F14;text-align:center;">${i.qty}</td>
+      <td style="padding:8px 0;border-bottom:1px solid #E0CEBB;font-size:14px;color:#7C5C35;text-align:right;font-family:Georgia,serif;">R$ ${(i.price*i.qty).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+    </tr>`).join('');
+
+  const htmlConfirmacao = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F5F0EA;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0EA;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#FEFCF9;border:1px solid #E0CEBB;max-width:560px;width:100%;">
+        <tr>
+          <td style="background:#3D2B1A;padding:32px 40px;text-align:center;">
+            <p style="margin:0;font-family:Georgia,serif;font-size:22px;font-weight:300;letter-spacing:8px;color:#C4A47A;text-transform:uppercase;">Elenice Collection</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:40px 40px 32px;">
+            <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:300;color:#3D2B1A;margin:0 0 8px;">Obrigada pela sua compra! ✦</h1>
+            <p style="font-size:14px;color:#5A4030;margin:0 0 24px;">Olá, <strong>${nome.split(' ')[0]}</strong>! Recebemos seu pedido <strong>${orderNum}</strong>. ${infoPagamento}</p>
+
+            <div style="text-align:center;margin-bottom:28px;">
+              <p style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#7C5C35;margin:0 0 4px;">R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</p>
+              <p style="font-size:12px;color:#9C8070;margin:0;">Pagamento via ${metodoLabel} · Frete: ${frete.nome}</p>
+            </div>
+
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+              <tr>
+                <th style="text-align:left;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9C8070;padding-bottom:12px;border-bottom:2px solid #E0CEBB;">Produto</th>
+                <th style="text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9C8070;padding-bottom:12px;border-bottom:2px solid #E0CEBB;">Qtd</th>
+                <th style="text-align:right;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9C8070;padding-bottom:12px;border-bottom:2px solid #E0CEBB;">Valor</th>
+              </tr>
+              ${itensHtml}
+            </table>
+
+            <div style="background:#F0F9F4;border-left:3px solid #2D6A4F;padding:16px 20px;margin-bottom:28px;">
+              <p style="margin:0;font-size:13px;color:#1A4731;line-height:1.8;">
+                💎 Sua semijoia será embalada com carinho em embalagem especial<br>
+                📦 Você receberá o código de rastreio por e-mail assim que enviarmos<br>
+                🔎 Acompanhe seu pedido em <a href="https://www.elenicecollection.com.br/rastreio.html?pedido=${encodeURIComponent(orderNum)}" style="color:#2D6A4F;">nossa página de rastreio</a>
+              </p>
+            </div>
+
+            <p style="font-size:13px;color:#9C8070;margin:0;">Dúvidas? Fale com a gente:<br>
+              <a href="mailto:contato@elenicecollection.com.br" style="color:#7C5C35;">contato@elenicecollection.com.br</a>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#F5F0EA;padding:24px 40px;text-align:center;border-top:1px solid #E0CEBB;">
+            <p style="margin:0;font-size:11px;color:#9C8070;letter-spacing:1px;">© 2026 Elenice Collection • Semijoias Exclusivas</p>
+            <p style="margin:4px 0 0;font-size:11px;color:#C4A47A;letter-spacing:1px;">elenicecollection.com.br</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  try {
+    const r = await fetch('/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: email,
+        toName: nome,
+        subject: `✦ Pedido ${orderNum} confirmado — Elenice Collection`,
+        htmlContent: htmlConfirmacao,
+      })
+    });
+    if (!r.ok) console.error('Falha no envio do e-mail de confirmação:', await r.text());
+  } catch(e) {
+    console.warn('Erro ao enviar e-mail de confirmação:', e);
+  }
 }
 
 // ── FINALIZAR ──
@@ -1545,6 +1656,15 @@ async function processarPix(orderNum, total, nome, email, cpf) {
   if (qrCode) document.getElementById('pix-copia-cola').value = qrCode;
 
   await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'pix' });
+
+  // E-mail com os detalhes do pedido (fire-and-forget)
+  enviarEmailConfirmacao(
+    orderNum, nome, email,
+    cart.map(i => ({ name: i.name, variant: i.variant, price: i.price, qty: i.qty })),
+    total,
+    selectedShipping || { nome: 'A definir', preco: 0 },
+    'pix'
+  );
 
   // Scroll para QR Code
   document.getElementById('panel-pix').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1734,7 +1854,7 @@ async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens,
 </html>`;
 
   try {
-    await fetch('/api/email', {
+    const r = await fetch('/api/email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1744,6 +1864,7 @@ async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens,
         htmlContent: htmlBoleto,
       })
     });
+    if (!r.ok) console.error('Falha no envio do e-mail de boleto:', await r.text());
   } catch(e) {
     console.warn('Erro ao enviar e-mail boleto:', e);
   }

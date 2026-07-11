@@ -222,6 +222,12 @@
 .status-preparando { background: #EDE9FE; color: #4C1D95; }
 .status-enviado { background: #DBEAFE; color: #1E40AF; }
 .status-entregue { background: #D1FAE5; color: #065F46; }
+.status-pendente { background: #FEF3C7; color: #92400E; }
+.status-cancelado { background: #FEE2E2; color: #991B1B; }
+.order-list { display: none; max-width: 760px; margin: 0 auto 1.5rem; text-align: center; }
+.order-list-title { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 0.8rem; }
+.order-list-pill { display: inline-block; margin: 0.25rem; padding: 0.55rem 1.1rem; border: 1px solid var(--gold-pale); background: var(--white); font-family: var(--font-sans); font-size: 0.72rem; color: var(--text-mid); cursor: pointer; border-radius: 999px; transition: all 0.25s ease; }
+.order-list-pill:hover, .order-list-pill.active { border-color: var(--gold); color: var(--gold); }
 
 .order-meta {
   display: flex;
@@ -586,17 +592,17 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
         <div class="search-tabs" style="margin-bottom:1.2rem;">
           <button class="search-tab active" onclick="setSearchType('pedido', this)">Número do pedido</button>
           <button class="search-tab" onclick="setSearchType('correios', this)">Código dos Correios</button>
-          <button class="search-tab" onclick="setSearchType('email', this)">E-mail + CPF</button>
+          <button class="search-tab" onclick="setSearchType('email', this)">E-mail ou CPF</button>
         </div>
         <div class="search-row">
           <input type="text" class="search-input" id="search-input"
-            placeholder="Ex: #SJ-12345"
+            placeholder="Ex: #EC-12345"
             oninput="formatSearchInput(this)"
             onkeydown="if(event.key==='Enter') buscarPedido()">
           <button class="btn-search" onclick="buscarPedido()" id="btn-buscar">Rastrear</button>
         </div>
         <p style="font-size:0.62rem;color:var(--text-soft);text-align:center;letter-spacing:0.05em;">
-          Não encontrou seu pedido? <a data-cfg="whatsapp-link" href="https://wa.me/5547997259678" style="color:var(--gold);" target="_blank">Fale conosco no WhatsApp</a>
+          Não encontrou seu pedido? <a data-cfg="whatsapp-link" href="https://wa.me/5547997259678" style="color:var(--gold);font-weight:700;text-decoration:underline;" target="_blank">Fale conosco no WhatsApp</a>
         </p>
       </div>
     </div>
@@ -636,6 +642,9 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
       <p>Não encontramos nenhum pedido com esse número. Verifique se digitou corretamente ou entre em contato conosco.</p>
       <a data-cfg="whatsapp-link" href="https://wa.me/5547997259678" class="btn btn-primary" target="_blank" style="display:inline-flex;">💬 Falar no WhatsApp</a>
     </div>
+
+    <!-- LISTA (quando e-mail/CPF tem mais de um pedido) -->
+    <div class="order-list" id="order-list"></div>
 
     <!-- ORDER RESULT -->
     <div class="order-card" id="order-result">
@@ -809,53 +818,7 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
 // ── STATE ──
 let searchType = 'pedido';
 let currentTracking = null;
-
-// ── DEMO ORDERS (substituir por integração real) ──
-const DEMO_ORDERS = {
-  'SJ-12345': {
-    num: '#SJ-12345',
-    date: '14/05/2025',
-    payment: 'Pix',
-    eta: '19/05/2025',
-    tracking: 'BR123456789BR',
-    status: 'enviado',
-    statusLabel: 'Enviado',
-    total: 'R$ 289,00',
-    items: [
-      { name: 'Colar Lua Dourada', variant: 'Dourado 18k · 45cm', price: 'R$ 289,00', symbol: '◯' }
-    ],
-    timeline: [
-      { name: 'Pedido realizado', desc: 'Recebemos seu pedido com sucesso.', date: '14/05/2025 às 14h32', done: true },
-      { name: 'Pagamento confirmado', desc: 'Pix confirmado e pedido aprovado.', date: '14/05/2025 às 14h35', done: true },
-      { name: 'Em preparação', desc: 'Sua semijoia está sendo embalada com carinho.', date: '15/05/2025 às 09h00', done: true },
-      { name: 'Enviado pelos Correios', desc: 'SEDEX · Código: BR123456789BR', date: '16/05/2025 às 11h20', done: true, current: false },
-      { name: 'Saiu para entrega', desc: 'Sua semijoia está a caminho!', date: '', done: false, current: true },
-      { name: 'Entregue', desc: 'Aproveite sua nova semijoia! ✦', date: '', done: false },
-    ]
-  },
-  'SJ-99999': {
-    num: '#SJ-99999',
-    date: '10/05/2025',
-    payment: 'Cartão · 3×',
-    eta: '—',
-    tracking: 'BR987654321BR',
-    status: 'entregue',
-    statusLabel: 'Entregue',
-    total: 'R$ 508,00',
-    items: [
-      { name: 'Anel Serpente', variant: 'Dourado 18k · T16', price: 'R$ 199,00', symbol: '⊛' },
-      { name: 'Pulseira Elos', variant: 'Dourado 18k · 18cm', price: 'R$ 309,00', symbol: '∞' },
-    ],
-    timeline: [
-      { name: 'Pedido realizado', desc: 'Recebemos seu pedido com sucesso.', date: '10/05/2025 às 10h00', done: true },
-      { name: 'Pagamento confirmado', desc: 'Cartão aprovado.', date: '10/05/2025 às 10h02', done: true },
-      { name: 'Em preparação', desc: 'Suas semijoias foram embaladas.', date: '11/05/2025 às 09h00', done: true },
-      { name: 'Enviado pelos Correios', desc: 'PAC · Código: BR987654321BR', date: '12/05/2025 às 14h00', done: true },
-      { name: 'Saiu para entrega', desc: 'Saiu para entrega.', date: '13/05/2025 às 08h30', done: true },
-      { name: 'Entregue', desc: 'Entregue com sucesso! Aproveite suas semijoias ✦', date: '13/05/2025 às 14h15', done: true },
-    ]
-  }
-};
+let foundOrders = [];
 
 // ── SEARCH TYPE ──
 function setSearchType(type, btn) {
@@ -864,9 +827,9 @@ function setSearchType(type, btn) {
   btn.classList.add('active');
   const input = document.getElementById('search-input');
   const placeholders = {
-    pedido: 'Ex: #SJ-12345',
+    pedido: 'Ex: #EC-12345',
     correios: 'Ex: BR123456789BR',
-    email: 'Digite seu e-mail'
+    email: 'Digite seu e-mail ou CPF'
   };
   input.placeholder = placeholders[type];
   input.value = '';
@@ -875,31 +838,63 @@ function setSearchType(type, btn) {
 function formatSearchInput(el) {
   if (searchType === 'pedido') {
     let v = el.value.replace(/[^0-9]/g, '');
-    if (v) el.value = 'SJ-' + v;
+    if (v) el.value = 'EC-' + v;
   }
+}
+
+// ── API DE RASTREIO ──
+// A coleção de pedidos não é pública (contém dados pessoais) — a busca
+// passa por /api/rastreio, que devolve apenas os campos seguros
+async function apiRastreio(tipo, valor) {
+  const res = await fetch('/api/rastreio', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tipo, valor }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Erro na busca');
+  return data.pedidos || [];
 }
 
 // ── SEARCH ──
 async function buscarPedido() {
-  const raw = document.getElementById('search-input').value.trim().toUpperCase();
+  const raw = document.getElementById('search-input').value.trim();
   const btn = document.getElementById('btn-buscar');
 
-  if (!raw) { showToast('Digite o número do pedido'); return; }
+  if (!raw) {
+    showToast(searchType === 'email' ? 'Digite seu e-mail ou CPF' : 'Digite o código para buscar');
+    return;
+  }
 
   btn.disabled = true;
   btn.textContent = 'Buscando...';
   hideAll();
 
-  // Simula delay de API
-  await new Promise(r => setTimeout(r, 1000));
+  try {
+    if (searchType === 'email' && !raw.includes('@')) {
+      const digits = raw.replace(/\D/g, '');
+      if (digits.length !== 11) {
+        showToast('Digite um e-mail válido ou um CPF completo (11 dígitos)');
+        btn.disabled = false;
+        btn.textContent = 'Rastrear';
+        document.getElementById('state-empty').style.display = '';
+        return;
+      }
+    }
 
-  // Normaliza input
-  const key = raw.replace('#','').replace('SJ-','');
-  const order = DEMO_ORDERS['SJ-' + key] || DEMO_ORDERS[raw];
+    const tipos = { pedido: 'pedido', correios: 'correios', email: 'busca' };
+    const results = await apiRastreio(tipos[searchType], raw);
 
-  if (order) {
-    renderOrder(order);
-  } else {
+    if (results.length) {
+      foundOrders = results;
+      renderOrderList();
+      renderPedido(results[0]);
+    } else {
+      document.getElementById('state-not-found').classList.add('show');
+    }
+  } catch (e) {
+    console.error('Erro na busca:', e);
+    showToast('Erro ao buscar pedido. Tente novamente.');
     document.getElementById('state-not-found').classList.add('show');
   }
 
@@ -911,32 +906,115 @@ function hideAll() {
   document.getElementById('state-empty').style.display = 'none';
   document.getElementById('state-not-found').classList.remove('show');
   document.getElementById('order-result').classList.remove('show');
+  const lista = document.getElementById('order-list');
+  lista.style.display = 'none';
+  lista.innerHTML = '';
 }
 
-function renderOrder(order) {
-  currentTracking = order.tracking;
+// ── HELPERS ──
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
 
-  document.getElementById('res-order-num').textContent = order.num;
-  document.getElementById('res-date').textContent = order.date;
-  document.getElementById('res-payment').textContent = order.payment;
-  document.getElementById('res-eta').textContent = order.eta || '—';
-  document.getElementById('res-total').textContent = order.total;
+function fmtMoeda(v) {
+  return 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
-  // Status badge
-  const badge = document.getElementById('res-status-badge');
-  badge.textContent = order.statusLabel;
-  badge.className = 'order-status-badge status-' + order.status;
+function fmtData(iso, comHora) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (isNaN(d)) return '—';
+  const data = d.toLocaleDateString('pt-BR');
+  if (!comHora) return data;
+  return data + ' às ' + String(d.getHours()).padStart(2, '0') + 'h' + String(d.getMinutes()).padStart(2, '0');
+}
 
-  // Tracking code
-  if (order.tracking) {
-    document.getElementById('res-tracking').textContent = order.tracking;
-    document.getElementById('tracking-code-block').style.display = 'block';
-    document.getElementById('btn-correios').style.display = 'inline-flex';
+const PAGTO_LABELS = { pix: 'Pix', cartao: 'Cartão', boleto: 'Boleto' };
+
+function statusInfo(o) {
+  const mp = o.mercadoPago && o.mercadoPago.status;
+  if (o.status === 'cancelado') return { label: 'Cancelado', cls: 'cancelado', pagoOk: false };
+  const pagoOk = mp === 'approved' || ['processando', 'enviado', 'entregue'].includes(o.status);
+  if (o.status === 'novo' || !o.status) {
+    return pagoOk
+      ? { label: 'Pagamento confirmado', cls: 'pago', pagoOk: true }
+      : { label: 'Aguardando pagamento', cls: 'pendente', pagoOk: false };
   }
+  const map = { processando: ['Em preparação', 'preparando'], enviado: ['Enviado', 'enviado'], entregue: ['Entregue', 'entregue'] };
+  const m = map[o.status] || ['Em andamento', 'processando'];
+  return { label: m[0], cls: m[1], pagoOk: pagoOk };
+}
+
+// ── LISTA (vários pedidos do mesmo e-mail/CPF) ──
+function renderOrderList() {
+  const box = document.getElementById('order-list');
+  if (foundOrders.length < 2) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = 'block';
+  box.innerHTML = '<div class="order-list-title">Encontramos ' + foundOrders.length + ' pedidos — toque para ver cada um</div>' +
+    foundOrders.map((o, i) =>
+      '<button class="order-list-pill' + (i === 0 ? ' active' : '') + '" onclick="verPedido(' + i + ', this)">' +
+      esc(o.numeroPedido) + ' · ' + fmtData(o.criadoEm) + ' · ' + statusInfo(o).label + '</button>'
+    ).join('');
+}
+
+window.verPedido = function (i, btn) {
+  document.querySelectorAll('.order-list-pill').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderPedido(foundOrders[i]);
+  document.getElementById('order-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+// ── RENDER ──
+function renderPedido(o) {
+  currentTracking = o.codigoRastreio || null;
+  const st = statusInfo(o);
+  const pagto = PAGTO_LABELS[o.pagamento] || o.pagamento || '—';
+
+  document.getElementById('res-order-num').textContent = o.numeroPedido || '—';
+  document.getElementById('res-date').textContent = fmtData(o.criadoEm);
+  document.getElementById('res-payment').textContent = pagto;
+  document.getElementById('res-eta').textContent = (o.frete && (o.frete.desc || o.frete.nome)) || '—';
+  document.getElementById('res-total').textContent = fmtMoeda(o.total);
+
+  const badge = document.getElementById('res-status-badge');
+  badge.textContent = st.label;
+  badge.className = 'order-status-badge status-' + st.cls;
+
+  const temRastreio = !!o.codigoRastreio;
+  document.getElementById('tracking-code-block').style.display = temRastreio ? 'block' : 'none';
+  document.getElementById('btn-correios').style.display = temRastreio ? 'inline-flex' : 'none';
+  if (temRastreio) document.getElementById('res-tracking').textContent = o.codigoRastreio;
 
   // Timeline
-  const timeline = document.getElementById('timeline-steps');
-  timeline.innerHTML = order.timeline.map(step => `
+  let steps;
+  if (o.status === 'cancelado') {
+    steps = [
+      { name: 'Pedido realizado', desc: 'Recebemos seu pedido.', date: fmtData(o.criadoEm, true), done: true },
+      { name: 'Pedido cancelado', desc: 'Este pedido foi cancelado. Fale conosco se tiver dúvidas.', done: false, current: true },
+    ];
+  } else {
+    steps = [
+      { name: 'Pedido realizado', desc: 'Recebemos seu pedido com sucesso.', date: fmtData(o.criadoEm, true), done: true },
+      st.pagoOk
+        ? { name: 'Pagamento confirmado', desc: 'Pagamento via ' + pagto + ' confirmado.', done: true }
+        : {
+            name: 'Aguardando pagamento',
+            desc: o.pagamento === 'boleto'
+              ? 'Boleto emitido — a compensação leva 1 a 2 dias úteis após o pagamento.'
+              : 'Aguardando a confirmação do pagamento via ' + pagto + '.',
+            done: false, current: true
+          },
+      { name: 'Em preparação', desc: 'Sua semijoia está sendo embalada com carinho.', done: ['enviado', 'entregue'].includes(o.status), current: o.status === 'processando' },
+      {
+        name: 'Enviado',
+        desc: temRastreio ? (o.transportadora || 'Correios') + ' · Código: ' + o.codigoRastreio : 'Você receberá o código de rastreio por e-mail.',
+        done: o.status === 'entregue', current: o.status === 'enviado'
+      },
+      { name: 'Entregue', desc: 'Aproveite sua nova semijoia! ✦', done: o.status === 'entregue' },
+    ];
+  }
+
+  document.getElementById('timeline-steps').innerHTML = steps.map(step => `
     <div class="timeline-step ${step.done ? 'done' : ''} ${step.current ? 'current' : ''} ${!step.done && !step.current ? 'pending' : ''}">
       <div class="timeline-step-dot">${step.done && !step.current ? '✓' : ''}</div>
       <div class="timeline-step-name">${step.name}</div>
@@ -945,24 +1023,25 @@ function renderOrder(order) {
     </div>
   `).join('');
 
-  // Items
-  document.getElementById('res-items').innerHTML = order.items.map(item => `
+  // Itens
+  const itens = o.itens || [];
+  document.getElementById('res-items').innerHTML = itens.map(item => `
     <div class="order-item">
-      <div class="order-item-img">${item.symbol}</div>
+      <div class="order-item-img">✦</div>
       <div class="order-item-info">
-        <div class="item-name">${item.name}</div>
-        <div class="item-var">${item.variant}</div>
+        <div class="item-name">${item.qty > 1 ? item.qty + '× ' : ''}${esc(item.nome)}</div>
+        <div class="item-var">${esc(item.variante || '')}</div>
       </div>
-      <div class="order-item-price">${item.price}</div>
+      <div class="order-item-price">${fmtMoeda((item.preco || 0) * (item.qty || 1))}</div>
     </div>
-  `).join('');
+  `).join('') || '<p style="font-size:0.75rem;color:var(--text-soft);">—</p>';
 
   document.getElementById('order-result').classList.add('show');
 }
 
 function openCorreios() {
   if (currentTracking) {
-    window.open(`https://rastreamento.correios.com.br/app/index.php?objeto=${currentTracking}`, '_blank');
+    window.open('https://rastreamento.correios.com.br/app/index.php?objeto=' + currentTracking, '_blank');
   }
 }
 

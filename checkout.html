@@ -517,6 +517,13 @@
   font-size: 1.4rem;
   color: var(--gold);
 }
+.summary-row.coupon-highlight {
+  animation: couponFlash 1.4s ease;
+}
+@keyframes couponFlash {
+  0%, 100% { background: transparent; }
+  20% { background: rgba(45,106,79,0.15); }
+}
 
 .btn-finalizar {
   width: 100%;
@@ -604,6 +611,25 @@
   letter-spacing: 0.1em;
 }
 .success-order strong { color: var(--gold); font-family: var(--font-serif); font-size: 1.1rem; }
+.copy-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--gold);
+  font-size: 0.95rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  padding: 0.1rem 0.3rem;
+  transition: color var(--transition, 0.2s);
+}
+.copy-btn:hover { color: var(--brown-deep); }
+.copy-btn.copied::after {
+  content: 'Copiado!';
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: #2D6A4F;
+  margin-left: 0.4rem;
+}
 
 /* RESPONSIVE */
 @media (max-width: 860px) {
@@ -974,6 +1000,7 @@
     <p class="success-sub" id="success-sub">Obrigada pela sua compra, <strong id="success-name"></strong>!<br>Você receberá um e-mail de confirmação em breve com todos os detalhes.</p>
     <div class="success-order">
       Número do pedido: <strong id="success-order-num">#SJ-00001</strong>
+      <button type="button" class="copy-btn" onclick="copyOrderNumber(this)" title="Copiar número do pedido">⧉</button>
     </div>
     <a href="rastreio.html" class="btn btn-primary" style="justify-content:center;width:100%;margin-bottom:0.8rem;">Acompanhar pedido</a>
     <a href="index.html" class="btn btn-ghost" style="display:block;text-align:center;">Voltar à loja</a>
@@ -1247,9 +1274,17 @@ async function applyCoupon() {
     }
     msg.style.color = '#2D6A4F';
     msg.style.display = 'block';
-    document.getElementById('s-coupon-row').style.display = 'flex';
+    const couponRow = document.getElementById('s-coupon-row');
+    couponRow.style.display = 'flex';
     updateSummary();
     showToast(`Cupom ${code} aplicado!`);
+
+    if (window.matchMedia('(max-width: 860px)').matches) {
+      document.querySelector('.order-summary')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    couponRow.classList.remove('coupon-highlight');
+    void couponRow.offsetWidth;
+    couponRow.classList.add('coupon-highlight');
 
   } catch(err) {
     console.error(err);
@@ -1385,12 +1420,42 @@ function calcularTotalFinal() {
   return Math.max(0, subtotal - pixDisc - couponDisc + shippingCost);
 }
 
+function emailInstagramCTA() {
+  const url = window.SITE_CONFIG?.geral?.instagramUrl;
+  if (!url) return '';
+  return `
+    <div style="text-align:center;margin-top:24px;padding-top:20px;border-top:1px solid #E0CEBB;">
+      <p style="margin:0 0 10px;font-size:13px;color:#5A4030;">Ama semijoias? Siga a gente e acompanhe os lançamentos ✦</p>
+      <a href="${url}" target="_blank" style="display:inline-block;background:#3D2B1A;color:#C4A47A;font-family:Georgia,serif;font-size:12px;letter-spacing:2px;padding:10px 24px;text-decoration:none;">SEGUIR NO INSTAGRAM</a>
+    </div>`;
+}
+
 function copiarPix() {
   const input = document.getElementById('pix-copia-cola');
   input.select();
   document.execCommand('copy');
   showToast('Código Pix copiado!');
 }
+
+window.copyOrderNumber = function(btn) {
+  const num = document.getElementById('success-order-num').textContent.trim();
+  const done = () => {
+    showToast('Número do pedido copiado!');
+    btn.classList.add('copied');
+    setTimeout(() => btn.classList.remove('copied'), 1800);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(num).then(done).catch(done);
+  } else {
+    const tmp = document.createElement('input');
+    tmp.value = num;
+    document.body.appendChild(tmp);
+    tmp.select();
+    document.execCommand('copy');
+    document.body.removeChild(tmp);
+    done();
+  }
+};
 
 // Salva pedido no Firestore
 async function salvarPedidoFirebase(orderNum, paymentData) {
@@ -1564,6 +1629,7 @@ async function enviarEmailConfirmacao(orderNum, nome, email, itens, total, frete
             <p style="font-size:13px;color:#9C8070;margin:0;">Dúvidas? Fale com a gente:<br>
               <a href="mailto:contato@elenicecollection.com.br" style="color:#7C5C35;">contato@elenicecollection.com.br</a>
             </p>
+            ${emailInstagramCTA()}
           </td>
         </tr>
         <tr>
@@ -1845,6 +1911,7 @@ async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens,
             <p style="font-size:13px;color:#9C8070;margin:0;">Dúvidas? Fale com a gente:<br>
               <a href="mailto:contato@elenicecollection.com.br" style="color:#7C5C35;">contato@elenicecollection.com.br</a>
             </p>
+            ${emailInstagramCTA()}
           </td>
         </tr>
         <tr>

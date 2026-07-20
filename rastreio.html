@@ -207,6 +207,17 @@
   font-weight: 300;
   color: var(--brown-deep);
 }
+.copy-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--gold);
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.3rem;
+  transition: color 0.2s;
+}
+.copy-btn:hover { color: var(--brown-deep); }
 .order-status-badge {
   display: inline-flex;
   align-items: center;
@@ -652,7 +663,10 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
       <div class="order-card-header">
         <div>
           <div style="font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--text-soft);margin-bottom:0.3rem;">Pedido</div>
-          <div class="order-num" id="res-order-num">#SJ-12345</div>
+          <div style="display:flex;align-items:center;">
+            <div class="order-num" id="res-order-num">#SJ-12345</div>
+            <button type="button" class="copy-btn" onclick="copyOrderNumber(this)" title="Copiar número do pedido">⧉</button>
+          </div>
         </div>
         <div class="order-status-badge" id="res-status-badge">Em preparação</div>
       </div>
@@ -855,6 +869,22 @@ async function apiRastreio(tipo, valor) {
   if (!res.ok) throw new Error(data.error || 'Erro na busca');
   return data.pedidos || [];
 }
+
+window.copyOrderNumber = function(btn) {
+  const num = document.getElementById('res-order-num').textContent.trim();
+  const done = () => showToast('Número do pedido copiado!');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(num).then(done).catch(done);
+  } else {
+    const tmp = document.createElement('input');
+    tmp.value = num;
+    document.body.appendChild(tmp);
+    tmp.select();
+    document.execCommand('copy');
+    document.body.removeChild(tmp);
+    done();
+  }
+};
 
 // ── SEARCH ──
 async function buscarPedido() {

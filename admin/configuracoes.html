@@ -18,8 +18,8 @@
 body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text); display:flex; min-height:100vh; }
 
 /* ── SIDEBAR ── */
-.sidebar { width:var(--sidebar); background:var(--brown); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; }
-.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); }
+.sidebar { width:var(--sidebar); background:var(--brown); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; transition:transform 0.3s ease; }
+.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); display:flex; align-items:center; justify-content:space-between; }
 .sidebar-logo .brand { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:300; letter-spacing:0.25em; color:var(--gold-light); text-transform:uppercase; display:block; }
 .sidebar-logo .tag { font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-top:0.2rem; display:block; }
 .sidebar-nav { flex:1; padding:1rem 0; overflow-y:auto; }
@@ -70,6 +70,21 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .img-upload-area p { font-size:0.75rem; color:var(--text-s); }
 .img-upload-area .img-preview { width:100%; max-height:160px; object-fit:cover; border-radius:6px; margin-top:0.5rem; display:none; }
 
+/* ── REPOSICIONAR FOTO (arrastar dentro da moldura) ── */
+.reposition-wrap { margin-top:0.6rem; display:none; }
+.reposition-wrap.active { display:block; }
+.reposition-frame {
+  position:relative; overflow:hidden; border-radius:6px;
+  border:1px solid var(--gold-pale);
+  cursor:grab; touch-action:none; background:var(--cream-d);
+}
+.reposition-frame.dragging { cursor:grabbing; }
+.reposition-frame img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; user-select:none; pointer-events:none; }
+.reposition-controls { display:flex; align-items:center; justify-content:space-between; gap:0.6rem; margin-top:0.4rem; }
+.reposition-hint { font-size:0.62rem; color:var(--text-s); letter-spacing:0.02em; }
+.btn-reposition-reset { font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.3rem 0.6rem; border:1px solid var(--gold-pale); background:var(--white); color:var(--text-m); cursor:pointer; border-radius:4px; white-space:nowrap; }
+.btn-reposition-reset:hover { border-color:var(--gold); color:var(--gold); }
+
 /* ── DESTAQUE BOXES ── */
 .boxes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
 @media(max-width:700px){ .boxes-grid { grid-template-columns:1fr; } }
@@ -111,6 +126,19 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
   .cards-col { max-width:none; }
 }
 
+.sidebar-toggle-btn { display:none; width:34px; height:34px; border:none; background:none; color:var(--brown); font-size:1.2rem; cursor:pointer; align-items:center; justify-content:center; }
+.sidebar-collapse-btn { display:none; width:28px; height:28px; border:none; background:rgba(255,255,255,0.1); color:var(--gold-light); border-radius:50%; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; }
+.sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(42,31,20,0.45); z-index:99; }
+.sidebar-overlay.open { display:block; }
+
+@media(max-width:1024px) {
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
+  .main { margin-left:0; }
+  .sidebar-toggle-btn { display:flex; }
+  .sidebar-collapse-btn { display:flex; }
+}
+
 /* ── SUBSEÇÕES DENTRO DE UM CARD (ex: Seções da Home) ── */
 .subsection { padding:1rem 0; border-top:1px dashed var(--gold-pale); }
 .subsection:first-child { padding-top:0; border-top:none; }
@@ -120,10 +148,14 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 <body>
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <span class="brand">Elenice Collection</span>
-    <span class="tag">Painel Admin</span>
+    <div>
+      <span class="brand">Elenice Collection</span>
+      <span class="tag">Painel Admin</span>
+    </div>
+    <button type="button" class="sidebar-collapse-btn" onclick="closeSidebar()" aria-label="Recolher menu" title="Recolher menu">‹</button>
   </div>
   <nav class="sidebar-nav">
     <div class="nav-section-title">Principal</div>
@@ -154,7 +186,10 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
-    <div class="topbar-title">Configurações da Loja</div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <button type="button" class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Abrir menu" title="Abrir menu">☰</button>
+      <div class="topbar-title">Configurações da Loja</div>
+    </div>
     <button class="btn-save" onclick="salvarTudo()" id="btn-salvar" disabled>
       <span id="btn-txt">Carregando dados...</span>
     </button>
@@ -215,12 +250,45 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <div class="form-group">
           <label>Imagem principal (foto grande da direita)</label>
           <div class="img-upload-area" id="area-hero">
-            <input type="file" accept="image/*" onchange="previewImg(this,'prev-hero','area-hero','hero-img-url')" />
+            <input type="file" accept="image/*" onchange="previewImg(this,'prev-hero','area-hero','hero-img-url'); initReposition('hero')" />
             <div class="upload-icon">📷</div>
             <p>Clique para escolher a foto<br><small>Recomendado: 800×1000px</small></p>
             <img id="prev-hero" class="img-preview" />
           </div>
           <input type="hidden" id="hero-img-url" />
+          <input type="hidden" id="hero-img-posx" value="50">
+          <input type="hidden" id="hero-img-posy" value="50">
+          <div class="reposition-wrap" id="reposition-wrap-hero">
+            <div class="reposition-frame" id="reposition-frame-hero" style="aspect-ratio:4/5;max-width:220px;">
+              <img id="reposition-img-hero" alt="">
+            </div>
+            <div class="reposition-controls">
+              <span class="reposition-hint">↔ Arraste a foto para ajustar o enquadramento</span>
+              <button type="button" class="btn-reposition-reset" onclick="resetReposition('hero')">Centralizar</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Imagem principal — versão celular (opcional)</label>
+          <p style="font-size:0.68rem;color:var(--text-s);margin-bottom:0.5rem;">Se o enquadramento da foto acima ficar cortado no celular, envie aqui uma versão própria para telas pequenas. Se deixar em branco, o celular usa a mesma foto de cima.</p>
+          <div class="img-upload-area" id="area-hero-mobile">
+            <input type="file" accept="image/*" onchange="previewImg(this,'prev-hero-mobile','area-hero-mobile','hero-img-mobile-url'); initReposition('hero-mobile')" />
+            <div class="upload-icon">📷</div>
+            <p>Clique para escolher a foto<br><small>Recomendado: vertical, 600×900px</small></p>
+            <img id="prev-hero-mobile" class="img-preview" />
+          </div>
+          <input type="hidden" id="hero-img-mobile-url" />
+          <input type="hidden" id="hero-mobile-img-posx" value="50">
+          <input type="hidden" id="hero-mobile-img-posy" value="50">
+          <div class="reposition-wrap" id="reposition-wrap-hero-mobile">
+            <div class="reposition-frame" id="reposition-frame-hero-mobile" style="aspect-ratio:4/5;max-width:220px;">
+              <img id="reposition-img-hero-mobile" alt="">
+            </div>
+            <div class="reposition-controls">
+              <span class="reposition-hint">↔ Arraste a foto para ajustar o enquadramento</span>
+              <button type="button" class="btn-reposition-reset" onclick="resetReposition('hero-mobile')">Centralizar</button>
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label>Foto de fundo (Estilo Foto Cheia — opção C abaixo)</label>
@@ -399,52 +467,107 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
           <div class="box-item">
             <h4>Anéis</h4>
             <div class="img-upload-area" id="area-cat-aneis">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-aneis','area-cat-aneis','cat-aneis-img-url')" />
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-aneis','area-cat-aneis','cat-aneis-img-url'); initReposition('cat-aneis')" />
               <div class="upload-icon">📷</div>
               <p><small>400×500px</small></p>
               <img id="prev-cat-aneis" class="img-preview" />
             </div>
             <input type="hidden" id="cat-aneis-img-url" />
+            <input type="hidden" id="cat-aneis-img-posx" value="50">
+            <input type="hidden" id="cat-aneis-img-posy" value="50">
+            <div class="reposition-wrap" id="reposition-wrap-cat-aneis">
+              <div class="reposition-frame" id="reposition-frame-cat-aneis" style="aspect-ratio:4/5;">
+                <img id="reposition-img-cat-aneis" alt="">
+              </div>
+              <div class="reposition-controls">
+                <span class="reposition-hint">↔ Arraste</span>
+                <button type="button" class="btn-reposition-reset" onclick="resetReposition('cat-aneis')">Centralizar</button>
+              </div>
+            </div>
           </div>
           <div class="box-item">
             <h4>Colares</h4>
             <div class="img-upload-area" id="area-cat-colares">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-colares','area-cat-colares','cat-colares-img-url')" />
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-colares','area-cat-colares','cat-colares-img-url'); initReposition('cat-colares')" />
               <div class="upload-icon">📷</div>
               <p><small>400×500px</small></p>
               <img id="prev-cat-colares" class="img-preview" />
             </div>
             <input type="hidden" id="cat-colares-img-url" />
+            <input type="hidden" id="cat-colares-img-posx" value="50">
+            <input type="hidden" id="cat-colares-img-posy" value="50">
+            <div class="reposition-wrap" id="reposition-wrap-cat-colares">
+              <div class="reposition-frame" id="reposition-frame-cat-colares" style="aspect-ratio:4/5;">
+                <img id="reposition-img-cat-colares" alt="">
+              </div>
+              <div class="reposition-controls">
+                <span class="reposition-hint">↔ Arraste</span>
+                <button type="button" class="btn-reposition-reset" onclick="resetReposition('cat-colares')">Centralizar</button>
+              </div>
+            </div>
           </div>
           <div class="box-item">
             <h4>Pulseiras</h4>
             <div class="img-upload-area" id="area-cat-pulseiras">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-pulseiras','area-cat-pulseiras','cat-pulseiras-img-url')" />
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-pulseiras','area-cat-pulseiras','cat-pulseiras-img-url'); initReposition('cat-pulseiras')" />
               <div class="upload-icon">📷</div>
               <p><small>400×500px</small></p>
               <img id="prev-cat-pulseiras" class="img-preview" />
             </div>
             <input type="hidden" id="cat-pulseiras-img-url" />
+            <input type="hidden" id="cat-pulseiras-img-posx" value="50">
+            <input type="hidden" id="cat-pulseiras-img-posy" value="50">
+            <div class="reposition-wrap" id="reposition-wrap-cat-pulseiras">
+              <div class="reposition-frame" id="reposition-frame-cat-pulseiras" style="aspect-ratio:4/5;">
+                <img id="reposition-img-cat-pulseiras" alt="">
+              </div>
+              <div class="reposition-controls">
+                <span class="reposition-hint">↔ Arraste</span>
+                <button type="button" class="btn-reposition-reset" onclick="resetReposition('cat-pulseiras')">Centralizar</button>
+              </div>
+            </div>
           </div>
           <div class="box-item">
             <h4>Brincos</h4>
             <div class="img-upload-area" id="area-cat-brincos">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-brincos','area-cat-brincos','cat-brincos-img-url')" />
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-brincos','area-cat-brincos','cat-brincos-img-url'); initReposition('cat-brincos')" />
               <div class="upload-icon">📷</div>
               <p><small>400×500px</small></p>
               <img id="prev-cat-brincos" class="img-preview" />
             </div>
             <input type="hidden" id="cat-brincos-img-url" />
+            <input type="hidden" id="cat-brincos-img-posx" value="50">
+            <input type="hidden" id="cat-brincos-img-posy" value="50">
+            <div class="reposition-wrap" id="reposition-wrap-cat-brincos">
+              <div class="reposition-frame" id="reposition-frame-cat-brincos" style="aspect-ratio:4/5;">
+                <img id="reposition-img-cat-brincos" alt="">
+              </div>
+              <div class="reposition-controls">
+                <span class="reposition-hint">↔ Arraste</span>
+                <button type="button" class="btn-reposition-reset" onclick="resetReposition('cat-brincos')">Centralizar</button>
+              </div>
+            </div>
           </div>
           <div class="box-item">
             <h4>Conjuntos</h4>
             <div class="img-upload-area" id="area-cat-conjuntos">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-conjuntos','area-cat-conjuntos','cat-conjuntos-img-url')" />
+              <input type="file" accept="image/*" onchange="previewImg(this,'prev-cat-conjuntos','area-cat-conjuntos','cat-conjuntos-img-url'); initReposition('cat-conjuntos')" />
               <div class="upload-icon">📷</div>
               <p><small>400×500px</small></p>
               <img id="prev-cat-conjuntos" class="img-preview" />
             </div>
             <input type="hidden" id="cat-conjuntos-img-url" />
+            <input type="hidden" id="cat-conjuntos-img-posx" value="50">
+            <input type="hidden" id="cat-conjuntos-img-posy" value="50">
+            <div class="reposition-wrap" id="reposition-wrap-cat-conjuntos">
+              <div class="reposition-frame" id="reposition-frame-cat-conjuntos" style="aspect-ratio:4/5;">
+                <img id="reposition-img-cat-conjuntos" alt="">
+              </div>
+              <div class="reposition-controls">
+                <span class="reposition-hint">↔ Arraste</span>
+                <button type="button" class="btn-reposition-reset" onclick="resetReposition('cat-conjuntos')">Centralizar</button>
+              </div>
+            </div>
           </div>
         </div>
         </div>
@@ -476,7 +599,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
               <div class="img-upload-area">
                 <input type="file" accept="image/*" onchange="previewImg(this,'prev-box1','','box1-img-url')" />
                 <div class="upload-icon">📷</div>
-                <p>Escolher foto</p>
+                <p>Escolher foto<br><small>Recomendado: horizontal, 800×600px</small></p>
                 <img id="prev-box1" class="img-preview" />
               </div>
               <input type="hidden" id="box1-img-url" />
@@ -494,7 +617,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
               <div class="img-upload-area">
                 <input type="file" accept="image/*" onchange="previewImg(this,'prev-box2','','box2-img-url')" />
                 <div class="upload-icon">📷</div>
-                <p>Escolher foto</p>
+                <p>Escolher foto<br><small>Recomendado: horizontal, 500×375px</small></p>
                 <img id="prev-box2" class="img-preview" />
               </div>
               <input type="hidden" id="box2-img-url" />
@@ -512,7 +635,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
               <div class="img-upload-area">
                 <input type="file" accept="image/*" onchange="previewImg(this,'prev-box3','','box3-img-url')" />
                 <div class="upload-icon">📷</div>
-                <p>Escolher foto</p>
+                <p>Escolher foto<br><small>Recomendado: horizontal, 500×375px</small></p>
                 <img id="prev-box3" class="img-preview" />
               </div>
               <input type="hidden" id="box3-img-url" />
@@ -869,6 +992,15 @@ onAuthStateChanged(auth, user => {
 
 window.logout = async () => { await signOut(auth); window.location.href = 'index.html'; };
 
+window.toggleSidebar = function() {
+  document.getElementById('sidebar')?.classList.toggle('open');
+  document.getElementById('sidebar-overlay')?.classList.toggle('open');
+};
+window.closeSidebar = function() {
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sidebar-overlay')?.classList.remove('open');
+};
+
 // ── CARREGAR ──
 async function carregarConfigs() {
   try {
@@ -886,7 +1018,18 @@ async function carregarConfigs() {
     setVal('hero-subtitulo', d.hero?.subtitulo);
     setVal('hero-btn', d.hero?.btn);
     setVal('hero-label', d.hero?.label);
-    if (d.hero?.img) showPreview('prev-hero', d.hero.img, 'hero-img-url');
+    if (d.hero?.img) {
+      showPreview('prev-hero', d.hero.img, 'hero-img-url');
+      setVal('hero-img-posx', d.hero.posX ?? 50);
+      setVal('hero-img-posy', d.hero.posY ?? 50);
+      initReposition('hero');
+    }
+    if (d.hero?.imgMobile) {
+      showPreview('prev-hero-mobile', d.hero.imgMobile, 'hero-img-mobile-url');
+      setVal('hero-mobile-img-posx', d.hero.imgMobilePosX ?? 50);
+      setVal('hero-mobile-img-posy', d.hero.imgMobilePosY ?? 50);
+      initReposition('hero-mobile');
+    }
     if (d.hero?.imgFundo) showPreview('prev-hero-foto-fundo', d.hero.imgFundo, 'hero-foto-fundo-url');
     const estilo = d.hero?.estilo || 'editorial';
     const radioEl = document.querySelector(`input[name="hero-estilo"][value="${estilo}"]`);
@@ -907,7 +1050,12 @@ async function carregarConfigs() {
     // Categorias
     ['aneis','colares','pulseiras','brincos','conjuntos'].forEach(cat => {
       const img = d.categorias?.[cat]?.img;
-      if (img) showPreview('prev-cat-' + cat, img, 'cat-' + cat + '-img-url');
+      if (img) {
+        showPreview('prev-cat-' + cat, img, 'cat-' + cat + '-img-url');
+        setVal('cat-' + cat + '-img-posx', d.categorias[cat].posX ?? 50);
+        setVal('cat-' + cat + '-img-posy', d.categorias[cat].posY ?? 50);
+        initReposition('cat-' + cat);
+      }
     });
 
     // Depoimentos
@@ -1015,6 +1163,11 @@ function buildConfigObject() {
       label:     getVal('hero-label'),
       img:       getVal('hero-img-url'),
       imgFundo:  getVal('hero-foto-fundo-url'),
+      posX:      Number(getVal('hero-img-posx')) || 50,
+      posY:      Number(getVal('hero-img-posy')) || 50,
+      imgMobile: getVal('hero-img-mobile-url'),
+      imgMobilePosX: Number(getVal('hero-mobile-img-posx')) || 50,
+      imgMobilePosY: Number(getVal('hero-mobile-img-posy')) || 50,
       estilo:    document.querySelector('input[name="hero-estilo"]:checked')?.value || 'editorial',
     },
     box1: { label: getVal('box1-label'), nome: getVal('box1-nome'), img: getVal('box1-img-url') },
@@ -1074,11 +1227,11 @@ function buildConfigObject() {
       ...[1,2,3,4,5,6,7,8,9].reduce((acc, i) => { acc['foto' + i] = getVal('herob-foto' + i + '-url'); return acc; }, {}),
     },
     categorias: {
-      aneis:     { img: getVal('cat-aneis-img-url') },
-      colares:   { img: getVal('cat-colares-img-url') },
-      pulseiras: { img: getVal('cat-pulseiras-img-url') },
-      brincos:   { img: getVal('cat-brincos-img-url') },
-      conjuntos: { img: getVal('cat-conjuntos-img-url') },
+      aneis:     { img: getVal('cat-aneis-img-url'), posX: Number(getVal('cat-aneis-img-posx')) || 50, posY: Number(getVal('cat-aneis-img-posy')) || 50 },
+      colares:   { img: getVal('cat-colares-img-url'), posX: Number(getVal('cat-colares-img-posx')) || 50, posY: Number(getVal('cat-colares-img-posy')) || 50 },
+      pulseiras: { img: getVal('cat-pulseiras-img-url'), posX: Number(getVal('cat-pulseiras-img-posx')) || 50, posY: Number(getVal('cat-pulseiras-img-posy')) || 50 },
+      brincos:   { img: getVal('cat-brincos-img-url'), posX: Number(getVal('cat-brincos-img-posx')) || 50, posY: Number(getVal('cat-brincos-img-posy')) || 50 },
+      conjuntos: { img: getVal('cat-conjuntos-img-url'), posX: Number(getVal('cat-conjuntos-img-posx')) || 50, posY: Number(getVal('cat-conjuntos-img-posy')) || 50 },
     },
   };
 }
@@ -1128,6 +1281,83 @@ function showPreview(previewId, url, fieldId) {
   const field = document.getElementById(fieldId);
   if (field && url.startsWith('http')) field.value = url;
 }
+
+// ── REPOSICIONAR FOTO (arrastar dentro da moldura) ──
+const repositionState = {};
+
+window.initReposition = function(fieldPrefix) {
+  const wrap = document.getElementById('reposition-wrap-' + fieldPrefix);
+  const frame = document.getElementById('reposition-frame-' + fieldPrefix);
+  const img = document.getElementById('reposition-img-' + fieldPrefix);
+  const hiddenX = document.getElementById(fieldPrefix + '-img-posx');
+  const hiddenY = document.getElementById(fieldPrefix + '-img-posy');
+  const smallPreview = document.getElementById('prev-' + fieldPrefix);
+  if (!wrap || !frame || !img || !smallPreview || !smallPreview.src) return;
+
+  img.src = smallPreview.src;
+  wrap.classList.add('active');
+
+  let posX = Number(hiddenX?.value) || 50;
+  let posY = Number(hiddenY?.value) || 50;
+  applyPos();
+
+  function applyPos() {
+    img.style.objectPosition = posX.toFixed(1) + '% ' + posY.toFixed(1) + '%';
+    if (hiddenX) hiddenX.value = posX.toFixed(1);
+    if (hiddenY) hiddenY.value = posY.toFixed(1);
+  }
+
+  if (frame.dataset.repositionBound) {
+    repositionState[fieldPrefix] = { reset: () => { posX = 50; posY = 50; applyPos(); } };
+    return;
+  }
+  frame.dataset.repositionBound = '1';
+
+  let dragging = false, startClientX = 0, startClientY = 0, startPosX = 50, startPosY = 50;
+
+  frame.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    frame.classList.add('dragging');
+    startClientX = e.clientX;
+    startClientY = e.clientY;
+    startPosX = posX;
+    startPosY = posY;
+    frame.setPointerCapture(e.pointerId);
+  });
+
+  frame.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const Cw = frame.clientWidth, Ch = frame.clientHeight;
+    const Iw = img.naturalWidth, Ih = img.naturalHeight;
+    if (!Iw || !Ih || !Cw || !Ch) return;
+    const scale = Math.max(Cw / Iw, Ch / Ih);
+    const overflowX = Iw * scale - Cw;
+    const overflowY = Ih * scale - Ch;
+    const dx = e.clientX - startClientX;
+    const dy = e.clientY - startClientY;
+    if (overflowX > 0.5) {
+      const startOffsetX = overflowX * (startPosX / 100);
+      const newOffsetX = Math.min(overflowX, Math.max(0, startOffsetX - dx));
+      posX = (newOffsetX / overflowX) * 100;
+    }
+    if (overflowY > 0.5) {
+      const startOffsetY = overflowY * (startPosY / 100);
+      const newOffsetY = Math.min(overflowY, Math.max(0, startOffsetY - dy));
+      posY = (newOffsetY / overflowY) * 100;
+    }
+    applyPos();
+  });
+
+  function endDrag() { dragging = false; frame.classList.remove('dragging'); }
+  frame.addEventListener('pointerup', endDrag);
+  frame.addEventListener('pointercancel', endDrag);
+
+  repositionState[fieldPrefix] = { reset: () => { posX = 50; posY = 50; applyPos(); } };
+};
+
+window.resetReposition = function(fieldPrefix) {
+  repositionState[fieldPrefix]?.reset();
+};
 
 async function uploadPendentes() {
   for (const [fieldId, file] of Object.entries(uploadQueue)) {
@@ -1244,7 +1474,7 @@ function depRowHTML(d) {
           <div class="img-upload-area" id="dep-foto-area-${uid}" style="padding:0.6rem;">
             <input type="file" accept="image/*" onchange="previewImg(this,'dep-foto-prev-${uid}','dep-foto-area-${uid}','dep-foto-url-${uid}')" />
             <div class="upload-icon" style="font-size:1rem;margin-bottom:0.2rem;">📷</div>
-            <p style="font-size:0.65rem;">Foto da cliente</p>
+            <p style="font-size:0.65rem;">Foto da cliente<br><small>Quadrada (1:1), ex: 200×200px</small></p>
             <img id="dep-foto-prev-${uid}" class="img-preview" style="max-height:70px;${foto ? 'display:block;' : ''}" src="${foto}" />
           </div>
           <input type="hidden" id="dep-foto-url-${uid}" class="dep-foto-url" value="${foto}" />

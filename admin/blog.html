@@ -17,8 +17,8 @@
 }
 body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text); display:flex; min-height:100vh; }
 
-.sidebar { width:var(--sidebar); background:var(--brown); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; }
-.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); }
+.sidebar { width:var(--sidebar); background:var(--brown); min-height:100vh; position:fixed; top:0; left:0; display:flex; flex-direction:column; z-index:100; transition:transform 0.3s ease; }
+.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); display:flex; align-items:center; justify-content:space-between; }
 .sidebar-logo .brand { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:300; letter-spacing:0.25em; color:var(--gold-light); text-transform:uppercase; display:block; }
 .sidebar-logo .tag { font-size:0.52rem; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.25); margin-top:0.2rem; display:block; }
 .sidebar-nav { flex:1; padding:1rem 0; overflow-y:auto; }
@@ -90,19 +90,31 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .btn-sm { padding:0.4rem 1rem; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; font-family:'Jost',sans-serif; cursor:pointer; transition:all 0.2s; border:1px solid var(--gold-pale); background:var(--white); color:var(--text-m); text-decoration:none; display:inline-block; }
 .btn-sm:hover { background:var(--gold); color:var(--white); border-color:var(--gold); }
 
-@media(max-width:900px) {
-  .sidebar { display:none; }
+.sidebar-toggle-btn { display:none; width:34px; height:34px; border:none; background:none; color:var(--brown); font-size:1.2rem; cursor:pointer; align-items:center; justify-content:center; }
+.sidebar-collapse-btn { display:none; width:28px; height:28px; border:none; background:rgba(255,255,255,0.1); color:var(--gold-light); border-radius:50%; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; }
+.sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(42,31,20,0.45); z-index:99; }
+.sidebar-overlay.open { display:block; }
+
+@media(max-width:1024px) {
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
   .main { margin-left:0; }
+  .sidebar-toggle-btn { display:flex; }
+  .sidebar-collapse-btn { display:flex; }
 }
 </style>
 </head>
 <body>
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <span class="brand">Elenice Collection</span>
-    <span class="tag">Painel Admin</span>
+    <div>
+      <span class="brand">Elenice Collection</span>
+      <span class="tag">Painel Admin</span>
+    </div>
+    <button type="button" class="sidebar-collapse-btn" onclick="closeSidebar()" aria-label="Recolher menu" title="Recolher menu">‹</button>
   </div>
   <nav class="sidebar-nav">
     <div class="nav-section-title">Principal</div>
@@ -132,7 +144,10 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
-    <div class="topbar-title">Blog</div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <button type="button" class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Abrir menu" title="Abrir menu">☰</button>
+      <div class="topbar-title">Blog</div>
+    </div>
     <a href="/admin/blog-post" class="btn-new">+ Novo Post</a>
   </div>
 
@@ -281,6 +296,15 @@ window.confirmDelete = function(id, titulo) {
 window.closeModal = () => document.getElementById('confirm-modal').classList.remove('open');
 
 window.logout = async () => { await signOut(auth); window.location.href = '/admin'; };
+
+window.toggleSidebar = function() {
+  document.getElementById('sidebar')?.classList.toggle('open');
+  document.getElementById('sidebar-overlay')?.classList.toggle('open');
+};
+window.closeSidebar = function() {
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sidebar-overlay')?.classList.remove('open');
+};
 
 let toastTimer;
 window.showToast = function(msg) {

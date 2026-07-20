@@ -331,9 +331,11 @@
   .sidebar { display: none; }
   .filter-toggle-mobile { display: flex; }
   .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+  .catalog-grid.two-col { grid-template-columns: 1fr; gap: 1.5rem; }
 }
 @media (max-width: 500px) {
   .catalog-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .catalog-grid.two-col { grid-template-columns: 1fr; gap: 1rem; }
   .filter-cats { display: none; }
   .filter-bar-inner { justify-content: flex-end; }
 }
@@ -461,10 +463,10 @@
       <div class="sidebar-section">
         <div class="sidebar-title">Categoria</div>
         <div class="sidebar-options">
-          <label class="sidebar-option"><input type="checkbox" onchange="toggleSidebarCat('aneis',this)"> Anéis <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(4)</span></label>
-          <label class="sidebar-option"><input type="checkbox" onchange="toggleSidebarCat('colares',this)"> Colares <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(3)</span></label>
-          <label class="sidebar-option"><input type="checkbox" onchange="toggleSidebarCat('pulseiras',this)"> Pulseiras <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(2)</span></label>
-          <label class="sidebar-option"><input type="checkbox" onchange="toggleSidebarCat('brincos',this)"> Brincos <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(3)</span></label>
+          <label class="sidebar-option"><input type="checkbox" class="cat-checkbox" data-cat="aneis" onchange="toggleSidebarCat('aneis',this)"> Anéis <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(4)</span></label>
+          <label class="sidebar-option"><input type="checkbox" class="cat-checkbox" data-cat="colares" onchange="toggleSidebarCat('colares',this)"> Colares <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(3)</span></label>
+          <label class="sidebar-option"><input type="checkbox" class="cat-checkbox" data-cat="pulseiras" onchange="toggleSidebarCat('pulseiras',this)"> Pulseiras <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(2)</span></label>
+          <label class="sidebar-option"><input type="checkbox" class="cat-checkbox" data-cat="brincos" onchange="toggleSidebarCat('brincos',this)"> Brincos <span style="margin-left:auto;color:var(--text-soft);font-size:0.65rem;">(3)</span></label>
         </div>
       </div>
 
@@ -474,7 +476,7 @@
           <span id="price-min-label">R$ 0</span>
           <span id="price-max-label">R$ 800</span>
         </div>
-        <input type="range" class="price-range-input" min="0" max="800" value="800" id="price-range" oninput="filterPrice(this.value)">
+        <input type="range" class="price-range-input" min="0" max="800" value="800" id="price-range" oninput="filterPrice(this.value)" aria-label="Preço máximo">
         <div style="font-size:0.65rem;color:var(--text-soft);margin-top:0.5rem;letter-spacing:0.05em;">Até <strong id="price-current" style="color:var(--gold);">R$ 800</strong></div>
       </div>
 
@@ -482,10 +484,12 @@
         <div class="sidebar-title">Material</div>
         <div class="sidebar-options">
           <label class="sidebar-option">
+            <input type="checkbox" class="mat-checkbox" data-material="Dourado" onchange="toggleMaterial('Dourado',this)">
             <div class="mat-dot" style="background:linear-gradient(135deg,#C4A47A,#7C5C35);"></div>
             Dourado 18k
           </label>
           <label class="sidebar-option">
+            <input type="checkbox" class="mat-checkbox" data-material="Rosé" onchange="toggleMaterial('Rosé',this)">
             <div class="mat-dot" style="background:linear-gradient(135deg,#E8B4A0,#C47858);"></div>
             Rosé 18k
           </label>
@@ -618,15 +622,16 @@
   <div class="sidebar-section">
     <div class="sidebar-title">Categoria</div>
     <div class="sidebar-options">
-      <label class="sidebar-option"><input type="checkbox"> Anéis</label>
-      <label class="sidebar-option"><input type="checkbox"> Colares</label>
-      <label class="sidebar-option"><input type="checkbox"> Pulseiras</label>
-      <label class="sidebar-option"><input type="checkbox"> Brincos</label>
+      <label class="sidebar-option"><input type="checkbox" class="cat-checkbox" data-cat="aneis" onchange="toggleSidebarCat('aneis',this)"> Anéis</label>
+      <label class="sidebar-option"><input type="checkbox" class="cat-checkbox" data-cat="colares" onchange="toggleSidebarCat('colares',this)"> Colares</label>
+      <label class="sidebar-option"><input type="checkbox" class="cat-checkbox" data-cat="pulseiras" onchange="toggleSidebarCat('pulseiras',this)"> Pulseiras</label>
+      <label class="sidebar-option"><input type="checkbox" class="cat-checkbox" data-cat="brincos" onchange="toggleSidebarCat('brincos',this)"> Brincos</label>
     </div>
   </div>
   <div class="sidebar-section">
     <div class="sidebar-title">Preço máximo</div>
-    <input type="range" class="price-range-input" min="0" max="800" value="800">
+    <input type="range" class="price-range-input drawer-price-range" min="0" max="800" value="800" oninput="filterPrice(this.value)" aria-label="Preço máximo">
+    <div style="font-size:0.65rem;color:var(--text-soft);margin-top:0.5rem;">Até <strong class="drawer-price-label" style="color:var(--gold);">R$ 800</strong></div>
   </div>
   <div style="margin-top:1.5rem;">
     <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="closeSidebarDrawer()">Aplicar filtros</button>
@@ -681,6 +686,7 @@ let ALL_PRODUCTS = [];
 let currentCat = 'todos';
 let currentSort = 'default';
 let maxPrice = 9999;
+let selectedMaterials = [];
 let currentPage = 1;
 const perPage = 9;
 
@@ -712,6 +718,7 @@ async function loadProdutos() {
           oldPrice: d.precoOriginal || null,
           badge: d.badge || null,
           seloOferta: d.seloOferta || null,
+          material: d.material || 'Dourado 18k',
           variant: `${d.material || 'Dourado 18k'}${d.tamanho ? ' · ' + d.tamanho : ''}`,
           fotos: d.fotos || [],
           symbol: '◈',
@@ -760,6 +767,7 @@ function initFromURL() {
     document.querySelectorAll('.filter-cat').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.cat === cat);
     });
+    document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = cb.dataset.cat === cat);
     const titles = { aneis:'Anéis', colares:'Colares', pulseiras:'Pulseiras', brincos:'Brincos', conjuntos:'Conjuntos' };
     if (titles[cat]) {
       document.getElementById('page-title').innerHTML = `<em>${titles[cat]}</em>`;
@@ -777,6 +785,9 @@ function getFiltered() {
   let list = [...ALL_PRODUCTS];
   if (currentCat !== 'todos') list = list.filter(p => p.cat === currentCat);
   list = list.filter(p => p.price <= maxPrice);
+  if (selectedMaterials.length > 0) {
+    list = list.filter(p => selectedMaterials.some(m => p.material.startsWith(m)));
+  }
   if (currentSort === 'preco-asc')   list.sort((a,b) => a.price - b.price);
   else if (currentSort === 'preco-desc') list.sort((a,b) => b.price - a.price);
   else if (currentSort === 'novidades')  list.sort((a,b) => b.novo - a.novo);
@@ -788,6 +799,7 @@ window.filterCat = function(cat, btn) {
   currentPage = 1;
   document.querySelectorAll('.filter-cat').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = cb.dataset.cat === cat);
   render();
 };
 
@@ -799,23 +811,38 @@ window.sortProducts = function(val) {
 
 window.filterPrice = function(val) {
   maxPrice = parseInt(val);
-  document.getElementById('price-current').textContent = `R$ ${val}`;
+  document.querySelectorAll('.price-range-input').forEach(el => el.value = val);
+  const label = `R$ ${val}`;
+  const current = document.getElementById('price-current');
+  if (current) current.textContent = label;
+  document.querySelectorAll('.drawer-price-label').forEach(el => el.textContent = label);
+  currentPage = 1;
+  render();
+};
+
+window.toggleMaterial = function(material, checkbox) {
+  if (checkbox.checked) {
+    if (!selectedMaterials.includes(material)) selectedMaterials.push(material);
+  } else {
+    selectedMaterials = selectedMaterials.filter(m => m !== material);
+  }
   currentPage = 1;
   render();
 };
 
 window.toggleSidebarCat = function(cat, checkbox) {
-  if (checkbox.checked) window.filterCat(cat, document.querySelector(`[data-cat="${cat}"]`));
-  else window.filterCat('todos', document.querySelector('[data-cat="todos"]'));
+  if (checkbox.checked) window.filterCat(cat, document.querySelector(`[data-cat="${cat}"].filter-cat`));
+  else window.filterCat('todos', document.querySelector('[data-cat="todos"].filter-cat'));
 };
 
 window.clearFilters = function() {
   currentCat = 'todos';
   currentSort = 'default';
+  selectedMaterials = [];
   currentPage = 1;
   document.querySelectorAll('.filter-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === 'todos'));
   const slider = document.getElementById('price-range');
-  if (slider) { slider.value = slider.max; filterPrice(slider.max); }
+  if (slider) { filterPrice(slider.max); }
   document.querySelectorAll('.sidebar-option input[type="checkbox"]').forEach(cb => cb.checked = false);
   render();
 };

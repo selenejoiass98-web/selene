@@ -21,8 +21,9 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
   width:var(--sidebar); background:var(--brown);
   min-height:100vh; position:fixed; top:0; left:0;
   display:flex; flex-direction:column; z-index:100;
+  transition: transform 0.3s ease;
 }
-.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); }
+.sidebar-logo { padding:1.8rem 1.5rem; border-bottom:1px solid rgba(196,164,122,0.15); display:flex; align-items:center; justify-content:space-between; }
 .sidebar-logo .brand {
   font-family:'Cormorant Garamond',serif; font-size:1.1rem;
   font-weight:300; letter-spacing:0.25em; color:var(--gold-light);
@@ -172,9 +173,17 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
 .spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-@media(max-width:900px) {
-  .sidebar { display:none; }
+.sidebar-toggle-btn { display:none; width:34px; height:34px; border:none; background:none; color:var(--brown); font-size:1.2rem; cursor:pointer; align-items:center; justify-content:center; }
+.sidebar-collapse-btn { display:none; width:28px; height:28px; border:none; background:rgba(255,255,255,0.1); color:var(--gold-light); border-radius:50%; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; }
+.sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(42,31,20,0.45); z-index:99; }
+.sidebar-overlay.open { display:block; }
+
+@media(max-width:1024px) {
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
   .main { margin-left:0; }
+  .sidebar-toggle-btn { display:flex; }
+  .sidebar-collapse-btn { display:flex; }
   .form-layout { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
   .form-row.three { grid-template-columns:1fr 1fr; }
@@ -192,10 +201,14 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
 <body>
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <span class="brand">Elenice Collection</span>
-    <span class="tag">Painel Admin</span>
+    <div>
+      <span class="brand">Elenice Collection</span>
+      <span class="tag">Painel Admin</span>
+    </div>
+    <button type="button" class="sidebar-collapse-btn" onclick="closeSidebar()" aria-label="Recolher menu" title="Recolher menu">‹</button>
   </div>
   <nav class="sidebar-nav">
     <div class="nav-section-title">Principal</div>
@@ -219,6 +232,7 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
+      <button type="button" class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Abrir menu" title="Abrir menu">☰</button>
       <a href="/admin/dashboard" class="back-btn">← Voltar</a>
       <div class="topbar-title" id="page-title">Novo Produto</div>
     </div>
@@ -743,6 +757,15 @@ window.salvarProduto = async function(status) {
 
 // ── LOGOUT ──
 window.logout = async () => { await signOut(auth); window.location.href = '/admin'; };
+
+window.toggleSidebar = function() {
+  document.getElementById('sidebar')?.classList.toggle('open');
+  document.getElementById('sidebar-overlay')?.classList.toggle('open');
+};
+window.closeSidebar = function() {
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sidebar-overlay')?.classList.remove('open');
+};
 
 // ── TOAST ──
 let toastTimer;

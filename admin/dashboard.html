@@ -463,12 +463,47 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 }
 .status-select:focus { border-color:var(--gold); }
 .tracking-note { font-size:0.6rem; color:var(--text-s); margin-top:0.2rem; }
+.copy-btn-sm { border:none; background:none; cursor:pointer; color:var(--gold); font-size:0.85rem; margin-left:0.35rem; padding:0.1rem 0.2rem; vertical-align:middle; transition:color 0.2s; }
+.copy-btn-sm:hover { color:var(--text); }
+
+/* SIDEBAR TOGGLE (mobile/tablet) */
+.sidebar-toggle-btn {
+  display:none;
+  width:34px; height:34px;
+  border:none; background:none;
+  color:var(--brown);
+  font-size:1.2rem;
+  cursor:pointer;
+  align-items:center; justify-content:center;
+}
+.sidebar-collapse-btn {
+  display:none;
+  width:28px; height:28px;
+  border:none;
+  background:rgba(255,255,255,0.1);
+  color:var(--gold-light);
+  border-radius:50%;
+  align-items:center; justify-content:center;
+  cursor:pointer;
+  font-size:0.85rem;
+  margin-left:auto;
+}
+.sidebar-logo { display:flex; align-items:center; justify-content:space-between; }
+.sidebar-overlay {
+  display:none;
+  position:fixed; inset:0;
+  background:rgba(42,31,20,0.45);
+  z-index:99;
+}
+.sidebar-overlay.open { display:block; }
 
 /* RESPONSIVE */
-@media(max-width:900px) {
+@media(max-width:1024px) {
   .sidebar { transform:translateX(-100%); }
   .sidebar.open { transform:translateX(0); }
   .main { margin-left:0; }
+  .sidebar-toggle-btn { display:flex; }
+  .sidebar-collapse-btn { display:flex; }
   .stats-grid { grid-template-columns:1fr 1fr; }
 }
 @media(max-width:600px) {
@@ -481,10 +516,14 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 <body>
 
 <!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <span class="brand">Elenice Collection</span>
-    <span class="tag">Painel Admin</span>
+    <div>
+      <span class="brand">Elenice Collection</span>
+      <span class="tag">Painel Admin</span>
+    </div>
+    <button type="button" class="sidebar-collapse-btn" onclick="closeSidebar()" aria-label="Recolher menu" title="Recolher menu">‹</button>
   </div>
   <nav class="sidebar-nav">
     <div class="nav-section-title">Principal</div>
@@ -539,6 +578,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-left">
+      <button type="button" class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Abrir menu" title="Abrir menu">☰</button>
       <div class="topbar-title" id="page-title">Dashboard</div>
     </div>
     <div class="topbar-right">
@@ -721,7 +761,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, deleteDoc, updateDoc, query, orderBy }
+import { getFirestore, collection, getDocs, doc, deleteDoc, updateDoc, query, orderBy, getDoc }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -836,7 +876,30 @@ async function aplicarMudancaStatus(pedido, novoStatus, selectEl, extra) {
 }
 
 // ── E-MAILS DE STATUS ──
-function emailWrapper(titulo, corpoHtml) {
+let _instagramUrl = null;
+let _instagramUrlLoaded = false;
+async function getInstagramUrl() {
+  if (_instagramUrlLoaded) return _instagramUrl;
+  try {
+    const snap = await getDoc(doc(db, 'configuracoes', 'loja'));
+    _instagramUrl = snap.exists() ? (snap.data().geral?.instagramUrl || null) : null;
+  } catch (e) {
+    _instagramUrl = null;
+  }
+  _instagramUrlLoaded = true;
+  return _instagramUrl;
+}
+
+function instagramCTA(instagramUrl) {
+  if (!instagramUrl) return '';
+  return `
+    <div style="text-align:center;margin-top:8px;padding-top:20px;border-top:1px solid #E0CEBB;">
+      <p style="margin:0 0 10px;font-size:13px;color:#5A4030;">Ama semijoias? Siga a gente e acompanhe os lançamentos ✦</p>
+      <a href="${instagramUrl}" target="_blank" style="display:inline-block;background:#3D2B1A;color:#C4A47A;font-family:Georgia,serif;font-size:12px;letter-spacing:2px;padding:10px 24px;text-decoration:none;">SEGUIR NO INSTAGRAM</a>
+    </div>`;
+}
+
+function emailWrapper(titulo, corpoHtml, instagramUrl) {
   return `<!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#F5F0EA;font-family:'Helvetica Neue',Arial,sans-serif;">
@@ -852,6 +915,7 @@ function emailWrapper(titulo, corpoHtml) {
           <td style="padding:40px 40px 32px;">
             <h1 style="font-family:Georgia,serif;font-size:24px;font-weight:300;color:#3D2B1A;margin:0 0 16px;">${titulo}</h1>
             ${corpoHtml}
+            ${instagramCTA(instagramUrl)}
           </td>
         </tr>
         <tr>
@@ -869,6 +933,7 @@ function emailWrapper(titulo, corpoHtml) {
 function montarEmailStatus(status, ctx) {
   const primeiroNome = (ctx.nome || 'Cliente').split(' ')[0];
   const numero = ctx.numero;
+  const instagramUrl = ctx.instagramUrl;
 
   if (status === 'processando') {
     return {
@@ -878,7 +943,7 @@ function montarEmailStatus(status, ctx) {
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Queremos que você saiba: seu pedido <strong>${numero}</strong> já está em nossas mãos e está sendo preparado com todo o cuidado que uma peça Elenice Collection merece.</p>
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Assim que ele for despachado, você receberá um novo e-mail com o código de rastreio.</p>
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0;">Obrigada pela confiança — é uma alegria preparar essa peça para você.</p>
-      `),
+      `, instagramUrl),
     };
   }
 
@@ -905,7 +970,7 @@ function montarEmailStatus(status, ctx) {
         </div>
         ${linkCorreios}
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0;">Assim que chegar, esperamos que você se encante com cada detalhe. Qualquer dúvida, estamos por aqui.</p>
-      `),
+      `, instagramUrl),
     };
   }
 
@@ -915,14 +980,8 @@ function montarEmailStatus(status, ctx) {
       html: emailWrapper('Esperamos que você ame sua nova semijoia ✦', `
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Olá, <strong>${primeiroNome}</strong>!</p>
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Nosso sistema indica que seu pedido <strong>${numero}</strong> foi entregue — que alegria! Esperamos que cada detalhe da sua nova peça tenha encantado você.</p>
-        <div style="background:#F0F9F4;border-left:3px solid #2D6A4F;padding:16px 20px;margin-bottom:20px;">
-          <p style="margin:0;font-size:13px;color:#1A4731;line-height:1.8;">
-            ✦ <strong>1 ano de garantia</strong> contra defeitos de fabricação<br>
-            ✦ <strong>Limpeza e polimento gratuitos</strong> para sempre — é só nos chamar
-          </p>
-        </div>
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0;">Se puder, adoraríamos saber o que achou. Sua opinião significa muito para nós — e para as próximas clientes que ainda vão conhecer a Elenice.</p>
-      `),
+      `, instagramUrl),
     };
   }
 
@@ -934,7 +993,7 @@ function montarEmailStatus(status, ctx) {
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Confirmamos que o pedido <strong>${numero}</strong> foi cancelado.</p>
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Se isso foi um engano, ou se você tiver qualquer dúvida sobre reembolso, é só responder este e-mail ou falar com a gente pelo WhatsApp — estamos prontos para ajudar.</p>
         <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0;">Esperamos ter a oportunidade de te atender em breve.</p>
-      `),
+      `, instagramUrl),
     };
   }
 
@@ -944,9 +1003,11 @@ function montarEmailStatus(status, ctx) {
 async function enviarEmailStatusPedido(pedido, status, extra) {
   const email = pedido.cliente?.email;
   if (!email) return;
+  const instagramUrl = await getInstagramUrl();
   const template = montarEmailStatus(status, {
     nome: pedido.cliente?.nome,
     numero: pedido.numeroPedido || pedido.id,
+    instagramUrl,
     ...(extra || {}),
   });
   if (!template) return;
@@ -976,6 +1037,7 @@ window.testarEmailStatus = async function(status, emailDestino, opts) {
     numero: opts.numero || '#EC-00000',
     codigoRastreio: opts.codigoRastreio || 'BR123456789BR',
     transportadora: opts.transportadora || 'Correios',
+    instagramUrl: await getInstagramUrl(),
   };
   const template = montarEmailStatus(status, ctx);
   if (!template) { console.warn('Status sem e-mail definido:', status); return; }
@@ -1085,7 +1147,8 @@ async function loadPedidos() {
       return `
       <tr>
         <td style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gold);">
-          ${p.numeroPedido||p.id.slice(0,8)}
+          <span class="order-num-text">${p.numeroPedido||p.id.slice(0,8)}</span>
+          <button type="button" class="copy-btn-sm" onclick="copyOrderNumberAdmin(this)" title="Copiar número do pedido">⧉</button>
           ${p.codigoRastreio ? `<div class="tracking-note">Rastreio: ${p.codigoRastreio}</div>` : ''}
         </td>
         <td>${p.cliente?.nome||'—'}</td>
@@ -1215,6 +1278,16 @@ window.logout = async function() {
   window.location.href = '/admin';
 };
 
+// ── SIDEBAR (mobile/tablet) ──
+window.toggleSidebar = function() {
+  document.getElementById('sidebar')?.classList.toggle('open');
+  document.getElementById('sidebar-overlay')?.classList.toggle('open');
+};
+window.closeSidebar = function() {
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sidebar-overlay')?.classList.remove('open');
+};
+
 // ── TOAST ──
 let toastTimer;
 window.showToast = function(msg) {
@@ -1223,6 +1296,22 @@ window.showToast = function(msg) {
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+};
+
+window.copyOrderNumberAdmin = function(btn) {
+  const num = btn.previousElementSibling.textContent.trim();
+  const done = () => showToast('Número do pedido copiado!');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(num).then(done).catch(done);
+  } else {
+    const tmp = document.createElement('input');
+    tmp.value = num;
+    document.body.appendChild(tmp);
+    tmp.select();
+    document.execCommand('copy');
+    document.body.removeChild(tmp);
+    done();
+  }
 };
 </script>
 </body>

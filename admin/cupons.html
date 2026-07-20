@@ -47,13 +47,18 @@
       padding: 2rem 0;
       display: flex;
       flex-direction: column;
-      flex-shrink: 0;
+      position: fixed;
+      top: 0; left: 0;
+      min-height: 100vh;
+      z-index: 100;
+      transition: transform 0.3s ease;
     }
 
     .sidebar-logo {
       text-align: center;
       padding: 0 1.5rem 2rem;
       border-bottom: 1px solid rgba(196,164,122,0.15);
+      position: relative;
     }
 
     .sidebar-logo span {
@@ -121,7 +126,49 @@
     .btn-logout:hover { background: rgba(196,164,122,0.1); }
 
     /* ── MAIN CONTENT ── */
-    .main { flex: 1; overflow-x: hidden; }
+    .main { flex: 1; overflow-x: hidden; margin-left: 240px; }
+
+    .sidebar-collapse-btn {
+      display: none;
+      position: absolute;
+      top: 0.4rem; right: 0.4rem;
+      width: 26px; height: 26px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: var(--gold-light);
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .sidebar-toggle-btn {
+      display: none;
+      width: 34px; height: 34px;
+      border: none;
+      background: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(42,31,20,0.45);
+      z-index: 99;
+    }
+    .sidebar-overlay.open { display: block; }
+
+    @media (max-width: 1024px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .sidebar-toggle-btn { display: flex; }
+      .sidebar-collapse-btn { display: flex; }
+    }
 
     .topbar {
       background: var(--white);
@@ -563,10 +610,12 @@
 <div class="admin-layout">
 
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <span>Elenice Collection</span>
       <small>Painel Admin</small>
+      <button type="button" class="sidebar-collapse-btn" onclick="closeSidebar()" aria-label="Recolher menu" title="Recolher menu">‹</button>
     </div>
     <nav>
       <a href="dashboard.html"><span class="icon">📊</span> Dashboard</a>
@@ -587,10 +636,13 @@
   <!-- MAIN -->
   <main class="main">
     <div class="topbar">
-      <h1>
-        Cupons de Desconto
-        <small>Gerenciar, criar e acompanhar desempenho</small>
-      </h1>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <button type="button" class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Abrir menu" title="Abrir menu">☰</button>
+        <h1>
+          Cupons de Desconto
+          <small>Gerenciar, criar e acompanhar desempenho</small>
+        </h1>
+      </div>
       <button class="btn btn-outline" onclick="limparFormulario()">
         ＋ Novo Cupom
       </button>
@@ -792,6 +844,15 @@
   window.logout = async () => {
     await signOut(auth);
     window.location.href = 'index.html';
+  };
+
+  window.toggleSidebar = function() {
+    document.getElementById('sidebar')?.classList.toggle('open');
+    document.getElementById('sidebar-overlay')?.classList.toggle('open');
+  };
+  window.closeSidebar = function() {
+    document.getElementById('sidebar')?.classList.remove('open');
+    document.getElementById('sidebar-overlay')?.classList.remove('open');
   };
 
   // ── LOAD ──

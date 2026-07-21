@@ -1125,7 +1125,7 @@ function cardHTML(p) {
       <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
       <a href="${href}">
         ${p.fotos?.[0]
-          ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy">`
+          ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy" style="object-position:${p.fotosFrame?.[0]?.posX ?? 50}% ${p.fotosFrame?.[0]?.posY ?? 50}%;">`
           : `<div class="product-card-placeholder">◈</div>`}
       </a>
     </div>
@@ -1171,7 +1171,7 @@ function renderTestimonials(deps) {
   grid.innerHTML = deps.slice(0, 3).map(d => {
     const stars    = '★'.repeat(Math.min(5, Math.max(1, d.estrelas || 5)));
     const initials = (d.nome || '?').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
-    const avatar   = d.foto ? `<img src="${d.foto}" alt="${d.nome}">` : initials;
+    const avatar   = d.foto ? `<img src="${d.foto}" alt="${d.nome}" style="object-position:${d.fotoPosX ?? 50}% ${d.fotoPosY ?? 50}%;transform:scale(${(d.fotoZoom ?? 100) / 100});">` : initials;
     return `
     <div class="testimonial reveal">
       <div class="testimonial-stars">${stars.split('').join(' ')}</div>
@@ -1207,12 +1207,13 @@ function hfGoTo(group) {
   for (let col = 0; col < 3; col++) {
     const img = document.getElementById('hf-img-' + col);
     if (!img) continue;
-    const url = hfPhotos[hfGroup * 3 + col] || '';
-    if (!url) { img.style.opacity = '0'; continue; }
+    const p = hfPhotos[hfGroup * 3 + col];
+    if (!p) { img.style.opacity = '0'; continue; }
     img.classList.add('hf-fade');
     setTimeout(() => {
-      img.src = url;
+      img.src = p.url;
       img.style.display = 'block';
+      applyHfFrame(img, p);
       img.classList.remove('hf-fade');
     }, 200);
   }
@@ -1227,12 +1228,21 @@ function hfStartTimer() {
 window.hfPrev = () => { hfGoTo(hfGroup - 1); hfStartTimer(); };
 window.hfNext = () => { hfGoTo(hfGroup + 1); hfStartTimer(); };
 
+function applyHfFrame(img, p) {
+  img.style.objectPosition = `${p.posX ?? 50}% ${p.posY ?? 50}%`;
+  img.style.transform = `scale(${(p.zoom ?? 100) / 100})`;
+}
+
 function initHeroB(photos) {
-  hfPhotos = photos.filter(Boolean);
+  hfPhotos = photos.filter(p => p && p.url);
   if (!hfPhotos.length) return;
   for (let col = 0; col < 3; col++) {
     const img = document.getElementById('hf-img-' + col);
-    if (img && hfPhotos[col]) { img.src = hfPhotos[col]; img.style.display = 'block'; }
+    if (img && hfPhotos[col]) {
+      img.src = hfPhotos[col].url;
+      img.style.display = 'block';
+      applyHfFrame(img, hfPhotos[col]);
+    }
   }
   hfBuildDots();
   hfStartTimer();
@@ -1345,7 +1355,12 @@ function applyConfig(d) {
   if (d.hero?.btn)       set('hp-btn-el', d.hero.btn);
   if (d.hero?.imgFundo) {
     const img = document.getElementById('hp-bg-img');
-    if (img) { img.src = d.hero.imgFundo; img.style.display = 'block'; }
+    if (img) {
+      img.src = d.hero.imgFundo;
+      img.style.display = 'block';
+      img.style.objectPosition = `${d.hero.imgFundoPosX ?? 50}% ${d.hero.imgFundoPosY ?? 50}%`;
+      img.style.transform = `scale(${(d.hero.imgFundoZoom ?? 100) / 100})`;
+    }
     const g = document.getElementById('hp-glyph');
     if (g) g.style.display = 'none';
   }
@@ -1354,12 +1369,22 @@ function applyConfig(d) {
   if (d.box1?.nome) set('box1-feat-name', d.box1.nome);
   if (d.box2?.img) {
     const img = document.getElementById('hero-box2-img');
-    if (img) { img.src = d.box2.img; img.style.display = 'block'; }
+    if (img) {
+      img.src = d.box2.img;
+      img.style.display = 'block';
+      img.style.objectPosition = `${d.box2.posX ?? 50}% ${d.box2.posY ?? 50}%`;
+      img.style.transform = `scale(${(d.box2.zoom ?? 100) / 100})`;
+    }
     const g = document.getElementById('glyph-b2'); if (g) g.style.display = 'none';
   }
   if (d.box3?.img) {
     const img = document.getElementById('hero-box3-img');
-    if (img) { img.src = d.box3.img; img.style.display = 'block'; }
+    if (img) {
+      img.src = d.box3.img;
+      img.style.display = 'block';
+      img.style.objectPosition = `${d.box3.posX ?? 50}% ${d.box3.posY ?? 50}%`;
+      img.style.transform = `scale(${(d.box3.zoom ?? 100) / 100})`;
+    }
     const g = document.getElementById('glyph-b3'); if (g) g.style.display = 'none';
   }
 
@@ -1369,7 +1394,13 @@ function applyConfig(d) {
     set('hf-t2',      d.heroB.tituloGrande);
     set('hf-t1',      d.heroB.subtitulo);
     set('hf-btn-el',  d.heroB.btn);
-    const fotos = [1,2,3,4,5,6,7,8,9].map(i => d.heroB['foto' + i] || '');
+    const fotos = [1,2,3,4,5,6,7,8,9]
+      .map(i => d.heroB['foto' + i] ? {
+        url: d.heroB['foto' + i],
+        posX: d.heroB['foto' + i + 'PosX'] ?? 50,
+        posY: d.heroB['foto' + i + 'PosY'] ?? 50,
+        zoom: d.heroB['foto' + i + 'Zoom'] ?? 100,
+      } : null);
     initHeroB(fotos);
   }
 

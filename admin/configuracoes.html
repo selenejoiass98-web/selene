@@ -86,9 +86,14 @@ body.sidebar-collapsed .main { margin-left:0; }
 .reposition-hint { font-size:0.62rem; color:var(--text-s); letter-spacing:0.02em; }
 .btn-reposition-reset { font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.3rem 0.6rem; border:1px solid var(--gold-pale); background:var(--white); color:var(--text-m); cursor:pointer; border-radius:4px; white-space:nowrap; }
 .btn-reposition-reset:hover { border-color:var(--gold); color:var(--gold); }
-.reposition-zoom-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem; }
-.reposition-zoom-row .icon { font-size:0.7rem; color:var(--text-s); flex-shrink:0; }
-.reposition-zoom { flex:1; accent-color:var(--gold); cursor:pointer; }
+.reposition-zoom-btns { position:absolute; bottom:0.4rem; right:0.4rem; display:flex; gap:0.3rem; z-index:2; }
+.reposition-zoom-btn {
+  width:26px; height:26px; border-radius:50%; border:none;
+  background:rgba(61,43,26,0.75); color:#fff; font-size:0.95rem; font-weight:600;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  line-height:1; padding:0; backdrop-filter:blur(2px); transition:background 0.15s;
+}
+.reposition-zoom-btn:hover { background:rgba(61,43,26,0.92); }
 
 /* ── DESTAQUE BOXES ── */
 .boxes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
@@ -274,10 +279,10 @@ body.sidebar-collapsed .main { margin-left:0; }
           <div class="reposition-wrap" id="reposition-wrap-hero">
             <div class="reposition-frame" id="reposition-frame-hero" style="aspect-ratio:4/5;max-width:220px;">
               <img id="reposition-img-hero" alt="">
-            </div>
-            <div class="reposition-zoom-row">
-              <span class="icon">🔍</span>
-              <input type="range" class="reposition-zoom" id="reposition-zoom-hero" min="100" max="300" value="100" step="5" oninput="setZoomReposition('hero', this.value)">
+              <div class="reposition-zoom-btns">
+                <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('hero', -10)">−</button>
+                <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('hero', 10)">+</button>
+              </div>
             </div>
             <div class="reposition-controls">
               <span class="reposition-hint">↔ Arraste a foto e use o zoom para ajustar o enquadramento</span>
@@ -301,10 +306,10 @@ body.sidebar-collapsed .main { margin-left:0; }
           <div class="reposition-wrap" id="reposition-wrap-hero-mobile">
             <div class="reposition-frame" id="reposition-frame-hero-mobile" style="aspect-ratio:4/5;max-width:220px;">
               <img id="reposition-img-hero-mobile" alt="">
-            </div>
-            <div class="reposition-zoom-row">
-              <span class="icon">🔍</span>
-              <input type="range" class="reposition-zoom" id="reposition-zoom-hero-mobile" min="100" max="300" value="100" step="5" oninput="setZoomReposition('hero-mobile', this.value)">
+              <div class="reposition-zoom-btns">
+                <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('hero-mobile', -10)">−</button>
+                <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('hero-mobile', 10)">+</button>
+              </div>
             </div>
             <div class="reposition-controls">
               <span class="reposition-hint">↔ Arraste a foto e use o zoom para ajustar o enquadramento</span>
@@ -315,12 +320,13 @@ body.sidebar-collapsed .main { margin-left:0; }
         <div class="form-group">
           <label>Foto de fundo (Estilo Foto Cheia — opção C abaixo)</label>
           <div class="img-upload-area" id="area-hero-foto-fundo">
-            <input type="file" accept="image/*" onchange="previewImg(this,'prev-hero-foto-fundo','area-hero-foto-fundo','hero-foto-fundo-url')" />
+            <input type="file" accept="image/*" onchange="previewImg(this,'prev-hero-foto-fundo','area-hero-foto-fundo','hero-foto-fundo-url'); initReposition('hero-foto-fundo')" />
             <div class="upload-icon">📷</div>
             <p>Clique para escolher a foto<br><small>Recomendado: 1600×1000px, horizontal</small></p>
             <img id="prev-hero-foto-fundo" class="img-preview" />
           </div>
           <input type="hidden" id="hero-foto-fundo-url" />
+          <div class="reposition-slot" data-field="hero-foto-fundo" data-style="aspect-ratio:8/5;max-width:320px;"></div>
         </div>
         <div class="form-group">
           <label>Estilo do Banner</label>
@@ -371,99 +377,7 @@ body.sidebar-collapsed .main { margin-left:0; }
           </div>
         </div>
         <p style="font-size:0.75rem;color:var(--text-s);margin:0.5rem 0 1rem;background:var(--cream);border-radius:6px;padding:0.6rem 0.9rem;">📐 9 fotos verticais · ideal <strong>600×900px</strong> · formato JPG ou PNG · exibidas 3 por vez, trocam a cada 5 seg.</p>
-        <div class="herob-photos-grid">
-
-          <div>
-            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 1</p>
-            <div class="img-upload-area" id="area-herob-foto1" style="padding:0.7rem;">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto1','area-herob-foto1','herob-foto1-url')" />
-              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
-              <img id="prev-herob-foto1" class="img-preview" style="max-height:100px;" />
-            </div>
-            <input type="hidden" id="herob-foto1-url" />
-          </div>
-
-          <div>
-            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 2</p>
-            <div class="img-upload-area" id="area-herob-foto2" style="padding:0.7rem;">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto2','area-herob-foto2','herob-foto2-url')" />
-              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
-              <img id="prev-herob-foto2" class="img-preview" style="max-height:100px;" />
-            </div>
-            <input type="hidden" id="herob-foto2-url" />
-          </div>
-
-          <div>
-            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 3</p>
-            <div class="img-upload-area" id="area-herob-foto3" style="padding:0.7rem;">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto3','area-herob-foto3','herob-foto3-url')" />
-              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
-              <img id="prev-herob-foto3" class="img-preview" style="max-height:100px;" />
-            </div>
-            <input type="hidden" id="herob-foto3-url" />
-          </div>
-
-          <div>
-            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 4</p>
-            <div class="img-upload-area" id="area-herob-foto4" style="padding:0.7rem;">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto4','area-herob-foto4','herob-foto4-url')" />
-              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
-              <img id="prev-herob-foto4" class="img-preview" style="max-height:100px;" />
-            </div>
-            <input type="hidden" id="herob-foto4-url" />
-          </div>
-
-          <div>
-            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 5</p>
-            <div class="img-upload-area" id="area-herob-foto5" style="padding:0.7rem;">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto5','area-herob-foto5','herob-foto5-url')" />
-              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
-              <img id="prev-herob-foto5" class="img-preview" style="max-height:100px;" />
-            </div>
-            <input type="hidden" id="herob-foto5-url" />
-          </div>
-
-          <div>
-            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 6</p>
-            <div class="img-upload-area" id="area-herob-foto6" style="padding:0.7rem;">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto6','area-herob-foto6','herob-foto6-url')" />
-              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
-              <img id="prev-herob-foto6" class="img-preview" style="max-height:100px;" />
-            </div>
-            <input type="hidden" id="herob-foto6-url" />
-          </div>
-
-          <div>
-            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 7</p>
-            <div class="img-upload-area" id="area-herob-foto7" style="padding:0.7rem;">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto7','area-herob-foto7','herob-foto7-url')" />
-              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
-              <img id="prev-herob-foto7" class="img-preview" style="max-height:100px;" />
-            </div>
-            <input type="hidden" id="herob-foto7-url" />
-          </div>
-
-          <div>
-            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 8</p>
-            <div class="img-upload-area" id="area-herob-foto8" style="padding:0.7rem;">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto8','area-herob-foto8','herob-foto8-url')" />
-              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
-              <img id="prev-herob-foto8" class="img-preview" style="max-height:100px;" />
-            </div>
-            <input type="hidden" id="herob-foto8-url" />
-          </div>
-
-          <div>
-            <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 9</p>
-            <div class="img-upload-area" id="area-herob-foto9" style="padding:0.7rem;">
-              <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto9','area-herob-foto9','herob-foto9-url')" />
-              <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
-              <img id="prev-herob-foto9" class="img-preview" style="max-height:100px;" />
-            </div>
-            <input type="hidden" id="herob-foto9-url" />
-          </div>
-
-        </div>
+        <div class="herob-photos-grid" id="herob-photos-grid"></div>
       </div>
     </div>
 
@@ -501,10 +415,10 @@ body.sidebar-collapsed .main { margin-left:0; }
             <div class="reposition-wrap" id="reposition-wrap-cat-aneis">
               <div class="reposition-frame" id="reposition-frame-cat-aneis" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-aneis" alt="">
-              </div>
-              <div class="reposition-zoom-row">
-                <span class="icon">🔍</span>
-                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-aneis" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-aneis', this.value)">
+                <div class="reposition-zoom-btns">
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-aneis', -10)">−</button>
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-aneis', 10)">+</button>
+                </div>
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -527,10 +441,10 @@ body.sidebar-collapsed .main { margin-left:0; }
             <div class="reposition-wrap" id="reposition-wrap-cat-colares">
               <div class="reposition-frame" id="reposition-frame-cat-colares" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-colares" alt="">
-              </div>
-              <div class="reposition-zoom-row">
-                <span class="icon">🔍</span>
-                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-colares" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-colares', this.value)">
+                <div class="reposition-zoom-btns">
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-colares', -10)">−</button>
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-colares', 10)">+</button>
+                </div>
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -553,10 +467,10 @@ body.sidebar-collapsed .main { margin-left:0; }
             <div class="reposition-wrap" id="reposition-wrap-cat-pulseiras">
               <div class="reposition-frame" id="reposition-frame-cat-pulseiras" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-pulseiras" alt="">
-              </div>
-              <div class="reposition-zoom-row">
-                <span class="icon">🔍</span>
-                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-pulseiras" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-pulseiras', this.value)">
+                <div class="reposition-zoom-btns">
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-pulseiras', -10)">−</button>
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-pulseiras', 10)">+</button>
+                </div>
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -579,10 +493,10 @@ body.sidebar-collapsed .main { margin-left:0; }
             <div class="reposition-wrap" id="reposition-wrap-cat-brincos">
               <div class="reposition-frame" id="reposition-frame-cat-brincos" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-brincos" alt="">
-              </div>
-              <div class="reposition-zoom-row">
-                <span class="icon">🔍</span>
-                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-brincos" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-brincos', this.value)">
+                <div class="reposition-zoom-btns">
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-brincos', -10)">−</button>
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-brincos', 10)">+</button>
+                </div>
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -605,10 +519,10 @@ body.sidebar-collapsed .main { margin-left:0; }
             <div class="reposition-wrap" id="reposition-wrap-cat-conjuntos">
               <div class="reposition-frame" id="reposition-frame-cat-conjuntos" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-conjuntos" alt="">
-              </div>
-              <div class="reposition-zoom-row">
-                <span class="icon">🔍</span>
-                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-conjuntos" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-conjuntos', this.value)">
+                <div class="reposition-zoom-btns">
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-conjuntos', -10)">−</button>
+                  <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('cat-conjuntos', 10)">+</button>
+                </div>
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -644,12 +558,13 @@ body.sidebar-collapsed .main { margin-left:0; }
             <div class="form-group">
               <label>Foto</label>
               <div class="img-upload-area">
-                <input type="file" accept="image/*" onchange="previewImg(this,'prev-box1','','box1-img-url')" />
+                <input type="file" accept="image/*" onchange="previewImg(this,'prev-box1','','box1-img-url'); initReposition('box1')" />
                 <div class="upload-icon">📷</div>
                 <p>Escolher foto<br><small>Recomendado: horizontal, 800×600px</small></p>
                 <img id="prev-box1" class="img-preview" />
               </div>
               <input type="hidden" id="box1-img-url" />
+              <div class="reposition-slot" data-field="box1" data-style="aspect-ratio:4/3;"></div>
             </div>
           </div>
 
@@ -662,12 +577,13 @@ body.sidebar-collapsed .main { margin-left:0; }
             <div class="form-group">
               <label>Foto</label>
               <div class="img-upload-area">
-                <input type="file" accept="image/*" onchange="previewImg(this,'prev-box2','','box2-img-url')" />
+                <input type="file" accept="image/*" onchange="previewImg(this,'prev-box2','','box2-img-url'); initReposition('box2')" />
                 <div class="upload-icon">📷</div>
                 <p>Escolher foto<br><small>Recomendado: horizontal, 500×375px</small></p>
                 <img id="prev-box2" class="img-preview" />
               </div>
               <input type="hidden" id="box2-img-url" />
+              <div class="reposition-slot" data-field="box2" data-style="aspect-ratio:4/3;"></div>
             </div>
           </div>
 
@@ -680,12 +596,13 @@ body.sidebar-collapsed .main { margin-left:0; }
             <div class="form-group">
               <label>Foto</label>
               <div class="img-upload-area">
-                <input type="file" accept="image/*" onchange="previewImg(this,'prev-box3','','box3-img-url')" />
+                <input type="file" accept="image/*" onchange="previewImg(this,'prev-box3','','box3-img-url'); initReposition('box3')" />
                 <div class="upload-icon">📷</div>
                 <p>Escolher foto<br><small>Recomendado: horizontal, 500×375px</small></p>
                 <img id="prev-box3" class="img-preview" />
               </div>
               <input type="hidden" id="box3-img-url" />
+              <div class="reposition-slot" data-field="box3" data-style="aspect-ratio:4/3;"></div>
             </div>
           </div>
 
@@ -1090,10 +1007,44 @@ async function carregarConfigs() {
       setVal('hero-mobile-img-zoom', d.hero.imgMobileZoom ?? 100);
       initReposition('hero-mobile');
     }
-    if (d.hero?.imgFundo) showPreview('prev-hero-foto-fundo', d.hero.imgFundo, 'hero-foto-fundo-url');
+    if (d.hero?.imgFundo) {
+      showPreview('prev-hero-foto-fundo', d.hero.imgFundo, 'hero-foto-fundo-url');
+      setVal('hero-foto-fundo-img-posx', d.hero.imgFundoPosX ?? 50);
+      setVal('hero-foto-fundo-img-posy', d.hero.imgFundoPosY ?? 50);
+      setVal('hero-foto-fundo-img-zoom', d.hero.imgFundoZoom ?? 100);
+      initReposition('hero-foto-fundo');
+    }
     const estilo = d.hero?.estilo || 'editorial';
     const radioEl = document.querySelector(`input[name="hero-estilo"][value="${estilo}"]`);
     if (radioEl) radioEl.checked = true;
+
+    // Caixas de Destaque (box1/2/3) — antes não eram recarregadas ao abrir a
+    // página, então salvar de novo sem preencher tudo apagava os dados reais.
+    setVal('box1-label', d.box1?.label);
+    setVal('box1-nome', d.box1?.nome);
+    if (d.box1?.img) {
+      showPreview('prev-box1', d.box1.img, 'box1-img-url');
+      setVal('box1-img-posx', d.box1.posX ?? 50);
+      setVal('box1-img-posy', d.box1.posY ?? 50);
+      setVal('box1-img-zoom', d.box1.zoom ?? 100);
+      initReposition('box1');
+    }
+    setVal('box2-nome', d.box2?.nome);
+    if (d.box2?.img) {
+      showPreview('prev-box2', d.box2.img, 'box2-img-url');
+      setVal('box2-img-posx', d.box2.posX ?? 50);
+      setVal('box2-img-posy', d.box2.posY ?? 50);
+      setVal('box2-img-zoom', d.box2.zoom ?? 100);
+      initReposition('box2');
+    }
+    setVal('box3-nome', d.box3?.nome);
+    if (d.box3?.img) {
+      showPreview('prev-box3', d.box3.img, 'box3-img-url');
+      setVal('box3-img-posx', d.box3.posX ?? 50);
+      setVal('box3-img-posy', d.box3.posY ?? 50);
+      setVal('box3-img-zoom', d.box3.zoom ?? 100);
+      initReposition('box3');
+    }
 
     // Hero B
     if (d.heroB) {
@@ -1103,7 +1054,13 @@ async function carregarConfigs() {
       setVal('herob-btn', d.heroB.btn);
       [1,2,3,4,5,6,7,8,9].forEach(i => {
         const img = d.heroB['foto' + i];
-        if (img) showPreview('prev-herob-foto' + i, img, 'herob-foto' + i + '-url');
+        if (img) {
+          showPreview('prev-herob-foto' + i, img, 'herob-foto' + i + '-url');
+          setVal('herob-foto' + i + '-img-posx', d.heroB['foto' + i + 'PosX'] ?? 50);
+          setVal('herob-foto' + i + '-img-posy', d.heroB['foto' + i + 'PosY'] ?? 50);
+          setVal('herob-foto' + i + '-img-zoom', d.heroB['foto' + i + 'Zoom'] ?? 100);
+          initReposition('herob-foto' + i);
+        }
       });
     }
 
@@ -1224,6 +1181,9 @@ function buildConfigObject() {
       label:     getVal('hero-label'),
       img:       getVal('hero-img-url'),
       imgFundo:  getVal('hero-foto-fundo-url'),
+      imgFundoPosX: Number(getVal('hero-foto-fundo-img-posx')) || 50,
+      imgFundoPosY: Number(getVal('hero-foto-fundo-img-posy')) || 50,
+      imgFundoZoom: Number(getVal('hero-foto-fundo-img-zoom')) || 100,
       posX:      Number(getVal('hero-img-posx')) || 50,
       posY:      Number(getVal('hero-img-posy')) || 50,
       zoom:      Number(getVal('hero-img-zoom')) || 100,
@@ -1233,9 +1193,9 @@ function buildConfigObject() {
       imgMobileZoom: Number(getVal('hero-mobile-img-zoom')) || 100,
       estilo:    document.querySelector('input[name="hero-estilo"]:checked')?.value || 'editorial',
     },
-    box1: { label: getVal('box1-label'), nome: getVal('box1-nome'), img: getVal('box1-img-url') },
-    box2: { nome: getVal('box2-nome'), img: getVal('box2-img-url') },
-    box3: { nome: getVal('box3-nome'), img: getVal('box3-img-url') },
+    box1: { label: getVal('box1-label'), nome: getVal('box1-nome'), img: getVal('box1-img-url'), posX: Number(getVal('box1-img-posx')) || 50, posY: Number(getVal('box1-img-posy')) || 50, zoom: Number(getVal('box1-img-zoom')) || 100 },
+    box2: { nome: getVal('box2-nome'), img: getVal('box2-img-url'), posX: Number(getVal('box2-img-posx')) || 50, posY: Number(getVal('box2-img-posy')) || 50, zoom: Number(getVal('box2-img-zoom')) || 100 },
+    box3: { nome: getVal('box3-nome'), img: getVal('box3-img-url'), posX: Number(getVal('box3-img-posx')) || 50, posY: Number(getVal('box3-img-posy')) || 50, zoom: Number(getVal('box3-img-zoom')) || 100 },
     faixa: getVal('faixa-itens').split('\n').map(s => s.trim()).filter(Boolean),
     depoimentos: Array.from(document.querySelectorAll('#depoimentos-lista .dep-row')).map(row => ({
       nome: row.querySelector('.dep-nome').value.trim(),
@@ -1243,6 +1203,9 @@ function buildConfigObject() {
       texto: row.querySelector('.dep-texto').value.trim(),
       estrelas: Number(row.querySelector('.dep-estrelas').value) || 5,
       foto: row.querySelector('.dep-foto-url').value || null,
+      fotoPosX: Number(row.querySelector('.dep-foto-posx')?.value) || 50,
+      fotoPosY: Number(row.querySelector('.dep-foto-posy')?.value) || 50,
+      fotoZoom: Number(row.querySelector('.dep-foto-zoom')?.value) || 100,
     })).filter(d => d.nome && d.texto),
     depoimentosAtivo: document.getElementById('dep-ativo')?.checked ?? true,
     instagram: {
@@ -1287,7 +1250,13 @@ function buildConfigObject() {
       subtitulo:     getVal('herob-subtitulo'),
       tituloGrande:  getVal('herob-titulo-grande'),
       btn:           getVal('herob-btn'),
-      ...[1,2,3,4,5,6,7,8,9].reduce((acc, i) => { acc['foto' + i] = getVal('herob-foto' + i + '-url'); return acc; }, {}),
+      ...[1,2,3,4,5,6,7,8,9].reduce((acc, i) => {
+        acc['foto' + i] = getVal('herob-foto' + i + '-url');
+        acc['foto' + i + 'PosX'] = Number(getVal('herob-foto' + i + '-img-posx')) || 50;
+        acc['foto' + i + 'PosY'] = Number(getVal('herob-foto' + i + '-img-posy')) || 50;
+        acc['foto' + i + 'Zoom'] = Number(getVal('herob-foto' + i + '-img-zoom')) || 100;
+        return acc;
+      }, {}),
     },
     categorias: {
       aneis:     { img: getVal('cat-aneis-img-url'), posX: Number(getVal('cat-aneis-img-posx')) || 50, posY: Number(getVal('cat-aneis-img-posy')) || 50, zoom: Number(getVal('cat-aneis-img-zoom')) || 100 },
@@ -1360,7 +1329,6 @@ window.initReposition = function(fieldPrefix) {
   const hiddenX = document.getElementById(fieldPrefix + '-img-posx');
   const hiddenY = document.getElementById(fieldPrefix + '-img-posy');
   const hiddenZoom = document.getElementById(fieldPrefix + '-img-zoom');
-  const zoomSlider = document.getElementById('reposition-zoom-' + fieldPrefix);
   const smallPreview = document.getElementById('prev-' + fieldPrefix);
   if (!wrap || !frame || !img || !smallPreview || !smallPreview.src) return;
 
@@ -1382,13 +1350,12 @@ window.initReposition = function(fieldPrefix) {
     if (hiddenX) hiddenX.value = state.posX.toFixed(1);
     if (hiddenY) hiddenY.value = state.posY.toFixed(1);
     if (hiddenZoom) hiddenZoom.value = state.zoom.toFixed(0);
-    if (zoomSlider) zoomSlider.value = state.zoom.toFixed(0);
   }
   state.applyPos = applyPos;
   applyPos();
 
   state.reset = () => { state.posX = 50; state.posY = 50; state.zoom = 100; applyPos(); };
-  state.setZoom = (v) => { state.zoom = Number(v); applyPos(); };
+  state.setZoom = (v) => { state.zoom = Math.min(300, Math.max(100, Number(v))); applyPos(); };
 
   if (frame.dataset.repositionBound) return;
   frame.dataset.repositionBound = '1';
@@ -1443,6 +1410,63 @@ window.resetReposition = function(fieldPrefix) {
 window.setZoomReposition = function(fieldPrefix, value) {
   repositionState[fieldPrefix]?.setZoom(value);
 };
+
+window.zoomStep = function(fieldPrefix, delta) {
+  const state = repositionState[fieldPrefix];
+  if (!state) return;
+  state.setZoom(state.zoom + delta);
+};
+
+// Gera o HTML de arrastar+zoom pra campos que não escrevem essa moldura na
+// mão no HTML (evita repetir a mesma marcação 9+ vezes) — usado a partir de
+// um placeholder vazio: div.reposition-slot com data-field e data-style.
+function repositionMarkup(fieldPrefix, style) {
+  return `
+    <div class="reposition-wrap" id="reposition-wrap-${fieldPrefix}">
+      <div class="reposition-frame" id="reposition-frame-${fieldPrefix}" style="${style || ''}">
+        <img id="reposition-img-${fieldPrefix}" alt="">
+        <div class="reposition-zoom-btns">
+          <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('${fieldPrefix}', -10)">−</button>
+          <button type="button" class="reposition-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStep('${fieldPrefix}', 10)">+</button>
+        </div>
+      </div>
+      <div class="reposition-controls">
+        <span class="reposition-hint">↔ Arraste e use +/− pra ajustar</span>
+        <button type="button" class="btn-reposition-reset" onclick="resetReposition('${fieldPrefix}')">Centralizar</button>
+      </div>
+    </div>
+    <input type="hidden" id="${fieldPrefix}-img-posx" value="50">
+    <input type="hidden" id="${fieldPrefix}-img-posy" value="50">
+    <input type="hidden" id="${fieldPrefix}-img-zoom" value="100">
+  `;
+}
+
+function initRepositionSlots(root) {
+  (root || document).querySelectorAll('.reposition-slot').forEach(slot => {
+    slot.outerHTML = repositionMarkup(slot.dataset.field, slot.dataset.style);
+  });
+}
+
+function buildHerobPhotoSlots() {
+  const grid = document.getElementById('herob-photos-grid');
+  if (!grid || grid.dataset.built) return;
+  grid.dataset.built = '1';
+  grid.innerHTML = [1,2,3,4,5,6,7,8,9].map(n => `
+    <div>
+      <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto ${n}</p>
+      <div class="img-upload-area" id="area-herob-foto${n}" style="padding:0.7rem;">
+        <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto${n}','area-herob-foto${n}','herob-foto${n}-url'); initReposition('herob-foto${n}')" />
+        <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+        <img id="prev-herob-foto${n}" class="img-preview" style="max-height:100px;" />
+      </div>
+      <input type="hidden" id="herob-foto${n}-url" />
+      <div class="reposition-slot" data-field="herob-foto${n}" data-style="aspect-ratio:2/3;"></div>
+    </div>
+  `).join('');
+  initRepositionSlots(grid);
+}
+buildHerobPhotoSlots();
+initRepositionSlots();
 
 async function uploadPendentes() {
   for (const [fieldId, file] of Object.entries(uploadQueue)) {
@@ -1556,13 +1580,17 @@ function depRowHTML(d) {
       <div class="form-row" style="margin-bottom:0.5rem;align-items:start;">
         <div class="form-group" style="margin:0;">
           <label>Foto (opcional)</label>
-          <div class="img-upload-area" id="dep-foto-area-${uid}" style="padding:0.6rem;">
-            <input type="file" accept="image/*" onchange="previewImg(this,'dep-foto-prev-${uid}','dep-foto-area-${uid}','dep-foto-url-${uid}')" />
+          <div class="img-upload-area" id="area-dep-${uid}" style="padding:0.6rem;">
+            <input type="file" accept="image/*" onchange="previewImg(this,'prev-dep-${uid}','area-dep-${uid}','dep-${uid}-img-url'); initReposition('dep-${uid}')" />
             <div class="upload-icon" style="font-size:1rem;margin-bottom:0.2rem;">📷</div>
             <p style="font-size:0.65rem;">Foto da cliente<br><small>Quadrada (1:1), ex: 200×200px</small></p>
-            <img id="dep-foto-prev-${uid}" class="img-preview" style="max-height:70px;${foto ? 'display:block;' : ''}" src="${foto}" />
+            <img id="prev-dep-${uid}" class="img-preview" style="max-height:70px;${foto ? 'display:block;' : ''}" src="${foto}" />
           </div>
-          <input type="hidden" id="dep-foto-url-${uid}" class="dep-foto-url" value="${foto}" />
+          <input type="hidden" id="dep-${uid}-img-url" class="dep-foto-url" value="${foto}" />
+          <input type="hidden" id="dep-${uid}-img-posx" class="dep-foto-posx" value="${d.fotoPosX ?? 50}">
+          <input type="hidden" id="dep-${uid}-img-posy" class="dep-foto-posy" value="${d.fotoPosY ?? 50}">
+          <input type="hidden" id="dep-${uid}-img-zoom" class="dep-foto-zoom" value="${d.fotoZoom ?? 100}">
+          <div class="reposition-slot" data-field="dep-${uid}" data-style="aspect-ratio:1/1;max-width:130px;"></div>
         </div>
         <div class="form-group" style="margin:0;">
           <label>Nome</label>
@@ -1586,6 +1614,12 @@ function renderDepoimentosAdmin() {
   const lista = document.getElementById('depoimentos-lista');
   if (!lista) return;
   lista.innerHTML = depoimentos.map(depRowHTML).join('');
+  initRepositionSlots(lista);
+  lista.querySelectorAll('.dep-row').forEach((row, i) => {
+    if (!depoimentos[i]?.foto) return;
+    const wrap = row.querySelector('.reposition-wrap');
+    if (wrap) initReposition(wrap.id.replace('reposition-wrap-', ''));
+  });
 }
 
 window.adicionarDepoimento = function() {

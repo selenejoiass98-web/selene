@@ -729,6 +729,7 @@ async function loadProdutos() {
           material: d.material || 'Dourado 18k',
           variant: `${d.material || 'Dourado 18k'}${d.tamanho ? ' · ' + d.tamanho : ''}`,
           fotos: d.fotos || [],
+          fotoPos: d.fotosFrame?.[0] || { posX: 50, posY: 50 },
           symbol: '◈',
           novo: d.badge === 'Novo',
           status: d.status || 'inativo',
@@ -896,7 +897,7 @@ function render() {
           <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
           <a href="${href}">
             ${p.fotos.length > 0
-              ? `<img src="${p.fotos[0]}" alt="${p.name}" loading="lazy">`
+              ? `<img src="${p.fotos[0]}" alt="${p.name}" loading="lazy" style="object-position:${p.fotoPos.posX}% ${p.fotoPos.posY}%;">`
               : `<div class="product-card-placeholder">${p.symbol}</div>`
             }
           </a>

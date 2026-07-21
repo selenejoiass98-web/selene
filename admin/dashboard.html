@@ -365,8 +365,15 @@ body.sidebar-collapsed .main { margin-left: 0; }
   padding:1.2rem 1.4rem;
   margin-bottom:1.4rem;
 }
+.campaigns-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:0.5rem; }
 .campaigns-card-title { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--brown); margin-bottom:0.3rem; }
-.campaigns-card-sub { font-size:0.72rem; color:var(--text-s); margin-bottom:1rem; }
+.campaigns-card-sub { font-size:0.72rem; color:var(--text-s); margin-bottom:0; }
+.btn-campaign-new {
+  padding:0.45rem 1rem; background:none; color:var(--gold); border:1px solid var(--gold-pale);
+  font-family:'Jost',sans-serif; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase;
+  cursor:pointer; transition:all 0.2s; white-space:nowrap; flex-shrink:0; text-decoration:none;
+}
+.btn-campaign-new:hover { background:var(--cream); border-color:var(--gold); }
 .campaign-row {
   display:flex; align-items:center; justify-content:space-between; gap:1rem;
   padding:0.7rem 0; border-top:1px solid var(--gold-pale);
@@ -767,9 +774,14 @@ body.sidebar-collapsed .main { margin-left: 0; }
         <h2 class="section-title">Clientes</h2>
       </div>
 
-      <div class="campaigns-card" id="campaigns-card" style="display:none;">
-        <div class="campaigns-card-title">✉️ Campanhas prontas no Brevo</div>
-        <p class="campaigns-card-sub">Campanhas que você já preparou no Brevo, prontas pra disparar sem precisar abrir o painel de lá.</p>
+      <div class="campaigns-card" id="campaigns-card">
+        <div class="campaigns-card-head">
+          <div>
+            <div class="campaigns-card-title">✉️ Campanhas prontas no Brevo</div>
+            <p class="campaigns-card-sub">Campanhas que você já preparou no Brevo, prontas pra disparar sem precisar abrir o painel de lá.</p>
+          </div>
+          <a href="https://app.brevo.com/camp/list/campaigns" target="_blank" rel="noopener" class="btn-campaign-new">+ Criar campanha</a>
+        </div>
         <div id="campaigns-list"></div>
       </div>
 
@@ -1186,10 +1198,11 @@ async function loadCampaigns() {
     const res = await fetch('/api/brevo-campaigns');
     const data = await res.json();
     const campanhas = data.campanhas || [];
-    const card = document.getElementById('campaigns-card');
     const list = document.getElementById('campaigns-list');
-    if (!campanhas.length) { card.style.display = 'none'; return; }
-    card.style.display = 'block';
+    if (!campanhas.length) {
+      list.innerHTML = `<p class="campaigns-empty">Nenhuma campanha em rascunho no Brevo agora. Clique em "Criar campanha" para preparar uma nova.</p>`;
+      return;
+    }
     list.innerHTML = campanhas.map(c => `
       <div class="campaign-row">
         <div class="campaign-info">

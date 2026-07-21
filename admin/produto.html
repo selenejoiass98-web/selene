@@ -129,8 +129,18 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
 .photo-item {
   aspect-ratio:1; position:relative;
   background:var(--cream); overflow:hidden;
+  cursor:grab; touch-action:none;
 }
-.photo-item img { width:100%; height:100%; object-fit:cover; }
+.photo-item.dragging { cursor:grabbing; }
+.photo-item img { width:100%; height:100%; object-fit:cover; user-select:none; pointer-events:none; }
+.photo-item-hint {
+  position:absolute; bottom:0; left:0; right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,0.55));
+  color:#fff; font-size:0.52rem; letter-spacing:0.03em;
+  text-align:center; padding:0.6rem 0.2rem 0.25rem;
+  pointer-events:none; opacity:0; transition:opacity 0.15s;
+}
+.photo-item:hover .photo-item-hint { opacity:1; }
 .photo-delete {
   position:absolute; top:4px; right:4px;
   width:22px; height:22px; border-radius:50%;
@@ -506,7 +516,8 @@ onAuthStateChanged(auth, user => {
 });
 
 // ── STATE ──
-let uploadedPhotos = []; // { url, path }
+let uploadedPhotos = []; // { url, path, uid, posX, posY }
+let photoUidCounter = 0;
 let editingId = null;
 let existingSlug = '';
 
@@ -546,7 +557,11 @@ async function loadProduct(id) {
     if (p.freteGratis) document.getElementById('toggle-frete').classList.add('on');
     if (p.esgotarComFaixa) document.getElementById('toggle-esgotar-faixa').classList.add('on');
     if (p.fotos?.length) {
-      uploadedPhotos = p.fotos.map(url => ({ url, path: null }));
+      uploadedPhotos = p.fotos.map((url, i) => ({
+        url, path: null, uid: photoUidCounter++,
+        posX: p.fotosFrame?.[i]?.posX ?? 50,
+        posY: p.fotosFrame?.[i]?.posY ?? 50,
+      }));
       renderPhotos();
     }
     updatePreview();
@@ -598,7 +613,7 @@ window.handleFiles = async function(files) {
       const data = await res.json();
 
       if (data.secure_url) {
-        uploadedPhotos.push({ url: data.secure_url, publicId: data.public_id });
+        uploadedPhotos.push({ url: data.secure_url, publicId: data.public_id, uid: photoUidCounter++, posX: 50, posY: 50 });
         renderPhotos();
         updatePreview();
       } else {
@@ -620,11 +635,13 @@ window.handleFiles = async function(files) {
 function renderPhotos() {
   const grid = document.getElementById('photos-grid');
   grid.innerHTML = uploadedPhotos.map((p,i) => `
-    <div class="photo-item">
-      <img src="${p.url}" alt="foto ${i+1}">
+    <div class="photo-item" id="photo-item-${p.uid}" data-uid="${p.uid}">
+      <img id="photo-img-${p.uid}" src="${p.url}" alt="foto ${i+1}" style="object-position:${p.posX}% ${p.posY}%;">
+      <div class="photo-item-hint">↔ Arraste pra reposicionar</div>
       <button class="photo-delete" onclick="removePhoto(${i})" title="Remover">×</button>
     </div>
   `).join('');
+  uploadedPhotos.forEach(p => initPhotoReposition(p.uid));
 }
 
 window.removePhoto = function(i) {
@@ -632,6 +649,65 @@ window.removePhoto = function(i) {
   renderPhotos();
   updatePreview();
 };
+
+// ── REPOSICIONAR FOTO (arrastar dentro do quadro — sem zoom aqui: as fotos
+// de produto usam um efeito de zoom no hover no site público e no card do
+// catálogo; aplicar um transform:scale fixo por cima quebraria esse hover) ──
+const photoRepositionBound = new Set();
+function initPhotoReposition(uid) {
+  const item = document.getElementById('photo-item-' + uid);
+  const img = document.getElementById('photo-img-' + uid);
+  if (!item || !img) return;
+
+  function getPhoto() { return uploadedPhotos.find(p => p.uid === uid); }
+
+  if (photoRepositionBound.has(uid)) return;
+  photoRepositionBound.add(uid);
+
+  let dragging = false, startClientX = 0, startClientY = 0, startPosX = 50, startPosY = 50;
+
+  item.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('.photo-delete')) return;
+    const p = getPhoto();
+    if (!p) return;
+    dragging = true;
+    item.classList.add('dragging');
+    startClientX = e.clientX;
+    startClientY = e.clientY;
+    startPosX = p.posX;
+    startPosY = p.posY;
+    item.setPointerCapture(e.pointerId);
+  });
+
+  item.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const p = getPhoto();
+    if (!p) return;
+    const Cw = item.clientWidth, Ch = item.clientHeight;
+    const Iw = img.naturalWidth, Ih = img.naturalHeight;
+    if (!Iw || !Ih || !Cw || !Ch) return;
+    const scale = Math.max(Cw / Iw, Ch / Ih);
+    const overflowX = Iw * scale - Cw;
+    const overflowY = Ih * scale - Ch;
+    const dx = e.clientX - startClientX;
+    const dy = e.clientY - startClientY;
+    if (overflowX > 0.5) {
+      const startOffsetX = overflowX * (startPosX / 100);
+      const newOffsetX = Math.min(overflowX, Math.max(0, startOffsetX - dx));
+      p.posX = (newOffsetX / overflowX) * 100;
+    }
+    if (overflowY > 0.5) {
+      const startOffsetY = overflowY * (startPosY / 100);
+      const newOffsetY = Math.min(overflowY, Math.max(0, startOffsetY - dy));
+      p.posY = (newOffsetY / overflowY) * 100;
+    }
+    img.style.objectPosition = `${p.posX.toFixed(1)}% ${p.posY.toFixed(1)}%`;
+  });
+
+  function endDrag() { dragging = false; item.classList.remove('dragging'); }
+  item.addEventListener('pointerup', endDrag);
+  item.addEventListener('pointercancel', endDrag);
+}
 
 // Drag and drop
 const uploadArea = document.getElementById('upload-area');
@@ -730,6 +806,7 @@ window.salvarProduto = async function(status) {
     freteGratis: document.getElementById('toggle-frete').classList.contains('on'),
     esgotarComFaixa: document.getElementById('toggle-esgotar-faixa').classList.contains('on'),
     fotos: uploadedPhotos.map(p => p.url),
+    fotosFrame: uploadedPhotos.map(p => ({ posX: p.posX ?? 50, posY: p.posY ?? 50 })),
     atualizadoEm: serverTimestamp(),
   };
   // Editar o estoque manualmente aqui sempre recalcula a faixa de esgotado,

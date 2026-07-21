@@ -95,6 +95,8 @@ function sanitizar(p) {
     status: p.status || 'novo',
     pagamento: p.pagamento || null,
     mercadoPago: p.mercadoPago ? { status: p.mercadoPago.status || null } : null,
+    vencimento: p.vencimento || null,
+    pagamentoConfirmado: !!p.pagamentoConfirmado,
     codigoRastreio: p.codigoRastreio || null,
     transportadora: p.transportadora || null,
     frete: p.frete ? { nome: p.frete.nome || null, desc: p.frete.desc || null } : null,

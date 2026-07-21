@@ -314,6 +314,13 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .status-inactive { background:var(--red-l); color:var(--red); }
 .status-draft { background:var(--cream-d); color:var(--text-s); }
 
+.payment-badge { display:inline-block; margin-top:0.3rem; padding:0.15rem 0.5rem; border-radius:20px; font-size:0.6rem; letter-spacing:0.03em; white-space:nowrap; }
+.payment-badge--ok { background:var(--green-l); color:var(--green); }
+.payment-badge--pending { background:#FFF8E7; color:#8a6820; }
+.payment-badge--warn { background:var(--red-l); color:var(--red); font-weight:500; }
+.btn-mark-paid { display:block; margin-top:0.35rem; font-size:0.58rem; letter-spacing:0.05em; text-transform:uppercase; padding:0.2rem 0.5rem; border:1px solid var(--green); background:none; color:var(--green); border-radius:4px; cursor:pointer; white-space:nowrap; }
+.btn-mark-paid:hover { background:var(--green-l); }
+
 .action-btns { display:flex; gap:0.4rem; }
 .action-btn {
   padding:0.3rem 0.7rem;
@@ -821,6 +828,44 @@ let pedidosCache = [];
 let pendingTrackingPedido = null;
 let pendingTrackingSelect = null;
 
+// ── PAGAMENTO (boleto/pix aguardando confirmação do Mercado Pago) ──
+function renderPagamentoBadge(p) {
+  if (p.pagamentoConfirmado) return `<div class="payment-badge payment-badge--ok">✓ Pago</div>`;
+  if (p.pagamento === 'boleto') {
+    const venc = p.vencimento ? new Date(p.vencimento) : null;
+    const vencido = venc && !isNaN(venc.getTime()) && venc.getTime() < Date.now();
+    if (vencido) {
+      return `<div class="payment-badge payment-badge--warn">⚠ Vencido${p.avisoVencimentoEnviado ? ' · cliente avisada' : ''}</div>
+              <button type="button" class="btn-mark-paid" onclick="marcarPagamentoConfirmado('${p.id}')">Marcar como pago</button>`;
+    }
+    return `<div class="payment-badge payment-badge--pending">Aguardando${venc && !isNaN(venc.getTime()) ? ' até ' + venc.toLocaleDateString('pt-BR') : ''}</div>
+            <button type="button" class="btn-mark-paid" onclick="marcarPagamentoConfirmado('${p.id}')">Marcar como pago</button>`;
+  }
+  if (p.pagamento === 'pix' && p.mercadoPago?.status && p.mercadoPago.status !== 'approved') {
+    return `<div class="payment-badge payment-badge--pending">Aguardando</div>
+            <button type="button" class="btn-mark-paid" onclick="marcarPagamentoConfirmado('${p.id}')">Marcar como pago</button>`;
+  }
+  return '';
+}
+
+// Fallback manual — usado quando o webhook do Mercado Pago ainda não está
+// configurado ou não disparou (ex: pagamento combinado fora do sistema).
+window.marcarPagamentoConfirmado = async function(id) {
+  const pedido = pedidosCache.find(p => p.id === id);
+  if (!pedido) return;
+  try {
+    const updates = { pagamentoConfirmado: true, pagamentoConfirmadoEm: new Date().toISOString() };
+    if ((pedido.status || 'novo') === 'novo') updates.status = 'processando';
+    await updateDoc(doc(db, 'pedidos', id), updates);
+    Object.assign(pedido, updates);
+    showToast('Pagamento marcado como confirmado');
+    loadPedidos();
+  } catch (e) {
+    console.error(e);
+    showToast('Erro ao marcar pagamento como confirmado');
+  }
+};
+
 window.onStatusSelectChange = function(selectEl) {
   const id = selectEl.dataset.id;
   const novoStatus = selectEl.value;
@@ -1154,7 +1199,7 @@ async function loadPedidos() {
         <td>${p.cliente?.nome||'—'}</td>
         <td style="font-size:0.7rem;color:var(--text-s);">${(p.itens||[]).map(i=>i.nome).join(', ')||'—'}</td>
         <td><span class="price-cell">R$ ${Number(p.total||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</span></td>
-        <td style="font-size:0.72rem;">${p.pagamento||'—'}</td>
+        <td style="font-size:0.72rem;">${p.pagamento||'—'}${renderPagamentoBadge(p)}</td>
         <td><span class="status-pill ${STATUS_PILL_CLASS[statusAtual]||'status-draft'}">${STATUS_LABELS[statusAtual]||statusAtual}</span></td>
         <td>
           <select class="status-select" data-id="${p.id}" onchange="onStatusSelectChange(this)">

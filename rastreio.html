@@ -234,6 +234,7 @@
 .status-enviado { background: #DBEAFE; color: #1E40AF; }
 .status-entregue { background: #D1FAE5; color: #065F46; }
 .status-pendente { background: #FEF3C7; color: #92400E; }
+.status-vencido { background: #FEE2E2; color: #991B1B; }
 .status-cancelado { background: #FEE2E2; color: #991B1B; }
 .order-list { display: none; max-width: 760px; margin: 0 auto 1.5rem; text-align: center; }
 .order-list-title { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 0.8rem; }
@@ -964,10 +965,12 @@ const PAGTO_LABELS = { pix: 'Pix', cartao: 'Cartão', boleto: 'Boleto' };
 function statusInfo(o) {
   const mp = o.mercadoPago && o.mercadoPago.status;
   if (o.status === 'cancelado') return { label: 'Cancelado', cls: 'cancelado', pagoOk: false };
-  const pagoOk = mp === 'approved' || ['processando', 'enviado', 'entregue'].includes(o.status);
+  const pagoOk = o.pagamentoConfirmado === true || mp === 'approved' || ['processando', 'enviado', 'entregue'].includes(o.status);
   if (o.status === 'novo' || !o.status) {
-    return pagoOk
-      ? { label: 'Pagamento confirmado', cls: 'pago', pagoOk: true }
+    if (pagoOk) return { label: 'Pagamento confirmado', cls: 'pago', pagoOk: true };
+    const vencido = o.pagamento === 'boleto' && o.vencimento && new Date(o.vencimento).getTime() < Date.now();
+    return vencido
+      ? { label: 'Boleto vencido', cls: 'pendente', pagoOk: false, vencido: true }
       : { label: 'Aguardando pagamento', cls: 'pendente', pagoOk: false };
   }
   const map = { processando: ['Em preparação', 'preparando'], enviado: ['Enviado', 'enviado'], entregue: ['Entregue', 'entregue'] };
@@ -1008,7 +1011,7 @@ function renderPedido(o) {
 
   const badge = document.getElementById('res-status-badge');
   badge.textContent = st.label;
-  badge.className = 'order-status-badge status-' + st.cls;
+  badge.className = 'order-status-badge status-' + (st.vencido ? 'vencido' : st.cls);
 
   const temRastreio = !!o.codigoRastreio;
   document.getElementById('tracking-code-block').style.display = temRastreio ? 'block' : 'none';
@@ -1027,6 +1030,12 @@ function renderPedido(o) {
       { name: 'Pedido realizado', desc: 'Recebemos seu pedido com sucesso.', date: fmtData(o.criadoEm, true), done: true },
       st.pagoOk
         ? { name: 'Pagamento confirmado', desc: 'Pagamento via ' + pagto + ' confirmado.', done: true }
+        : st.vencido
+        ? {
+            name: 'Boleto vencido',
+            desc: 'O prazo de pagamento passou sem confirmação. Vamos entrar em contato — ou fale com a gente pelo WhatsApp para finalizar de outra forma.',
+            done: false, current: true
+          }
         : {
             name: 'Aguardando pagamento',
             desc: o.pagamento === 'boleto'

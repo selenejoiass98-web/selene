@@ -1458,7 +1458,7 @@ window.copyOrderNumber = function(btn) {
 };
 
 // Salva pedido no Firestore
-async function salvarPedidoFirebase(orderNum, paymentData) {
+async function salvarPedidoFirebase(orderNum, paymentData, extra) {
   if (!window._db) {
     console.error('Firestore indisponível — pedido ' + orderNum + ' NÃO foi salvo!');
     return;
@@ -1469,6 +1469,7 @@ async function salvarPedidoFirebase(orderNum, paymentData) {
     // e o pedido nunca é salvo (bug que deixou a coleção vazia até 11/07/2026).
     await window._fbAddDoc(window._fbCollection(window._db, 'pedidos'), {
       numeroPedido: orderNum,
+      ...(extra || {}),
       cliente: {
         nome: document.getElementById('nome').value,
         email: document.getElementById('email').value,
@@ -1825,10 +1826,19 @@ async function processarBoleto(orderNum, total, nome, email, cpf) {
     window.open(boletoUrl, '_blank');
   }
 
-  await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'boleto', url: boletoUrl });
+  // Vencimento: 3 dias úteis — salvo no pedido pra o cron de aviso de vencimento
+  // (api/check-boletos.js) saber quando o boleto expirou sem pagamento.
+  const venc = new Date();
+  let diasUteis = 0;
+  while (diasUteis < 3) {
+    venc.setDate(venc.getDate() + 1);
+    if (venc.getDay() !== 0 && venc.getDay() !== 6) diasUteis++;
+  }
+
+  await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'boleto', url: boletoUrl }, { vencimento: venc.toISOString() });
 
   // E-mail específico de boleto com urgência
-  await enviarEmailBoleto(orderNum, nome, email, total, boletoUrl,
+  await enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, venc,
     cart.map(i => ({ name: i.name, variant: i.variant, price: i.price, qty: i.qty })),
     selectedShipping || { nome: 'A definir', preco: 0 }
   );
@@ -1836,14 +1846,7 @@ async function processarBoleto(orderNum, total, nome, email, cpf) {
   mostrarSucesso(orderNum);
 }
 
-async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens, frete) {
-  // Calcular vencimento (3 dias úteis)
-  const venc = new Date();
-  let diasUteis = 0;
-  while (diasUteis < 3) {
-    venc.setDate(venc.getDate() + 1);
-    if (venc.getDay() !== 0 && venc.getDay() !== 6) diasUteis++;
-  }
+async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, venc, itens, frete) {
   const vencStr = venc.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   const itensHtml = itens.map(i => `
@@ -1874,7 +1877,7 @@ async function enviarEmailBoleto(orderNum, nome, email, total, boletoUrl, itens,
             <div style="background:#FFF8E7;border:2px solid #F6A800;padding:20px 24px;margin-bottom:28px;text-align:center;border-radius:4px;">
               <p style="margin:0 0 4px;font-size:13px;color:#7A5500;font-weight:600;letter-spacing:1px;text-transform:uppercase;">⚠️ Atenção — Prazo de pagamento</p>
               <p style="margin:0;font-family:Georgia,serif;font-size:26px;color:#7A5500;">Vence em ${vencStr}</p>
-              <p style="margin:6px 0 0;font-size:12px;color:#9A7000;">Após o vencimento, o pedido será cancelado automaticamente.</p>
+              <p style="margin:6px 0 0;font-size:12px;color:#9A7000;">Se o boleto vencer sem pagamento, vamos entrar em contato pra ajudar você a finalizar de outra forma.</p>
             </div>
 
             <div style="text-align:center;margin-bottom:28px;">

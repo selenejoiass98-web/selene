@@ -23,6 +23,9 @@
     { "source": "/admin/blog-post", "destination": "/admin/blog-post.html" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" }
   ],
+  "crons": [
+    { "path": "/api/check-boletos", "schedule": "0 12 * * *" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

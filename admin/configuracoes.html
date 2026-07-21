@@ -81,11 +81,14 @@ body.sidebar-collapsed .main { margin-left:0; }
   cursor:grab; touch-action:none; background:var(--cream-d);
 }
 .reposition-frame.dragging { cursor:grabbing; }
-.reposition-frame img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; user-select:none; pointer-events:none; }
+.reposition-frame img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center center; user-select:none; pointer-events:none; }
 .reposition-controls { display:flex; align-items:center; justify-content:space-between; gap:0.6rem; margin-top:0.4rem; }
 .reposition-hint { font-size:0.62rem; color:var(--text-s); letter-spacing:0.02em; }
 .btn-reposition-reset { font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.3rem 0.6rem; border:1px solid var(--gold-pale); background:var(--white); color:var(--text-m); cursor:pointer; border-radius:4px; white-space:nowrap; }
 .btn-reposition-reset:hover { border-color:var(--gold); color:var(--gold); }
+.reposition-zoom-row { display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem; }
+.reposition-zoom-row .icon { font-size:0.7rem; color:var(--text-s); flex-shrink:0; }
+.reposition-zoom { flex:1; accent-color:var(--gold); cursor:pointer; }
 
 /* ── DESTAQUE BOXES ── */
 .boxes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
@@ -267,12 +270,17 @@ body.sidebar-collapsed .main { margin-left:0; }
           <input type="hidden" id="hero-img-url" />
           <input type="hidden" id="hero-img-posx" value="50">
           <input type="hidden" id="hero-img-posy" value="50">
+          <input type="hidden" id="hero-img-zoom" value="100">
           <div class="reposition-wrap" id="reposition-wrap-hero">
             <div class="reposition-frame" id="reposition-frame-hero" style="aspect-ratio:4/5;max-width:220px;">
               <img id="reposition-img-hero" alt="">
             </div>
+            <div class="reposition-zoom-row">
+              <span class="icon">🔍</span>
+              <input type="range" class="reposition-zoom" id="reposition-zoom-hero" min="100" max="300" value="100" step="5" oninput="setZoomReposition('hero', this.value)">
+            </div>
             <div class="reposition-controls">
-              <span class="reposition-hint">↔ Arraste a foto para ajustar o enquadramento</span>
+              <span class="reposition-hint">↔ Arraste a foto e use o zoom para ajustar o enquadramento</span>
               <button type="button" class="btn-reposition-reset" onclick="resetReposition('hero')">Centralizar</button>
             </div>
           </div>
@@ -289,12 +297,17 @@ body.sidebar-collapsed .main { margin-left:0; }
           <input type="hidden" id="hero-img-mobile-url" />
           <input type="hidden" id="hero-mobile-img-posx" value="50">
           <input type="hidden" id="hero-mobile-img-posy" value="50">
+          <input type="hidden" id="hero-mobile-img-zoom" value="100">
           <div class="reposition-wrap" id="reposition-wrap-hero-mobile">
             <div class="reposition-frame" id="reposition-frame-hero-mobile" style="aspect-ratio:4/5;max-width:220px;">
               <img id="reposition-img-hero-mobile" alt="">
             </div>
+            <div class="reposition-zoom-row">
+              <span class="icon">🔍</span>
+              <input type="range" class="reposition-zoom" id="reposition-zoom-hero-mobile" min="100" max="300" value="100" step="5" oninput="setZoomReposition('hero-mobile', this.value)">
+            </div>
             <div class="reposition-controls">
-              <span class="reposition-hint">↔ Arraste a foto para ajustar o enquadramento</span>
+              <span class="reposition-hint">↔ Arraste a foto e use o zoom para ajustar o enquadramento</span>
               <button type="button" class="btn-reposition-reset" onclick="resetReposition('hero-mobile')">Centralizar</button>
             </div>
           </div>
@@ -484,9 +497,14 @@ body.sidebar-collapsed .main { margin-left:0; }
             <input type="hidden" id="cat-aneis-img-url" />
             <input type="hidden" id="cat-aneis-img-posx" value="50">
             <input type="hidden" id="cat-aneis-img-posy" value="50">
+            <input type="hidden" id="cat-aneis-img-zoom" value="100">
             <div class="reposition-wrap" id="reposition-wrap-cat-aneis">
               <div class="reposition-frame" id="reposition-frame-cat-aneis" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-aneis" alt="">
+              </div>
+              <div class="reposition-zoom-row">
+                <span class="icon">🔍</span>
+                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-aneis" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-aneis', this.value)">
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -505,9 +523,14 @@ body.sidebar-collapsed .main { margin-left:0; }
             <input type="hidden" id="cat-colares-img-url" />
             <input type="hidden" id="cat-colares-img-posx" value="50">
             <input type="hidden" id="cat-colares-img-posy" value="50">
+            <input type="hidden" id="cat-colares-img-zoom" value="100">
             <div class="reposition-wrap" id="reposition-wrap-cat-colares">
               <div class="reposition-frame" id="reposition-frame-cat-colares" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-colares" alt="">
+              </div>
+              <div class="reposition-zoom-row">
+                <span class="icon">🔍</span>
+                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-colares" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-colares', this.value)">
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -526,9 +549,14 @@ body.sidebar-collapsed .main { margin-left:0; }
             <input type="hidden" id="cat-pulseiras-img-url" />
             <input type="hidden" id="cat-pulseiras-img-posx" value="50">
             <input type="hidden" id="cat-pulseiras-img-posy" value="50">
+            <input type="hidden" id="cat-pulseiras-img-zoom" value="100">
             <div class="reposition-wrap" id="reposition-wrap-cat-pulseiras">
               <div class="reposition-frame" id="reposition-frame-cat-pulseiras" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-pulseiras" alt="">
+              </div>
+              <div class="reposition-zoom-row">
+                <span class="icon">🔍</span>
+                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-pulseiras" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-pulseiras', this.value)">
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -547,9 +575,14 @@ body.sidebar-collapsed .main { margin-left:0; }
             <input type="hidden" id="cat-brincos-img-url" />
             <input type="hidden" id="cat-brincos-img-posx" value="50">
             <input type="hidden" id="cat-brincos-img-posy" value="50">
+            <input type="hidden" id="cat-brincos-img-zoom" value="100">
             <div class="reposition-wrap" id="reposition-wrap-cat-brincos">
               <div class="reposition-frame" id="reposition-frame-cat-brincos" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-brincos" alt="">
+              </div>
+              <div class="reposition-zoom-row">
+                <span class="icon">🔍</span>
+                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-brincos" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-brincos', this.value)">
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -568,9 +601,14 @@ body.sidebar-collapsed .main { margin-left:0; }
             <input type="hidden" id="cat-conjuntos-img-url" />
             <input type="hidden" id="cat-conjuntos-img-posx" value="50">
             <input type="hidden" id="cat-conjuntos-img-posy" value="50">
+            <input type="hidden" id="cat-conjuntos-img-zoom" value="100">
             <div class="reposition-wrap" id="reposition-wrap-cat-conjuntos">
               <div class="reposition-frame" id="reposition-frame-cat-conjuntos" style="aspect-ratio:4/5;">
                 <img id="reposition-img-cat-conjuntos" alt="">
+              </div>
+              <div class="reposition-zoom-row">
+                <span class="icon">🔍</span>
+                <input type="range" class="reposition-zoom" id="reposition-zoom-cat-conjuntos" min="100" max="300" value="100" step="5" oninput="setZoomReposition('cat-conjuntos', this.value)">
               </div>
               <div class="reposition-controls">
                 <span class="reposition-hint">↔ Arraste</span>
@@ -1042,12 +1080,14 @@ async function carregarConfigs() {
       showPreview('prev-hero', d.hero.img, 'hero-img-url');
       setVal('hero-img-posx', d.hero.posX ?? 50);
       setVal('hero-img-posy', d.hero.posY ?? 50);
+      setVal('hero-img-zoom', d.hero.zoom ?? 100);
       initReposition('hero');
     }
     if (d.hero?.imgMobile) {
       showPreview('prev-hero-mobile', d.hero.imgMobile, 'hero-img-mobile-url');
       setVal('hero-mobile-img-posx', d.hero.imgMobilePosX ?? 50);
       setVal('hero-mobile-img-posy', d.hero.imgMobilePosY ?? 50);
+      setVal('hero-mobile-img-zoom', d.hero.imgMobileZoom ?? 100);
       initReposition('hero-mobile');
     }
     if (d.hero?.imgFundo) showPreview('prev-hero-foto-fundo', d.hero.imgFundo, 'hero-foto-fundo-url');
@@ -1074,6 +1114,7 @@ async function carregarConfigs() {
         showPreview('prev-cat-' + cat, img, 'cat-' + cat + '-img-url');
         setVal('cat-' + cat + '-img-posx', d.categorias[cat].posX ?? 50);
         setVal('cat-' + cat + '-img-posy', d.categorias[cat].posY ?? 50);
+        setVal('cat-' + cat + '-img-zoom', d.categorias[cat].zoom ?? 100);
         initReposition('cat-' + cat);
       }
     });
@@ -1185,9 +1226,11 @@ function buildConfigObject() {
       imgFundo:  getVal('hero-foto-fundo-url'),
       posX:      Number(getVal('hero-img-posx')) || 50,
       posY:      Number(getVal('hero-img-posy')) || 50,
+      zoom:      Number(getVal('hero-img-zoom')) || 100,
       imgMobile: getVal('hero-img-mobile-url'),
       imgMobilePosX: Number(getVal('hero-mobile-img-posx')) || 50,
       imgMobilePosY: Number(getVal('hero-mobile-img-posy')) || 50,
+      imgMobileZoom: Number(getVal('hero-mobile-img-zoom')) || 100,
       estilo:    document.querySelector('input[name="hero-estilo"]:checked')?.value || 'editorial',
     },
     box1: { label: getVal('box1-label'), nome: getVal('box1-nome'), img: getVal('box1-img-url') },
@@ -1247,11 +1290,11 @@ function buildConfigObject() {
       ...[1,2,3,4,5,6,7,8,9].reduce((acc, i) => { acc['foto' + i] = getVal('herob-foto' + i + '-url'); return acc; }, {}),
     },
     categorias: {
-      aneis:     { img: getVal('cat-aneis-img-url'), posX: Number(getVal('cat-aneis-img-posx')) || 50, posY: Number(getVal('cat-aneis-img-posy')) || 50 },
-      colares:   { img: getVal('cat-colares-img-url'), posX: Number(getVal('cat-colares-img-posx')) || 50, posY: Number(getVal('cat-colares-img-posy')) || 50 },
-      pulseiras: { img: getVal('cat-pulseiras-img-url'), posX: Number(getVal('cat-pulseiras-img-posx')) || 50, posY: Number(getVal('cat-pulseiras-img-posy')) || 50 },
-      brincos:   { img: getVal('cat-brincos-img-url'), posX: Number(getVal('cat-brincos-img-posx')) || 50, posY: Number(getVal('cat-brincos-img-posy')) || 50 },
-      conjuntos: { img: getVal('cat-conjuntos-img-url'), posX: Number(getVal('cat-conjuntos-img-posx')) || 50, posY: Number(getVal('cat-conjuntos-img-posy')) || 50 },
+      aneis:     { img: getVal('cat-aneis-img-url'), posX: Number(getVal('cat-aneis-img-posx')) || 50, posY: Number(getVal('cat-aneis-img-posy')) || 50, zoom: Number(getVal('cat-aneis-img-zoom')) || 100 },
+      colares:   { img: getVal('cat-colares-img-url'), posX: Number(getVal('cat-colares-img-posx')) || 50, posY: Number(getVal('cat-colares-img-posy')) || 50, zoom: Number(getVal('cat-colares-img-zoom')) || 100 },
+      pulseiras: { img: getVal('cat-pulseiras-img-url'), posX: Number(getVal('cat-pulseiras-img-posx')) || 50, posY: Number(getVal('cat-pulseiras-img-posy')) || 50, zoom: Number(getVal('cat-pulseiras-img-zoom')) || 100 },
+      brincos:   { img: getVal('cat-brincos-img-url'), posX: Number(getVal('cat-brincos-img-posx')) || 50, posY: Number(getVal('cat-brincos-img-posy')) || 50, zoom: Number(getVal('cat-brincos-img-zoom')) || 100 },
+      conjuntos: { img: getVal('cat-conjuntos-img-url'), posX: Number(getVal('cat-conjuntos-img-posx')) || 50, posY: Number(getVal('cat-conjuntos-img-posy')) || 50, zoom: Number(getVal('cat-conjuntos-img-zoom')) || 100 },
     },
   };
 }
@@ -1302,7 +1345,12 @@ function showPreview(previewId, url, fieldId) {
   if (field && url.startsWith('http')) field.value = url;
 }
 
-// ── REPOSICIONAR FOTO (arrastar dentro da moldura) ──
+// ── REPOSICIONAR FOTO (arrastar + zoom dentro da moldura) ──
+// O estado (posX/posY/zoom) vive num objeto persistente por campo — não em
+// variáveis locais da função — porque initReposition roda de novo toda vez
+// que uma foto é trocada, e as variáveis locais de uma chamada antiga
+// ficavam "presas" nos listeners de arraste já ligados, causando um salto
+// estranho se a foto fosse trocada e a posição resetada depois.
 const repositionState = {};
 
 window.initReposition = function(fieldPrefix) {
@@ -1311,26 +1359,38 @@ window.initReposition = function(fieldPrefix) {
   const img = document.getElementById('reposition-img-' + fieldPrefix);
   const hiddenX = document.getElementById(fieldPrefix + '-img-posx');
   const hiddenY = document.getElementById(fieldPrefix + '-img-posy');
+  const hiddenZoom = document.getElementById(fieldPrefix + '-img-zoom');
+  const zoomSlider = document.getElementById('reposition-zoom-' + fieldPrefix);
   const smallPreview = document.getElementById('prev-' + fieldPrefix);
   if (!wrap || !frame || !img || !smallPreview || !smallPreview.src) return;
 
   img.src = smallPreview.src;
   wrap.classList.add('active');
 
-  let posX = Number(hiddenX?.value) || 50;
-  let posY = Number(hiddenY?.value) || 50;
-  applyPos();
+  let state = repositionState[fieldPrefix];
+  if (!state) {
+    state = repositionState[fieldPrefix] = {
+      posX: Number(hiddenX?.value) || 50,
+      posY: Number(hiddenY?.value) || 50,
+      zoom: Number(hiddenZoom?.value) || 100,
+    };
+  }
 
   function applyPos() {
-    img.style.objectPosition = posX.toFixed(1) + '% ' + posY.toFixed(1) + '%';
-    if (hiddenX) hiddenX.value = posX.toFixed(1);
-    if (hiddenY) hiddenY.value = posY.toFixed(1);
+    img.style.objectPosition = state.posX.toFixed(1) + '% ' + state.posY.toFixed(1) + '%';
+    img.style.transform = 'scale(' + (state.zoom / 100) + ')';
+    if (hiddenX) hiddenX.value = state.posX.toFixed(1);
+    if (hiddenY) hiddenY.value = state.posY.toFixed(1);
+    if (hiddenZoom) hiddenZoom.value = state.zoom.toFixed(0);
+    if (zoomSlider) zoomSlider.value = state.zoom.toFixed(0);
   }
+  state.applyPos = applyPos;
+  applyPos();
 
-  if (frame.dataset.repositionBound) {
-    repositionState[fieldPrefix] = { reset: () => { posX = 50; posY = 50; applyPos(); } };
-    return;
-  }
+  state.reset = () => { state.posX = 50; state.posY = 50; state.zoom = 100; applyPos(); };
+  state.setZoom = (v) => { state.zoom = Number(v); applyPos(); };
+
+  if (frame.dataset.repositionBound) return;
   frame.dataset.repositionBound = '1';
 
   let dragging = false, startClientX = 0, startClientY = 0, startPosX = 50, startPosY = 50;
@@ -1340,8 +1400,8 @@ window.initReposition = function(fieldPrefix) {
     frame.classList.add('dragging');
     startClientX = e.clientX;
     startClientY = e.clientY;
-    startPosX = posX;
-    startPosY = posY;
+    startPosX = state.posX;
+    startPosY = state.posY;
     frame.setPointerCapture(e.pointerId);
   });
 
@@ -1350,6 +1410,9 @@ window.initReposition = function(fieldPrefix) {
     const Cw = frame.clientWidth, Ch = frame.clientHeight;
     const Iw = img.naturalWidth, Ih = img.naturalHeight;
     if (!Iw || !Ih || !Cw || !Ch) return;
+    // O arraste sempre opera no enquadramento "cover" base (zoom=100%); o
+    // zoom é uma ampliação visual aplicada por cima (transform:scale),
+    // então arrastar continua funcionando igual em qualquer nível de zoom.
     const scale = Math.max(Cw / Iw, Ch / Ih);
     const overflowX = Iw * scale - Cw;
     const overflowY = Ih * scale - Ch;
@@ -1358,25 +1421,27 @@ window.initReposition = function(fieldPrefix) {
     if (overflowX > 0.5) {
       const startOffsetX = overflowX * (startPosX / 100);
       const newOffsetX = Math.min(overflowX, Math.max(0, startOffsetX - dx));
-      posX = (newOffsetX / overflowX) * 100;
+      state.posX = (newOffsetX / overflowX) * 100;
     }
     if (overflowY > 0.5) {
       const startOffsetY = overflowY * (startPosY / 100);
       const newOffsetY = Math.min(overflowY, Math.max(0, startOffsetY - dy));
-      posY = (newOffsetY / overflowY) * 100;
+      state.posY = (newOffsetY / overflowY) * 100;
     }
-    applyPos();
+    state.applyPos();
   });
 
   function endDrag() { dragging = false; frame.classList.remove('dragging'); }
   frame.addEventListener('pointerup', endDrag);
   frame.addEventListener('pointercancel', endDrag);
-
-  repositionState[fieldPrefix] = { reset: () => { posX = 50; posY = 50; applyPos(); } };
 };
 
 window.resetReposition = function(fieldPrefix) {
   repositionState[fieldPrefix]?.reset();
+};
+
+window.setZoomReposition = function(fieldPrefix, value) {
+  repositionState[fieldPrefix]?.setZoom(value);
 };
 
 async function uploadPendentes() {

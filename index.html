@@ -620,7 +620,6 @@
   </div>
   <div class="hero-visual">
     <div class="hero-visual-main">
-      <style id="hero-mobile-pos-style"></style>
       <picture>
         <source id="hero-main-img-mobile-source" media="(max-width: 768px)">
         <img id="hero-main-img" alt="Elenice Collection" style="display:none;" />
@@ -1242,6 +1241,20 @@ function initHeroB(photos) {
 /* ─── HERO A — FRASE ALTERNADA (título grande trocando a cada 4s) ─── */
 let heroTituloTimer = null;
 
+const heroMobileQuery = window.matchMedia('(max-width: 768px)');
+function applyHeroImageFraming() {
+  const img = document.getElementById('hero-main-img');
+  const cfg = window.__heroImgConfig;
+  if (!img || !cfg) return;
+  const useMobile = heroMobileQuery.matches && cfg.imgMobile;
+  const posX = useMobile ? (cfg.imgMobilePosX ?? 50) : (cfg.posX ?? 50);
+  const posY = useMobile ? (cfg.imgMobilePosY ?? 50) : (cfg.posY ?? 50);
+  const zoom = useMobile ? (cfg.imgMobileZoom ?? 100) : (cfg.zoom ?? 100);
+  img.style.objectPosition = `${posX}% ${posY}%`;
+  img.style.transform = `scale(${zoom / 100})`;
+}
+heroMobileQuery.addEventListener('change', applyHeroImageFraming);
+
 function initHeroTituloRotativo(d) {
   clearInterval(heroTituloTimer);
   if (!d.hero?.tituloRotativo) return;
@@ -1302,30 +1315,27 @@ function applyConfig(d) {
   if (d.hero?.btn)       set('hero-btn-el', d.hero.btn);
   initHeroTituloRotativo(d);
 
-  /* Hero A — imagem */
+  /* Hero A — imagem (desktop e versão mobile, com zoom) */
   if (d.hero?.img) {
     const img = document.getElementById('hero-main-img');
     if (img) {
       img.src = d.hero.img;
       img.style.display = 'block';
-      img.style.objectPosition = `${d.hero.posX ?? 50}% ${d.hero.posY ?? 50}%`;
     }
     const g = document.getElementById('hero-glyph');
     if (g) g.style.opacity = '0.03';
   }
-  /* Hero A — versão mobile (foto e enquadramento próprios para telas pequenas) */
   const heroMobileSource = document.getElementById('hero-main-img-mobile-source');
   if (heroMobileSource) {
-    if (d.hero?.imgMobile) {
-      heroMobileSource.srcset = d.hero.imgMobile;
-      const posX = d.hero.imgMobilePosX ?? 50;
-      const posY = d.hero.imgMobilePosY ?? 50;
-      const styleTag = document.getElementById('hero-mobile-pos-style');
-      if (styleTag) styleTag.textContent = `@media (max-width: 768px) { #hero-main-img { object-position: ${posX}% ${posY}%; } }`;
-    } else {
-      heroMobileSource.removeAttribute('srcset');
-    }
+    if (d.hero?.imgMobile) heroMobileSource.srcset = d.hero.imgMobile;
+    else heroMobileSource.removeAttribute('srcset');
   }
+  // Guardado pra reaplicar o enquadramento certo (desktop vs mobile) sempre
+  // que a largura da tela cruzar o breakpoint — um estilo inline sempre
+  // vence uma regra de media query no CSS, então a troca precisa ser feita
+  // aqui via JS, não confiando na cascata do CSS pra isso.
+  window.__heroImgConfig = d.hero || {};
+  applyHeroImageFraming();
 
   /* Hero C — espelha texto do hero A + foto de fundo própria */
   if (d.hero?.label)     set('hp-tag-txt', d.hero.label);
@@ -1403,6 +1413,7 @@ function applyConfig(d) {
         el.src = url;
         el.style.display = 'block';
         el.style.objectPosition = `${catCfg.posX ?? 50}% ${catCfg.posY ?? 50}%`;
+        el.style.transform = `scale(${(catCfg.zoom ?? 100) / 100})`;
       }
       const glyph = document.getElementById('cat-glyph-' + cat);
       if (glyph) glyph.style.display = 'none';

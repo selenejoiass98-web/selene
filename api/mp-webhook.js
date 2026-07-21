@@ -74,7 +74,7 @@ export default async function handler(req, res) {
     }
     await fsPatch(token, 'pedidos', pedido._id, updates);
 
-    if (payment.status === 'approved' && !jaConfirmado && pedido.pagamento === 'boleto') {
+    if (payment.status === 'approved' && !jaConfirmado && ['boleto', 'pix'].includes(pedido.pagamento)) {
       await enviarEmailPagamentoConfirmado(pedido);
     }
 
@@ -92,10 +92,11 @@ async function enviarEmailPagamentoConfirmado(pedido) {
   if (!email) return;
   const primeiroNome = (pedido.cliente?.nome || 'Cliente').split(' ')[0];
   const numero = pedido.numeroPedido;
+  const metodoLabel = pedido.pagamento === 'pix' ? 'Pix' : 'boleto';
 
   const html = emailWrapper('Pagamento confirmado! ✅', `
     <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Olá, <strong>${primeiroNome}</strong>!</p>
-    <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Boa notícia: recebemos a confirmação do pagamento do boleto do seu pedido <strong>${numero}</strong>!</p>
+    <p style="font-size:14px;color:#5A4030;line-height:1.8;margin:0 0 16px;">Boa notícia: recebemos a confirmação do pagamento do ${metodoLabel} do seu pedido <strong>${numero}</strong>!</p>
     <div style="background:#F0F9F4;border-left:3px solid #2D6A4F;padding:16px 20px;margin-bottom:20px;">
       <p style="margin:0;font-size:13px;color:#1A4731;line-height:1.8;">
         ✅ Pagamento compensado<br>

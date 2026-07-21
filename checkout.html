@@ -1696,7 +1696,7 @@ async function finalizarPedido() {
     }
   } catch(err) {
     console.error('Erro MP:', err);
-    showToast('Erro ao processar pagamento. Tente novamente.');
+    showToast(err.message || 'Erro ao processar pagamento. Tente novamente.');
     btn.disabled = false;
     btn.innerHTML = '🔒 Finalizar Pedido';
   }
@@ -1720,13 +1720,17 @@ async function processarPix(orderNum, total, nome, email, cpf) {
   const data = await res.json();
   if (!res.ok || data.error) throw new Error(data.message || data.error || 'Erro ao gerar Pix');
 
-  // Mostra QR Code
   const qrCode = data.point_of_interaction?.transaction_data?.qr_code;
   const qrBase64 = data.point_of_interaction?.transaction_data?.qr_code_base64;
+  if (data.status === 'rejected' || !qrCode) {
+    throw new Error('Não foi possível gerar o Pix. Tente novamente ou escolha outra forma de pagamento.');
+  }
+
+  // Mostra QR Code
   document.getElementById('pix-qr-placeholder').style.display = 'none';
   document.getElementById('pix-result').style.display = 'block';
   if (qrBase64) document.getElementById('pix-qr-img').src = 'data:image/png;base64,' + qrBase64;
-  if (qrCode) document.getElementById('pix-copia-cola').value = qrCode;
+  document.getElementById('pix-copia-cola').value = qrCode;
 
   await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'pix' });
 
@@ -1745,6 +1749,39 @@ async function processarPix(orderNum, total, nome, email, cpf) {
 
   document.getElementById('btn-finalizar').innerHTML = '✓ Aguardando pagamento Pix';
   document.getElementById('btn-finalizar').disabled = true;
+
+  // Fica de olho na confirmação do pagamento e avisa a cliente na hora,
+  // sem precisar dar F5 nem esperar o e-mail chegar.
+  iniciarPollingPix(orderNum);
+}
+
+let pixPollTimer = null;
+function iniciarPollingPix(orderNum) {
+  let tentativas = 0;
+  const maxTentativas = 360; // a cada 5s, cobre a janela de ~30min do QR code
+  clearInterval(pixPollTimer);
+  pixPollTimer = setInterval(async () => {
+    tentativas++;
+    if (tentativas > maxTentativas) { clearInterval(pixPollTimer); return; }
+    try {
+      const res = await fetch('/api/payment-status?pedido=' + encodeURIComponent(orderNum));
+      const data = await res.json();
+      if (data.pagamentoConfirmado) {
+        clearInterval(pixPollTimer);
+        mostrarPixConfirmado(orderNum);
+      }
+    } catch (e) { /* tenta de novo no próximo ciclo, sem interromper a espera */ }
+  }, 5000);
+}
+
+function mostrarPixConfirmado(orderNum) {
+  document.getElementById('success-title').textContent = 'Pagamento confirmado!';
+  const sub = document.getElementById('success-sub');
+  sub.innerHTML = '';
+  sub.append('Recebemos a confirmação do seu Pix! Já estamos preparando sua semijoia com todo o carinho.');
+  document.getElementById('success-order-num').textContent = orderNum;
+  document.getElementById('success-overlay').classList.add('open');
+  cart = []; saveCart(); updateCartUI();
 }
 
 async function processarCartao(orderNum, total, nome, email, cpf) {
@@ -1776,16 +1813,43 @@ async function processarCartao(orderNum, total, nome, email, cpf) {
   const data = await res.json();
   if (!res.ok || data.error) throw new Error(data.message || data.error || 'Erro no cartão');
 
+  // IMPORTANTE: só cria o pedido (e reserva estoque) se o cartão não foi
+  // recusado. Cartão é a única forma de pagamento que a Mercado Pago
+  // aprova/recusa na hora — Pix e boleto sempre voltam "pending" nesse
+  // momento, então só o cartão pode ter uma recusa síncrona aqui. Criar o
+  // pedido antes dessa checagem já causou reserva de estoque (e até baixa
+  // de peça única) para compras que na verdade nunca foram pagas.
+  if (data.status === 'rejected' || data.status === 'cancelled') {
+    throw new Error(mapCardDeclineMessage(data.status_detail));
+  }
+
   await salvarPedidoFirebase(orderNum, { id: data.id, status: data.status, metodo: 'cartao' });
 
   if (data.status === 'approved') {
     mostrarSucesso(orderNum);
   } else if (data.status === 'in_process') {
-    showToast('Pagamento em análise. Você receberá um e-mail de confirmação.');
+    showToast('Pagamento em análise pela operadora do cartão. Você receberá um e-mail assim que for aprovado.');
     mostrarSucesso(orderNum);
   } else {
-    throw new Error('Pagamento não aprovado: ' + data.status_detail);
+    throw new Error('Pagamento não aprovado: ' + (data.status_detail || data.status));
   }
+}
+
+function mapCardDeclineMessage(detail) {
+  const map = {
+    cc_rejected_insufficient_amount: 'Cartão recusado: saldo insuficiente.',
+    cc_rejected_bad_filled_card_number: 'Número do cartão inválido — confira e tente de novo.',
+    cc_rejected_bad_filled_date: 'Data de validade do cartão inválida — confira e tente de novo.',
+    cc_rejected_bad_filled_security_code: 'Código de segurança (CVV) inválido — confira e tente de novo.',
+    cc_rejected_bad_filled_other: 'Dados do cartão inválidos — confira e tente de novo.',
+    cc_rejected_call_for_authorize: 'Seu banco pediu autorização manual — ligue pro seu banco ou tente outro cartão.',
+    cc_rejected_card_disabled: 'Cartão desabilitado — ligue pro seu banco ou tente outro cartão.',
+    cc_rejected_duplicated_payment: 'Já existe um pagamento igual em andamento — aguarde um instante antes de tentar de novo.',
+    cc_rejected_high_risk: 'Pagamento recusado por segurança — tente outro cartão ou outra forma de pagamento.',
+    cc_rejected_max_attempts: 'Limite de tentativas atingido — tente outro cartão.',
+    cc_rejected_other_reason: 'Cartão recusado pela operadora — tente outro cartão ou outra forma de pagamento.',
+  };
+  return map[detail] || 'Cartão recusado pela operadora — tente outro cartão ou outra forma de pagamento.';
 }
 
 async function processarBoleto(orderNum, total, nome, email, cpf) {

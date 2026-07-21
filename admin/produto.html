@@ -141,6 +141,14 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
   pointer-events:none; opacity:0; transition:opacity 0.15s;
 }
 .photo-item:hover .photo-item-hint { opacity:1; }
+.photo-item-zoom-btns { position:absolute; top:4px; left:4px; display:flex; gap:0.25rem; z-index:2; }
+.photo-item-zoom-btn {
+  width:22px; height:22px; border-radius:50%; border:none;
+  background:rgba(61,43,26,0.75); color:#fff; font-size:0.85rem; font-weight:600;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  line-height:1; padding:0; backdrop-filter:blur(2px); transition:background 0.15s;
+}
+.photo-item-zoom-btn:hover { background:rgba(61,43,26,0.92); }
 .photo-delete {
   position:absolute; top:4px; right:4px;
   width:22px; height:22px; border-radius:50%;
@@ -562,6 +570,7 @@ async function loadProduct(id) {
         url, path: null, uid: photoUidCounter++,
         posX: p.fotosFrame?.[i]?.posX ?? 50,
         posY: p.fotosFrame?.[i]?.posY ?? 50,
+        zoom: p.fotosFrame?.[i]?.zoom ?? 100,
       }));
       renderPhotos();
     }
@@ -614,7 +623,7 @@ window.handleFiles = async function(files) {
       const data = await res.json();
 
       if (data.secure_url) {
-        uploadedPhotos.push({ url: data.secure_url, publicId: data.public_id, uid: photoUidCounter++, posX: 50, posY: 50 });
+        uploadedPhotos.push({ url: data.secure_url, publicId: data.public_id, uid: photoUidCounter++, posX: 50, posY: 50, zoom: 100 });
         renderPhotos();
         updatePreview();
       } else {
@@ -637,13 +646,25 @@ function renderPhotos() {
   const grid = document.getElementById('photos-grid');
   grid.innerHTML = uploadedPhotos.map((p,i) => `
     <div class="photo-item" id="photo-item-${p.uid}" data-uid="${p.uid}">
-      <img id="photo-img-${p.uid}" src="${p.url}" alt="foto ${i+1}" style="object-position:${p.posX}% ${p.posY}%;">
-      <div class="photo-item-hint">↔ Arraste pra reposicionar</div>
+      <img id="photo-img-${p.uid}" src="${p.url}" alt="foto ${i+1}" style="object-position:${p.posX}% ${p.posY}%;transform:scale(${(p.zoom ?? 100) / 100});">
+      <div class="photo-item-zoom-btns">
+        <button type="button" class="photo-item-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStepPhoto(${p.uid}, -10)">−</button>
+        <button type="button" class="photo-item-zoom-btn" onpointerdown="event.stopPropagation()" onclick="zoomStepPhoto(${p.uid}, 10)">+</button>
+      </div>
+      <div class="photo-item-hint">↔ Arraste e use +/− pra ajustar</div>
       <button class="photo-delete" onclick="removePhoto(${i})" title="Remover">×</button>
     </div>
   `).join('');
   uploadedPhotos.forEach(p => initPhotoReposition(p.uid));
 }
+
+window.zoomStepPhoto = function(uid, delta) {
+  const p = uploadedPhotos.find(p => p.uid === uid);
+  if (!p) return;
+  p.zoom = Math.min(300, Math.max(100, (p.zoom ?? 100) + delta));
+  const img = document.getElementById('photo-img-' + uid);
+  if (img) img.style.transform = `scale(${p.zoom / 100})`;
+};
 
 window.removePhoto = function(i) {
   uploadedPhotos.splice(i, 1);
@@ -651,9 +672,11 @@ window.removePhoto = function(i) {
   updatePreview();
 };
 
-// ── REPOSICIONAR FOTO (arrastar dentro do quadro — sem zoom aqui: as fotos
-// de produto usam um efeito de zoom no hover no site público e no card do
-// catálogo; aplicar um transform:scale fixo por cima quebraria esse hover) ──
+// ── REPOSICIONAR FOTO (arrastar + zoom dentro do quadro) ──
+// O hover-zoom do site público (lupa na página do produto, scale no hover do
+// card do catálogo) usa a custom property CSS --zoom como base, então o zoom
+// configurado aqui (transform:scale direto, só pra prévia do admin) não
+// conflita com esses efeitos — eles multiplicam a partir do --zoom salvo.
 const photoRepositionBound = new Set();
 function initPhotoReposition(uid) {
   const item = document.getElementById('photo-item-' + uid);
@@ -807,7 +830,7 @@ window.salvarProduto = async function(status) {
     freteGratis: document.getElementById('toggle-frete').classList.contains('on'),
     esgotarComFaixa: document.getElementById('toggle-esgotar-faixa').classList.contains('on'),
     fotos: uploadedPhotos.map(p => p.url),
-    fotosFrame: uploadedPhotos.map(p => ({ posX: p.posX ?? 50, posY: p.posY ?? 50 })),
+    fotosFrame: uploadedPhotos.map(p => ({ posX: p.posX ?? 50, posY: p.posY ?? 50, zoom: p.zoom ?? 100 })),
     atualizadoEm: serverTimestamp(),
   };
   // Editar o estoque manualmente aqui sempre recalcula a faixa de esgotado,

@@ -1125,7 +1125,7 @@ function cardHTML(p) {
       <button class="product-wishlist" onclick="event.preventDefault();showToast('Adicionado aos favoritos ♡')" title="Favoritar">♡</button>
       <a href="${href}">
         ${p.fotos?.[0]
-          ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy" style="object-position:${p.fotosFrame?.[0]?.posX ?? 50}% ${p.fotosFrame?.[0]?.posY ?? 50}%;">`
+          ? `<img src="${p.fotos[0]}" alt="${p.nome}" loading="lazy" style="object-position:${p.fotosFrame?.[0]?.posX ?? 50}% ${p.fotosFrame?.[0]?.posY ?? 50}%;--zoom:${(p.fotosFrame?.[0]?.zoom ?? 100) / 100};">`
           : `<div class="product-card-placeholder">◈</div>`}
       </a>
     </div>

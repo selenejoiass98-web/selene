@@ -1334,6 +1334,11 @@ window.initReposition = function(fieldPrefix) {
 
   img.src = smallPreview.src;
   wrap.classList.add('active');
+  // A prévia estática dentro da área de upload fica redundante e sem
+  // interação depois que a moldura de arrastar+zoom aparece — some com ela
+  // pra não ter duas fotos parecidas na tela e o usuário tentar arrastar a
+  // errada (foi exatamente o que aconteceu: a de cima nunca teve drag).
+  smallPreview.style.display = 'none';
 
   let state = repositionState[fieldPrefix];
   if (!state) {
@@ -1457,6 +1462,7 @@ function buildHerobPhotoSlots() {
       <div class="img-upload-area" id="area-herob-foto${n}" style="padding:0.7rem;">
         <input type="file" accept="image/*" onchange="previewImg(this,'prev-herob-foto${n}','area-herob-foto${n}','herob-foto${n}-url'); initReposition('herob-foto${n}')" />
         <div class="upload-icon" style="font-size:1.1rem;margin-bottom:0.2rem;">📷</div>
+        <p style="font-size:0.6rem;">Vertical, ex: 800×1200px</p>
         <img id="prev-herob-foto${n}" class="img-preview" style="max-height:100px;" />
       </div>
       <input type="hidden" id="herob-foto${n}-url" />

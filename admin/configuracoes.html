@@ -37,7 +37,9 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .btn-logout:hover { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); }
 
 /* ── MAIN ── */
-.main { margin-left:var(--sidebar); flex:1; }
+.main { margin-left:var(--sidebar); flex:1; transition:margin-left 0.3s ease; }
+body.sidebar-collapsed .sidebar { transform:translateX(-100%); }
+body.sidebar-collapsed .main { margin-left:0; }
 .topbar { background:var(--white); border-bottom:1px solid var(--gold-pale); padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
 .topbar-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300; color:var(--brown); }
 .content { padding:2rem; }
@@ -60,7 +62,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .form-group input:focus, .form-group textarea:focus { border-color:var(--gold); background:var(--white); }
 .form-group textarea { resize:vertical; min-height:80px; }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
-@media(max-width:600px){ .form-row { grid-template-columns:1fr; } }
+@media(max-width:600px){ .form-row { grid-template-columns:1fr; } .content { padding:1rem; } }
 
 /* ── IMAGE UPLOAD ── */
 .img-upload-area { border:1.5px dashed var(--gold-pale); border-radius:8px; padding:1.2rem; text-align:center; cursor:pointer; transition:border-color 0.2s; background:var(--cream); position:relative; }
@@ -88,6 +90,14 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 /* ── DESTAQUE BOXES ── */
 .boxes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
 @media(max-width:700px){ .boxes-grid { grid-template-columns:1fr; } }
+
+.herob-photos-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; }
+@media(max-width:700px){ .herob-photos-grid { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:480px){ .herob-photos-grid { grid-template-columns:1fr; } }
+
+.cat-photos-grid { grid-template-columns:repeat(5,1fr) !important; }
+@media(max-width:900px){ .cat-photos-grid { grid-template-columns:repeat(3,1fr) !important; } }
+@media(max-width:480px){ .cat-photos-grid { grid-template-columns:repeat(2,1fr) !important; } }
 .box-item { border:1px solid var(--gold-pale); border-radius:8px; padding:1rem; background:var(--cream); }
 .box-item h4 { font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-s); margin-bottom:0.75rem; }
 
@@ -122,21 +132,20 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .preview-open-link:hover { background:var(--cream); }
 @media(max-width:1150px){
   .content-layout { grid-template-columns:1fr; }
-  .preview-pane { display:none; }
+  .preview-pane { position:static; margin-top:2rem; }
   .cards-col { max-width:none; }
+  #preview-iframe { height:60vh; min-height:320px; }
 }
 
-.sidebar-toggle-btn { display:none; width:34px; height:34px; border:none; background:none; color:var(--brown); font-size:1.2rem; cursor:pointer; align-items:center; justify-content:center; }
-.sidebar-collapse-btn { display:none; width:28px; height:28px; border:none; background:rgba(255,255,255,0.1); color:var(--gold-light); border-radius:50%; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; }
+.sidebar-toggle-btn { display:flex; width:34px; height:34px; border:none; background:none; color:var(--brown); font-size:1.2rem; cursor:pointer; align-items:center; justify-content:center; }
+.sidebar-collapse-btn { display:flex; width:28px; height:28px; border:none; background:rgba(255,255,255,0.1); color:var(--gold-light); border-radius:50%; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; }
 .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(42,31,20,0.45); z-index:99; }
-.sidebar-overlay.open { display:block; }
 
 @media(max-width:1024px) {
   .sidebar { transform:translateX(-100%); }
-  .sidebar.open { transform:translateX(0); }
+  body.sidebar-mobile-open .sidebar { transform:translateX(0); }
   .main { margin-left:0; }
-  .sidebar-toggle-btn { display:flex; }
-  .sidebar-collapse-btn { display:flex; }
+  body.sidebar-mobile-open .sidebar-overlay { display:block; }
 }
 
 /* ── SUBSEÇÕES DENTRO DE UM CARD (ex: Seções da Home) ── */
@@ -349,7 +358,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
           </div>
         </div>
         <p style="font-size:0.75rem;color:var(--text-s);margin:0.5rem 0 1rem;background:var(--cream);border-radius:6px;padding:0.6rem 0.9rem;">📐 9 fotos verticais · ideal <strong>600×900px</strong> · formato JPG ou PNG · exibidas 3 por vez, trocam a cada 5 seg.</p>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;">
+        <div class="herob-photos-grid">
 
           <div>
             <p style="font-size:0.7rem;font-weight:600;color:var(--brown);margin-bottom:0.3rem;">Foto 1</p>
@@ -463,7 +472,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         </div>
         <div class="subsection">
         <div class="subsection-title">🗂️ Fotos por categoria</div>
-        <div class="boxes-grid" style="grid-template-columns:repeat(5,1fr);">
+        <div class="boxes-grid cat-photos-grid">
           <div class="box-item">
             <h4>Anéis</h4>
             <div class="img-upload-area" id="area-cat-aneis">
@@ -992,13 +1001,24 @@ onAuthStateChanged(auth, user => {
 
 window.logout = async () => { await signOut(auth); window.location.href = 'index.html'; };
 
+if (localStorage.getItem('sidebarCollapsed') === '1') {
+  document.body.classList.add('sidebar-collapsed');
+}
 window.toggleSidebar = function() {
-  document.getElementById('sidebar')?.classList.toggle('open');
-  document.getElementById('sidebar-overlay')?.classList.toggle('open');
+  if (window.matchMedia('(max-width:1024px)').matches) {
+    document.body.classList.toggle('sidebar-mobile-open');
+  } else {
+    const collapsed = document.body.classList.toggle('sidebar-collapsed');
+    localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+  }
 };
 window.closeSidebar = function() {
-  document.getElementById('sidebar')?.classList.remove('open');
-  document.getElementById('sidebar-overlay')?.classList.remove('open');
+  if (window.matchMedia('(max-width:1024px)').matches) {
+    document.body.classList.remove('sidebar-mobile-open');
+  } else {
+    document.body.classList.add('sidebar-collapsed');
+    localStorage.setItem('sidebarCollapsed', '1');
+  }
 };
 
 // ── CARREGAR ──

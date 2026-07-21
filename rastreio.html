@@ -11,7 +11,6 @@
 /* ── RASTREIO PAGE ── */
 
 .rastreio-page {
-  padding-top: var(--nav-h);
   min-height: 100vh;
   background: var(--cream);
 }
@@ -238,7 +237,7 @@
 .status-cancelado { background: #FEE2E2; color: #991B1B; }
 .order-list { display: none; max-width: 760px; margin: 0 auto 1.5rem; text-align: center; }
 .order-list-title { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 0.8rem; }
-.order-list-pill { display: inline-block; margin: 0.25rem; padding: 0.55rem 1.1rem; border: 1px solid var(--gold-pale); background: var(--white); font-family: var(--font-sans); font-size: 0.72rem; color: var(--text-mid); cursor: pointer; border-radius: 999px; transition: all 0.25s ease; }
+.order-list-pill { display: inline-block; margin: 0.25rem; padding: 0.75rem 1.1rem; border: 1px solid var(--gold-pale); background: var(--white); font-family: var(--font-sans); font-size: 0.72rem; color: var(--text-mid); cursor: pointer; border-radius: 999px; transition: all 0.25s ease; }
 .order-list-pill:hover, .order-list-pill.active { border-color: var(--gold); color: var(--gold); }
 
 .order-meta {
@@ -437,7 +436,7 @@
   flex-wrap: wrap;
 }
 .btn-action {
-  padding: 0.6rem 1.4rem;
+  padding: 0.75rem 1.4rem;
   font-size: 0.62rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -559,6 +558,14 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
 
 </style>
 <script src="assets/js/tracking.js"></script>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NB5Q5NEEG6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NB5Q5NEEG6');
+</script>
 </head>
 <body>
 

@@ -30,7 +30,9 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .btn-logout { width:100%; padding:0.55rem; background:rgba(255,255,255,0.05); border:1px solid rgba(196,164,122,0.15); color:rgba(255,255,255,0.4); font-family:'Jost',sans-serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
 .btn-logout:hover { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); }
 
-.main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; }
+.main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; transition:margin-left 0.3s ease; }
+body.sidebar-collapsed .sidebar { transform:translateX(-100%); }
+body.sidebar-collapsed .main { margin-left:0; }
 .topbar { background:var(--white); border-bottom:1px solid var(--gold-pale); padding:0 2rem; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
 .topbar-title { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:300; color:var(--brown); }
 .topbar-left { display:flex; align-items:center; gap:1rem; }
@@ -92,20 +94,19 @@ textarea.form-input.tall { min-height:280px; }
 .spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-.sidebar-toggle-btn { display:none; width:34px; height:34px; border:none; background:none; color:var(--brown); font-size:1.2rem; cursor:pointer; align-items:center; justify-content:center; }
-.sidebar-collapse-btn { display:none; width:28px; height:28px; border:none; background:rgba(255,255,255,0.1); color:var(--gold-light); border-radius:50%; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; }
+.sidebar-toggle-btn { display:flex; width:34px; height:34px; border:none; background:none; color:var(--brown); font-size:1.2rem; cursor:pointer; align-items:center; justify-content:center; }
+.sidebar-collapse-btn { display:flex; width:28px; height:28px; border:none; background:rgba(255,255,255,0.1); color:var(--gold-light); border-radius:50%; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; }
 .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(42,31,20,0.45); z-index:99; }
-.sidebar-overlay.open { display:block; }
 
 @media(max-width:1024px) {
   .sidebar { transform:translateX(-100%); }
-  .sidebar.open { transform:translateX(0); }
+  body.sidebar-mobile-open .sidebar { transform:translateX(0); }
   .main { margin-left:0; }
-  .sidebar-toggle-btn { display:flex; }
-  .sidebar-collapse-btn { display:flex; }
+  body.sidebar-mobile-open .sidebar-overlay { display:block; }
   .form-layout { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
 }
+@media(max-width:600px) { .content { padding:1rem; } }
 </style>
 </head>
 <body>
@@ -538,13 +539,24 @@ uploadArea.addEventListener('drop', e => {
 // ── LOGOUT ──
 window.logout = async () => { await signOut(auth); window.location.href = '/admin'; };
 
+if (localStorage.getItem('sidebarCollapsed') === '1') {
+  document.body.classList.add('sidebar-collapsed');
+}
 window.toggleSidebar = function() {
-  document.getElementById('sidebar')?.classList.toggle('open');
-  document.getElementById('sidebar-overlay')?.classList.toggle('open');
+  if (window.matchMedia('(max-width:1024px)').matches) {
+    document.body.classList.toggle('sidebar-mobile-open');
+  } else {
+    const collapsed = document.body.classList.toggle('sidebar-collapsed');
+    localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+  }
 };
 window.closeSidebar = function() {
-  document.getElementById('sidebar')?.classList.remove('open');
-  document.getElementById('sidebar-overlay')?.classList.remove('open');
+  if (window.matchMedia('(max-width:1024px)').matches) {
+    document.body.classList.remove('sidebar-mobile-open');
+  } else {
+    document.body.classList.add('sidebar-collapsed');
+    localStorage.setItem('sidebarCollapsed', '1');
+  }
 };
 
 // ── TOAST ──

@@ -126,10 +126,12 @@
     .btn-logout:hover { background: rgba(196,164,122,0.1); }
 
     /* ── MAIN CONTENT ── */
-    .main { flex: 1; overflow-x: hidden; margin-left: 240px; }
+    .main { flex: 1; overflow-x: hidden; margin-left: 240px; transition: margin-left 0.3s ease; }
+    body.sidebar-collapsed .sidebar { transform: translateX(-100%); }
+    body.sidebar-collapsed .main { margin-left: 0; }
 
     .sidebar-collapse-btn {
-      display: none;
+      display: flex;
       position: absolute;
       top: 0.4rem; right: 0.4rem;
       width: 26px; height: 26px;
@@ -143,7 +145,7 @@
       font-size: 0.8rem;
     }
     .sidebar-toggle-btn {
-      display: none;
+      display: flex;
       width: 34px; height: 34px;
       border: none;
       background: none;
@@ -160,14 +162,12 @@
       background: rgba(42,31,20,0.45);
       z-index: 99;
     }
-    .sidebar-overlay.open { display: block; }
 
     @media (max-width: 1024px) {
       .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
+      body.sidebar-mobile-open .sidebar { transform: translateX(0); }
       .main { margin-left: 0; }
-      .sidebar-toggle-btn { display: flex; }
-      .sidebar-collapse-btn { display: flex; }
+      body.sidebar-mobile-open .sidebar-overlay { display: block; }
     }
 
     .topbar {
@@ -242,6 +242,7 @@
     }
 
     @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } .content { padding: 1rem; } }
 
     /* ── CARD ── */
     .card {
@@ -846,13 +847,24 @@
     window.location.href = 'index.html';
   };
 
+  if (localStorage.getItem('sidebarCollapsed') === '1') {
+    document.body.classList.add('sidebar-collapsed');
+  }
   window.toggleSidebar = function() {
-    document.getElementById('sidebar')?.classList.toggle('open');
-    document.getElementById('sidebar-overlay')?.classList.toggle('open');
+    if (window.matchMedia('(max-width:1024px)').matches) {
+      document.body.classList.toggle('sidebar-mobile-open');
+    } else {
+      const collapsed = document.body.classList.toggle('sidebar-collapsed');
+      localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+    }
   };
   window.closeSidebar = function() {
-    document.getElementById('sidebar')?.classList.remove('open');
-    document.getElementById('sidebar-overlay')?.classList.remove('open');
+    if (window.matchMedia('(max-width:1024px)').matches) {
+      document.body.classList.remove('sidebar-mobile-open');
+    } else {
+      document.body.classList.add('sidebar-collapsed');
+      localStorage.setItem('sidebarCollapsed', '1');
+    }
   };
 
   // ── LOAD ──

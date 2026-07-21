@@ -343,7 +343,7 @@ ul { list-style: none; }
   color: var(--brown-deep);
 }
 .cart-close {
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   background: var(--cream);
   border: none;
   border-radius: 50%;
@@ -419,7 +419,7 @@ ul { list-style: none; }
   gap: 0.6rem;
 }
 .qty-btn {
-  width: 24px; height: 24px;
+  width: 32px; height: 32px;
   border-radius: 50%;
   background: var(--cream-dark);
   border: none;

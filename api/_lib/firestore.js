@@ -1,45 +1,12 @@
 // Acesso ao Firestore via REST + service account, sem depender do SDK
 // (o projeto não tem package.json/node_modules — só built-ins do Node).
-// Mesmo padrão de autenticação usado em api/rastreio.js.
 
-import crypto from 'crypto';
+import { getGoogleAccessToken } from './google-auth.js';
 
 const PROJECT = 'selene-joias';
-let tokenCache = { token: null, exp: 0 };
-
-function b64url(input) {
-  return Buffer.from(input).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
 
 export async function getFirestoreAccessToken() {
-  const now = Math.floor(Date.now() / 1000);
-  if (tokenCache.token && tokenCache.exp > now + 60) return tokenCache.token;
-
-  const saRaw = process.env.FIREBASE_SERVICE_ACCOUNT;
-  if (!saRaw) throw new Error('FIREBASE_SERVICE_ACCOUNT não configurada');
-  const sa = JSON.parse(saRaw);
-
-  const header = b64url(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
-  const claims = b64url(JSON.stringify({
-    iss: sa.client_email,
-    scope: 'https://www.googleapis.com/auth/datastore',
-    aud: 'https://oauth2.googleapis.com/token',
-    iat: now,
-    exp: now + 3600,
-  }));
-  const unsigned = header + '.' + claims;
-  const signature = crypto.createSign('RSA-SHA256').update(unsigned).sign(sa.private_key);
-  const jwt = unsigned + '.' + b64url(signature);
-
-  const res = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: 'grant_type=' + encodeURIComponent('urn:ietf:params:oauth:grant-type:jwt-bearer') + '&assertion=' + jwt,
-  });
-  const data = await res.json();
-  if (!res.ok || !data.access_token) throw new Error('Falha ao autenticar no Firestore: ' + JSON.stringify(data));
-  tokenCache = { token: data.access_token, exp: now + (data.expires_in || 3600) };
-  return tokenCache.token;
+  return getGoogleAccessToken('https://www.googleapis.com/auth/datastore');
 }
 
 // Converte o formato de valores do Firestore REST para JS puro

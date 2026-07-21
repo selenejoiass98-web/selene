@@ -133,7 +133,10 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
   display:flex;
   flex-direction:column;
   min-height:100vh;
+  transition: margin-left 0.3s ease;
 }
+body.sidebar-collapsed .sidebar { transform: translateX(-100%); }
+body.sidebar-collapsed .main { margin-left: 0; }
 
 /* TOP BAR */
 .topbar {
@@ -171,6 +174,21 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
   text-decoration:none;
 }
 .btn-new-product:hover { background:var(--brown-m); }
+.btn-stats {
+  display:flex; align-items:center; gap:0.5rem;
+  padding:0.55rem 1.2rem;
+  background:none;
+  color:var(--gold);
+  border:1px solid var(--gold-pale);
+  font-family:'Jost',sans-serif;
+  font-size:0.62rem;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-decoration:none;
+}
+.btn-stats:hover { background:var(--cream); border-color:var(--gold); }
 
 /* CONTENT */
 .content { padding:2rem; flex:1; }
@@ -250,7 +268,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .table-wrap {
   background:var(--white);
   border:1px solid var(--gold-pale);
-  overflow:hidden;
+  overflow-x:auto;
   margin-bottom:2rem;
 }
 .data-table {
@@ -340,6 +358,32 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .action-btn.danger:hover { background:var(--red); border-color:var(--red); }
 
 /* SEARCH */
+.campaigns-card {
+  background:var(--white);
+  border:1px solid var(--gold-pale);
+  border-radius:8px;
+  padding:1.2rem 1.4rem;
+  margin-bottom:1.4rem;
+}
+.campaigns-card-title { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--brown); margin-bottom:0.3rem; }
+.campaigns-card-sub { font-size:0.72rem; color:var(--text-s); margin-bottom:1rem; }
+.campaign-row {
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:0.7rem 0; border-top:1px solid var(--gold-pale);
+}
+.campaign-row:first-child { border-top:none; padding-top:0; }
+.campaign-info { display:flex; flex-direction:column; gap:0.15rem; }
+.campaign-nome { font-size:0.8rem; font-weight:500; color:var(--text); }
+.campaign-assunto { font-size:0.68rem; color:var(--text-s); }
+.btn-campaign-send {
+  padding:0.4rem 1rem; background:var(--gold); color:var(--white); border:none;
+  font-family:'Jost',sans-serif; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase;
+  cursor:pointer; transition:background 0.2s; white-space:nowrap; flex-shrink:0;
+}
+.btn-campaign-send:hover { background:var(--brown-m); }
+.btn-campaign-send:disabled { background:var(--text-s); cursor:not-allowed; }
+.campaigns-empty { font-size:0.75rem; color:var(--text-s); }
+
 .search-input {
   width:100%; max-width:320px;
   padding:0.55rem 0.9rem;
@@ -473,9 +517,9 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
 .copy-btn-sm { border:none; background:none; cursor:pointer; color:var(--gold); font-size:0.85rem; margin-left:0.35rem; padding:0.1rem 0.2rem; vertical-align:middle; transition:color 0.2s; }
 .copy-btn-sm:hover { color:var(--text); }
 
-/* SIDEBAR TOGGLE (mobile/tablet) */
+/* SIDEBAR TOGGLE — sempre visível, funciona em qualquer largura */
 .sidebar-toggle-btn {
-  display:none;
+  display:flex;
   width:34px; height:34px;
   border:none; background:none;
   color:var(--brown);
@@ -484,7 +528,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
   align-items:center; justify-content:center;
 }
 .sidebar-collapse-btn {
-  display:none;
+  display:flex;
   width:28px; height:28px;
   border:none;
   background:rgba(255,255,255,0.1);
@@ -502,15 +546,13 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
   background:rgba(42,31,20,0.45);
   z-index:99;
 }
-.sidebar-overlay.open { display:block; }
 
-/* RESPONSIVE */
+/* RESPONSIVE (mobile/tablet — vira menu-gaveta) */
 @media(max-width:1024px) {
   .sidebar { transform:translateX(-100%); }
-  .sidebar.open { transform:translateX(0); }
+  body.sidebar-mobile-open .sidebar { transform:translateX(0); }
   .main { margin-left:0; }
-  .sidebar-toggle-btn { display:flex; }
-  .sidebar-collapse-btn { display:flex; }
+  body.sidebar-mobile-open .sidebar-overlay { display:block; }
   .stats-grid { grid-template-columns:1fr 1fr; }
 }
 @media(max-width:600px) {
@@ -589,6 +631,7 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
       <div class="topbar-title" id="page-title">Dashboard</div>
     </div>
     <div class="topbar-right">
+      <a href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener" class="btn-stats">📊 Ver estatísticas</a>
       <a href="/admin/produto" class="btn-new-product">+ Novo Produto</a>
     </div>
   </div>
@@ -621,6 +664,34 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
         <div class="stat-value" id="stat-faturamento">—</div>
         <div class="stat-change up">Valor dos pedidos</div>
         <div class="stat-icon">💰</div>
+      </div>
+    </div>
+
+    <!-- BUSCA NO GOOGLE -->
+    <div class="stats-grid" id="gsc-grid" style="display:none;margin-top:1rem;">
+      <div class="stat-card">
+        <div class="stat-label">Cliques no Google</div>
+        <div class="stat-value" id="gsc-clicks">—</div>
+        <div class="stat-change" id="gsc-periodo">Últimos 28 dias</div>
+        <div class="stat-icon">🔍</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Impressões</div>
+        <div class="stat-value" id="gsc-impressions">—</div>
+        <div class="stat-change">Vezes que apareceu na busca</div>
+        <div class="stat-icon">👁️</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Taxa de cliques</div>
+        <div class="stat-value" id="gsc-ctr">—</div>
+        <div class="stat-change">CTR médio</div>
+        <div class="stat-icon">📈</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Posição média</div>
+        <div class="stat-value" id="gsc-position">—</div>
+        <div class="stat-change">No Google</div>
+        <div class="stat-icon">🏆</div>
       </div>
     </div>
 
@@ -695,6 +766,13 @@ body { font-family:'Jost',sans-serif; background:var(--cream); color:var(--text)
       <div class="section-header">
         <h2 class="section-title">Clientes</h2>
       </div>
+
+      <div class="campaigns-card" id="campaigns-card" style="display:none;">
+        <div class="campaigns-card-title">✉️ Campanhas prontas no Brevo</div>
+        <p class="campaigns-card-sub">Campanhas que você já preparou no Brevo, prontas pra disparar sem precisar abrir o painel de lá.</p>
+        <div id="campaigns-list"></div>
+      </div>
+
       <input type="text" class="search-input" id="clientes-busca" placeholder="Buscar por nome ou e-mail..." oninput="renderClientesTable()">
       <div class="table-wrap">
         <div class="loading" id="loading-clientes">
@@ -1099,6 +1177,69 @@ window.testarEmailStatus = async function(status, emailDestino, opts) {
 // ── LOAD ──
 async function loadDashboard() {
   await Promise.all([loadProdutos(), loadPedidos()]);
+  loadSearchConsoleStats();
+  loadCampaigns();
+}
+
+async function loadCampaigns() {
+  try {
+    const res = await fetch('/api/brevo-campaigns');
+    const data = await res.json();
+    const campanhas = data.campanhas || [];
+    const card = document.getElementById('campaigns-card');
+    const list = document.getElementById('campaigns-list');
+    if (!campanhas.length) { card.style.display = 'none'; return; }
+    card.style.display = 'block';
+    list.innerHTML = campanhas.map(c => `
+      <div class="campaign-row">
+        <div class="campaign-info">
+          <div class="campaign-nome">${c.nome}</div>
+          <div class="campaign-assunto">${c.assunto || ''}</div>
+        </div>
+        <button class="btn-campaign-send" onclick="dispararCampanha(${c.id}, this, '${c.nome.replace(/'/g, "\\'")}')">Disparar</button>
+      </div>
+    `).join('');
+  } catch (e) {
+    console.warn('Campanhas do Brevo indisponíveis:', e);
+  }
+}
+
+window.dispararCampanha = async function(id, btn, nome) {
+  if (!confirm(`Disparar a campanha "${nome}" agora? Ela será enviada pra lista configurada no Brevo — essa ação não pode ser desfeita.`)) return;
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  try {
+    const res = await fetch('/api/brevo-campaigns', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Falha ao disparar');
+    showToast(`Campanha "${nome}" disparada!`);
+    loadCampaigns();
+  } catch (e) {
+    console.error(e);
+    showToast('Erro ao disparar campanha');
+    btn.disabled = false;
+    btn.textContent = 'Disparar';
+  }
+};
+
+async function loadSearchConsoleStats() {
+  try {
+    const res = await fetch('/api/search-console-stats');
+    const data = await res.json();
+    if (!data.configured || data.error) return;
+    document.getElementById('gsc-clicks').textContent = data.clicks.toLocaleString('pt-BR');
+    document.getElementById('gsc-impressions').textContent = data.impressions.toLocaleString('pt-BR');
+    document.getElementById('gsc-ctr').textContent = (data.ctr * 100).toFixed(1).replace('.', ',') + '%';
+    document.getElementById('gsc-position').textContent = data.position.toFixed(1).replace('.', ',');
+    if (data.periodo) document.getElementById('gsc-periodo').textContent = data.periodo;
+    document.getElementById('gsc-grid').style.display = 'grid';
+  } catch (e) {
+    console.warn('Estatísticas de busca do Google indisponíveis:', e);
+  }
 }
 
 // ── PRODUTOS ──
@@ -1323,14 +1464,29 @@ window.logout = async function() {
   window.location.href = '/admin';
 };
 
-// ── SIDEBAR (mobile/tablet) ──
+// ── SIDEBAR — recolher/expandir em qualquer largura ──
+// No celular/tablet estreito (≤1024px) vira menu-gaveta (some por completo,
+// some com overlay escuro atrás). Em telas maiores, a seta apenas recolhe a
+// sidebar pra dar mais espaço ao conteúdo — e essa preferência fica salva
+// (localStorage), útil pra quem usa um tablet com pouco espaço na tela.
+if (localStorage.getItem('sidebarCollapsed') === '1') {
+  document.body.classList.add('sidebar-collapsed');
+}
 window.toggleSidebar = function() {
-  document.getElementById('sidebar')?.classList.toggle('open');
-  document.getElementById('sidebar-overlay')?.classList.toggle('open');
+  if (window.matchMedia('(max-width:1024px)').matches) {
+    document.body.classList.toggle('sidebar-mobile-open');
+  } else {
+    const collapsed = document.body.classList.toggle('sidebar-collapsed');
+    localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+  }
 };
 window.closeSidebar = function() {
-  document.getElementById('sidebar')?.classList.remove('open');
-  document.getElementById('sidebar-overlay')?.classList.remove('open');
+  if (window.matchMedia('(max-width:1024px)').matches) {
+    document.body.classList.remove('sidebar-mobile-open');
+  } else {
+    document.body.classList.add('sidebar-collapsed');
+    localStorage.setItem('sidebarCollapsed', '1');
+  }
 };
 
 // ── TOAST ──

@@ -82,9 +82,9 @@ body.sidebar-collapsed .main { margin-left:0; }
 }
 .reposition-frame.dragging { cursor:grabbing; }
 .reposition-frame img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center center; user-select:none; pointer-events:none; }
-.reposition-controls { display:flex; align-items:center; justify-content:space-between; gap:0.6rem; margin-top:0.4rem; }
-.reposition-hint { font-size:0.62rem; color:var(--text-s); letter-spacing:0.02em; }
-.btn-reposition-reset { font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.3rem 0.6rem; border:1px solid var(--gold-pale); background:var(--white); color:var(--text-m); cursor:pointer; border-radius:4px; white-space:nowrap; }
+.reposition-controls { display:flex; flex-direction:column; align-items:flex-start; gap:0.4rem; margin-top:0.55rem; }
+.reposition-hint { font-size:0.62rem; color:var(--text-s); letter-spacing:0.02em; line-height:1.4; }
+.btn-reposition-reset { font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.3rem 0.6rem; border:1px solid var(--gold-pale); background:var(--white); color:var(--text-m); cursor:pointer; border-radius:4px; white-space:nowrap; align-self:flex-end; }
 .btn-reposition-reset:hover { border-color:var(--gold); color:var(--gold); }
 .reposition-zoom-btns { position:absolute; bottom:0.4rem; right:0.4rem; display:flex; gap:0.3rem; z-index:2; }
 .reposition-zoom-btn {
@@ -94,6 +94,13 @@ body.sidebar-collapsed .main { margin-left:0; }
   line-height:1; padding:0; backdrop-filter:blur(2px); transition:background 0.15s;
 }
 .reposition-zoom-btn:hover { background:rgba(61,43,26,0.92); }
+
+/* ── LISTA DE OPÇÕES (ex: Estilo do Banner) ── */
+.banner-style-list { display:flex; flex-direction:column; gap:0.6rem; margin-top:0.5rem; }
+.banner-style-option { display:flex; align-items:flex-start; gap:0.65rem; cursor:pointer; font-weight:400; padding:0.65rem 0.8rem; border:1px solid var(--gold-pale); border-radius:8px; background:var(--cream); transition:border-color 0.15s, background 0.15s; }
+.banner-style-option:hover { border-color:var(--gold-light); }
+.banner-style-option input[type="radio"] { margin-top:0.2rem; flex-shrink:0; accent-color:var(--gold); }
+.banner-style-option:has(input:checked) { border-color:var(--gold); background:var(--white); box-shadow:0 0 0 1px var(--gold) inset; }
 
 /* ── DESTAQUE BOXES ── */
 .boxes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
@@ -335,16 +342,16 @@ body.sidebar-collapsed .main { margin-left:0; }
         </div>
         <div class="form-group">
           <label>Estilo do Banner</label>
-          <div style="display:flex;gap:1.5rem;margin-top:0.5rem;flex-wrap:wrap;">
-            <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:400;">
+          <div class="banner-style-list">
+            <label class="banner-style-option">
               <input type="radio" name="hero-estilo" id="hero-estilo-editorial" value="editorial" />
               <span><strong>Editorial</strong> — mosaico de fotos ao lado (clássico)</span>
             </label>
-            <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:400;">
+            <label class="banner-style-option">
               <input type="radio" name="hero-estilo" id="hero-estilo-fullscreen" value="fullscreen" />
               <span><strong>Fullscreen</strong> — 3 fotos com slideshow</span>
             </label>
-            <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:400;">
+            <label class="banner-style-option">
               <input type="radio" name="hero-estilo" id="hero-estilo-foto" value="foto" />
               <span><strong>Foto Cheia</strong> — foto de fundo com texto sobreposto</span>
             </label>

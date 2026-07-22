@@ -95,6 +95,12 @@ body.sidebar-collapsed .main { margin-left:0; }
 }
 .reposition-zoom-btn:hover { background:rgba(61,43,26,0.92); }
 
+/* ── SELO "EM USO" / "SÓ NO ESTILO X" ── */
+.usage-badge { display:inline-flex; align-items:center; font-size:0.58rem; letter-spacing:0.06em; text-transform:uppercase; font-weight:600; padding:0.2rem 0.55rem; border-radius:20px; white-space:nowrap; }
+.usage-badge:empty { display:none; }
+.usage-badge.usage-active { background:var(--green-l); color:var(--green); }
+.usage-badge.usage-inactive { background:var(--cream-d); color:var(--text-s); font-weight:400; text-transform:none; letter-spacing:0.01em; }
+
 /* ── LISTA DE OPÇÕES (ex: Estilo do Banner) ── */
 .banner-style-list { display:flex; flex-direction:column; gap:0.6rem; margin-top:0.5rem; }
 .banner-style-option { display:flex; align-items:flex-start; gap:0.65rem; cursor:pointer; font-weight:400; padding:0.65rem 0.8rem; border:1px solid var(--gold-pale); border-radius:8px; background:var(--cream); transition:border-color 0.15s, background 0.15s; }
@@ -277,7 +283,7 @@ body.sidebar-collapsed .main { margin-left:0; }
           </div>
         </div>
         <div class="form-group">
-          <label>Imagem principal (foto grande da direita)</label>
+          <label style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">Imagem principal (foto grande da direita) <span class="usage-badge" data-usage-for="editorial"></span></label>
           <div class="img-upload-area" id="area-hero">
             <input type="file" accept="image/*" onchange="previewImg(this,'prev-hero','area-hero','hero-img-url'); initReposition('hero')" />
             <div class="upload-icon">📷</div>
@@ -303,7 +309,7 @@ body.sidebar-collapsed .main { margin-left:0; }
           </div>
         </div>
         <div class="form-group">
-          <label>Imagem principal — versão celular (opcional)</label>
+          <label style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">Imagem principal — versão celular (opcional) <span class="usage-badge" data-usage-for="editorial"></span></label>
           <p style="font-size:0.68rem;color:var(--text-s);margin-bottom:0.5rem;">Se o enquadramento da foto acima ficar cortado no celular, envie aqui uma versão própria para telas pequenas. Se deixar em branco, o celular usa a mesma foto de cima.</p>
           <div class="img-upload-area" id="area-hero-mobile">
             <input type="file" accept="image/*" onchange="previewImg(this,'prev-hero-mobile','area-hero-mobile','hero-img-mobile-url'); initReposition('hero-mobile')" />
@@ -330,7 +336,7 @@ body.sidebar-collapsed .main { margin-left:0; }
           </div>
         </div>
         <div class="form-group">
-          <label>Foto de fundo (Estilo Foto Cheia — opção C abaixo)</label>
+          <label style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">Foto de fundo (Estilo Foto Cheia — opção C abaixo) <span class="usage-badge" data-usage-for="foto"></span></label>
           <div class="img-upload-area" id="area-hero-foto-fundo">
             <input type="file" accept="image/*" onchange="previewImg(this,'prev-hero-foto-fundo','area-hero-foto-fundo','hero-foto-fundo-url'); initReposition('hero-foto-fundo')" />
             <div class="upload-icon">📷</div>
@@ -364,7 +370,7 @@ body.sidebar-collapsed .main { margin-left:0; }
     <div class="config-card collapsed" data-preview-target="#hero-fullscreen">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">🎞️</span>
-        <h2>Banner Fullscreen — Estilo B (3 fotos + texto)</h2>
+        <h2>Banner Fullscreen — Estilo B (3 fotos + texto) <span class="usage-badge" data-usage-for="fullscreen"></span></h2>
         <span class="chevron">▾</span>
       </div>
       <div class="config-card-body">
@@ -551,7 +557,7 @@ body.sidebar-collapsed .main { margin-left:0; }
     <div class="config-card collapsed" data-preview-target="#hero-editorial">
       <div class="config-card-header" onclick="toggleCard(this)">
         <span class="icon">◻️</span>
-        <h2>Caixas de Destaque (3 fotos ao lado do Hero)</h2>
+        <h2>Caixas de Destaque (3 fotos ao lado do Hero) <span class="usage-badge" data-usage-for="editorial"></span></h2>
         <span class="chevron">▾</span>
       </div>
       <div class="config-card-body">
@@ -1029,6 +1035,7 @@ async function carregarConfigs() {
     const estilo = d.hero?.estilo || 'editorial';
     const radioEl = document.querySelector(`input[name="hero-estilo"][value="${estilo}"]`);
     if (radioEl) radioEl.checked = true;
+    updateBannerUsageBadges();
 
     // Caixas de Destaque (box1/2/3) — antes não eram recarregadas ao abrir a
     // página, então salvar de novo sem preencher tudo apagava os dados reais.
@@ -1549,7 +1556,28 @@ function schedulePreviewDraft() {
   previewDebounce = setTimeout(sendPreviewDraft, 200);
 }
 
+// Mostra, em cada campo/seção que só vale para um "Estilo do Banner"
+// específico, se ele está em uso agora ou só passa a valer ao trocar o
+// estilo (evita a duvida de "por que tem 2 fotos grandes aqui?").
+const ESTILO_BANNER_LABELS = { editorial: 'Editorial', fullscreen: 'Fullscreen', foto: 'Foto Cheia' };
+function updateBannerUsageBadges() {
+  const estiloAtual = document.querySelector('input[name="hero-estilo"]:checked')?.value || 'editorial';
+  document.querySelectorAll('.usage-badge[data-usage-for]').forEach(badge => {
+    const usaNoEstilo = badge.dataset.usageFor;
+    if (usaNoEstilo === estiloAtual) {
+      badge.textContent = '✓ Em uso agora';
+      badge.className = 'usage-badge usage-active';
+    } else {
+      badge.textContent = `Só aparece no estilo "${ESTILO_BANNER_LABELS[usaNoEstilo] || usaNoEstilo}"`;
+      badge.className = 'usage-badge usage-inactive';
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  updateBannerUsageBadges();
+  document.querySelectorAll('input[name="hero-estilo"]').forEach(r => r.addEventListener('change', updateBannerUsageBadges));
+
   const cardsCol = document.querySelector('.cards-col');
   if (!cardsCol) return;
 

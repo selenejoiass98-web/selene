@@ -46,12 +46,12 @@ Cole este documento no início de qualquer conversa nova para eu entender o proj
 - [x] `produto.html` — Cadastrar/editar produto, upload de até 4 fotos (Cloudinary), arrastar para reposicionar **e zoom +/-** em cada foto
 - [x] `cupons.html` — Gerenciar cupons de desconto
 - [x] `blog.html` / `blog-post.html` — Gerenciar posts do blog
-- [x] `configuracoes.html` — Hero, faixa de avisos, Caixas de Destaque, Banner Fullscreen B, Depoimentos, WhatsApp, frete grátis, Pix — **todo campo de imagem tem arrastar + zoom (+/-) na própria foto**
-- [x] Sidebar recolhível (preferência salva em localStorage) e responsiva (menu overlay em telas ≤1024px) em todas as páginas do admin
+- [x] `configuracoes.html` — Hero, faixa de avisos, Caixas de Destaque, Banner Fullscreen B, Depoimentos, WhatsApp, frete grátis, Pix — **todo campo de imagem tem arrastar + zoom (+/-na própria foto**
+- [x] Sidebar recolhível (preferência salva em localStoragee responsiva (menu overlay em telas ≤1024px) em todas as páginas do admin
 
 ### Pagamentos e Pós-venda
 - [x] **Mercado Pago real** — `api/payment.js` (cria pagamento Pix/cartão/boleto), `api/mp-webhook.js` (confirma pagamento via webhook com verificação HMAC de assinatura), `api/payment-status.js` (consulta status), `api/check-boletos.js` (cron diário às 12h que trata boletos vencidos)
-- [x] **E-mails transacionais e marketing via Brevo** (não EmailJS) — `api/email.js` (envio via SMTP da Brevo), `api/contact.js` (cadastra o cliente na lista "Clientes do Site" da Brevo a cada pedido, sem nunca bloquear a venda), `api/brevo-campaigns.js` (lista campanhas em rascunho e dispara `sendNow`)
+- [x] **E-mails transacionais e marketing via Brevo** (não EmailJS— `api/email.js` (envio via SMTP da Brevo), `api/contact.js` (cadastra o cliente na lista "Clientes do Site" da Brevo a cada pedido, sem nunca bloquear a venda), `api/brevo-campaigns.js` (lista campanhas em rascunho e dispara `sendNow`)
 
 ### Infraestrutura
 - [x] **Vercel** — hospedagem gratuita, deploy automático via GitHub
@@ -97,12 +97,12 @@ Cole este documento no início de qualquer conversa nova para eu entender o proj
 | Item | Escolha | Custo | Status |
 |------|---------|-------|--------|
 | Hospedagem | Vercel | Gratuito | ✅ Ativo |
-| Repositório | GitHub (selenejoiass98-web/selene) | Gratuito | ✅ Ativo |
+| Repositório | GitHub (selenejoiass98-web/selene| Gratuito | ✅ Ativo |
 | Banco de dados | Firebase Firestore | Gratuito | ✅ Ativo |
 | Autenticação | Firebase Auth | Gratuito | ✅ Ativo |
 | Fotos produtos | Cloudinary | Gratuito | ✅ Ativo |
 | Domínio | elenicecollection.com.br | — | ✅ Ativo |
-| SSL | Vercel (automático) | Gratuito | ✅ Ativo |
+| SSL | Vercel (automático| Gratuito | ✅ Ativo |
 | Analytics | Google Analytics 4 `G-NB5Q5NEEG6` | Gratuito | ✅ Ativo |
 | Search Console | `sc-domain:elenicecollection.com.br` | Gratuito | ✅ Ativo |
 | E-mail (transacional + marketing) | Brevo | Gratuito até 300 e-mails/dia | ✅ Ativo |
@@ -218,7 +218,7 @@ const CLOUDINARY_PRESET = 'selene-joias'; // Unsigned
 - `cleanUrls: true` deve estar ativo
 - `api/payment.js` deve sempre estar presente
 - Rotas obrigatórias: `/admin/cupons`, `/admin/configuracoes`, `/admin/blog`, `/admin/blog-post`, `/blog/:slug`
-- O cron de boletos (`/api/check-boletos`) precisa continuar em `crons`
+- O cron de boletos (`/api/check-boletos`precisa continuar em `crons`
 
 ### Firebase / Firestore
 - **Nunca** combinar `where` + `orderBy` no Firestore (plano gratuito exige índice composto)
@@ -233,12 +233,12 @@ const CLOUDINARY_PRESET = 'selene-joias'; // Unsigned
 - Meta Pixel não está instalado hoje
 
 ### E-mail e marketing
-- Tudo via **Brevo** (não EmailJS) — `api/email.js` para transacional, `api/contact.js` para cadastrar na lista de marketing, `api/brevo-campaigns.js` para campanhas
-- A API da Brevo (`sendNow`) não permite escolher destinatários por chamada — o envio sempre vai para a lista já configurada na própria campanha; por isso o botão "Criar campanha" no admin abre o Brevo direto em vez de tentar reconstruir esse fluxo
+- Tudo via **Brevo** (não EmailJS— `api/email.js` para transacional, `api/contact.js` para cadastrar na lista de marketing, `api/brevo-campaigns.js` para campanhas
+- A API da Brevo (`sendNow`não permite escolher destinatários por chamada — o envio sempre vai para a lista já configurada na própria campanha; por isso o botão "Criar campanha" no admin abre o Brevo direto em vez de tentar reconstruir esse fluxo
 
 ### Reposicionamento e zoom de fotos (Hero, Caixas de Destaque, produtos, etc.)
-- Padrão: `object-position` (arrastar/pan) + `transform: scale()` (zoom), salvos como `posX`/`posY`/`zoom` por foto
-- Nas fotos de produto, o zoom de hover do site (lupa na página do produto, ampliação no card do catálogo) usa a foto configurada como **base** via uma custom property CSS `--zoom` — o hover multiplica a partir dela em vez de sobrescrever, então o zoom do admin e o zoom de hover coexistem
+- Padrão: `object-position` (arrastar/pan+ `transform: scale()` (zoom), salvos como `posX`/`posY`/`zoom` por foto
+- Nas fotos de produto, o zoom de hover do site (lupa na página do produto, ampliação no card do catálogousa a foto configurada como **base** via uma custom property CSS `--zoom` — o hover multiplica a partir dela em vez de sobrescrever, então o zoom do admin e o zoom de hover coexistem
 - Estado de arraste/zoom fica em um objeto persistente por campo (não em variável local da função), porque a função de inicialização roda de novo toda vez que a foto é trocada
 
 ### CSS — cuidado com inline style

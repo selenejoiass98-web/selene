@@ -198,14 +198,6 @@
   cursor: pointer;
 }
 
-/* Material dots */
-.mat-dot {
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  border: 1px solid var(--gold-pale);
-}
-
 /* PRODUCTS AREA */
 .products-area {}
 .products-toolbar {
@@ -489,22 +481,6 @@
       </div>
 
       <div class="sidebar-section">
-        <div class="sidebar-title">Material</div>
-        <div class="sidebar-options">
-          <label class="sidebar-option">
-            <input type="checkbox" class="mat-checkbox" data-material="Dourado" onchange="toggleMaterial('Dourado',this)">
-            <div class="mat-dot" style="background:linear-gradient(135deg,#C4A47A,#7C5C35);"></div>
-            Dourado 18k
-          </label>
-          <label class="sidebar-option">
-            <input type="checkbox" class="mat-checkbox" data-material="Rosé" onchange="toggleMaterial('Rosé',this)">
-            <div class="mat-dot" style="background:linear-gradient(135deg,#E8B4A0,#C47858);"></div>
-            Rosé 18k
-          </label>
-        </div>
-      </div>
-
-      <div class="sidebar-section">
         <div class="sidebar-title">Ocasião</div>
         <div class="sidebar-options">
           <label class="sidebar-option"><input type="checkbox"> Uso diário</label>
@@ -694,7 +670,6 @@ let ALL_PRODUCTS = [];
 let currentCat = 'todos';
 let currentSort = 'default';
 let maxPrice = 9999;
-let selectedMaterials = [];
 let currentPage = 1;
 const perPage = 9;
 
@@ -794,9 +769,6 @@ function getFiltered() {
   let list = [...ALL_PRODUCTS];
   if (currentCat !== 'todos') list = list.filter(p => p.cat === currentCat);
   list = list.filter(p => p.price <= maxPrice);
-  if (selectedMaterials.length > 0) {
-    list = list.filter(p => selectedMaterials.some(m => p.material.startsWith(m)));
-  }
   if (currentSort === 'preco-asc')   list.sort((a,b) => a.price - b.price);
   else if (currentSort === 'preco-desc') list.sort((a,b) => b.price - a.price);
   else if (currentSort === 'novidades')  list.sort((a,b) => b.novo - a.novo);
@@ -829,16 +801,6 @@ window.filterPrice = function(val) {
   render();
 };
 
-window.toggleMaterial = function(material, checkbox) {
-  if (checkbox.checked) {
-    if (!selectedMaterials.includes(material)) selectedMaterials.push(material);
-  } else {
-    selectedMaterials = selectedMaterials.filter(m => m !== material);
-  }
-  currentPage = 1;
-  render();
-};
-
 window.toggleSidebarCat = function(cat, checkbox) {
   if (checkbox.checked) window.filterCat(cat, document.querySelector(`[data-cat="${cat}"].filter-cat`));
   else window.filterCat('todos', document.querySelector('[data-cat="todos"].filter-cat'));
@@ -847,7 +809,6 @@ window.toggleSidebarCat = function(cat, checkbox) {
 window.clearFilters = function() {
   currentCat = 'todos';
   currentSort = 'default';
-  selectedMaterials = [];
   currentPage = 1;
   document.querySelectorAll('.filter-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === 'todos'));
   const slider = document.getElementById('price-range');

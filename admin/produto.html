@@ -78,6 +78,25 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
 .form-error { font-size:0.62rem; color:var(--red); display:none; }
 .form-error.show { display:block; }
 
+/* SIZE CHIPS (tamanhos pré-prontos por categoria) */
+.size-chip-row { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.7rem; min-height:2.1rem; align-items:center; }
+.size-chip {
+  padding:0.45rem 0.9rem; border:1px solid var(--gold-pale); background:var(--white);
+  font-family:'Jost',sans-serif; font-size:0.72rem; color:var(--text-m);
+  cursor:pointer; transition:all 0.2s;
+}
+.size-chip:hover { border-color:var(--gold-light); color:var(--gold); }
+.size-chip.active { background:var(--gold); border-color:var(--gold); color:var(--white); }
+.size-chip-hint { font-size:0.7rem; color:var(--text-s); font-style:italic; }
+.size-chip-add { display:flex; gap:0.5rem; }
+.size-chip-add .form-input { padding:0.55rem 0.8rem; font-size:0.78rem; }
+.btn-add-tamanho {
+  padding:0.55rem 1rem; background:var(--cream-d); border:1px solid var(--gold-pale);
+  color:var(--text-m); font-family:'Jost',sans-serif; font-size:0.68rem; letter-spacing:0.05em;
+  cursor:pointer; white-space:nowrap; transition:all 0.2s;
+}
+.btn-add-tamanho:hover { background:var(--gold); border-color:var(--gold); color:var(--white); }
+
 /* TOGGLE */
 .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:0.8rem 0; border-bottom:1px solid var(--gold-pale); }
 .toggle-row:last-child { border-bottom:none; }
@@ -285,7 +304,7 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
           <div class="form-row single">
             <div class="form-group">
               <label class="form-label">Categoria <span>*</span></label>
-              <select class="form-input" id="categoria" onchange="updatePreview()">
+              <select class="form-input" id="categoria" onchange="updatePreview();categoriaAlterada();">
                 <option value="">Selecione...</option>
                 <option value="Colares">Colares</option>
                 <option value="Anéis">Anéis</option>
@@ -321,7 +340,8 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">SKU / Código</label>
-              <input type="text" class="form-input" id="sku" placeholder="SJ-COL-001">
+              <input type="text" class="form-input" id="sku" placeholder="Preenchido automaticamente pela categoria" oninput="skuEditadoManualmente = true;">
+              <div class="form-hint">Gerado sozinho ao escolher a categoria (ex: COL-001). Pode editar se quiser.</div>
             </div>
             <div class="form-group">
               <label class="form-label">Peso (gramas)</label>
@@ -351,8 +371,16 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
           <div class="form-row single">
             <div class="form-group">
               <label class="form-label">Tamanhos disponíveis</label>
-              <input type="text" class="form-input" id="tamanhos" placeholder="Ex: T14, T16, T17, T18 (separados por vírgula)">
-              <div class="form-hint">Deixe vazio se não tiver variação de tamanho</div>
+              <div class="size-chip-row" id="tamanhos-chips">
+                <span class="size-chip-hint">Selecione a categoria para ver os tamanhos</span>
+              </div>
+              <div class="size-chip-add">
+                <input type="text" class="form-input" id="novo-tamanho-input" placeholder="Novo tamanho (ex: T22)"
+                  onkeydown="if(event.key==='Enter'){event.preventDefault();adicionarTamanhoPreset();}">
+                <button type="button" class="btn-add-tamanho" onclick="adicionarTamanhoPreset()">+ Adicionar</button>
+              </div>
+              <input type="hidden" id="tamanhos">
+              <div class="form-hint">Clique para selecionar. Nenhum selecionado = sem variação de tamanho. O que adicionar aqui fica salvo para os próximos produtos dessa categoria.</div>
             </div>
           </div>
           <div class="form-row single">
@@ -482,12 +510,22 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, doc, addDoc, getDoc, getDocs, updateDoc, serverTimestamp }
+import { getFirestore, collection, doc, addDoc, getDoc, getDocs, updateDoc, setDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 // Cloudinary config
 const CLOUDINARY_CLOUD = 'ddmxyguk0';
 const CLOUDINARY_PRESET = 'selene-joias';
 const MATERIAL_PADRAO = 'Semijoia banhada a ouro 18k';
+
+// Prefixo do SKU automático e tamanhos padrão por categoria
+const SKU_PREFIXO = { 'Anéis':'ANE', 'Colares':'COL', 'Pulseiras':'PUL', 'Brincos':'BRI', 'Conjuntos':'CON' };
+const TAMANHOS_PADRAO = {
+  'Anéis':     ['T14','T16','T17','T18','T20'],
+  'Colares':   ['40cm','45cm','50cm','60cm'],
+  'Pulseiras': ['15cm','17cm','19cm','Ajustável'],
+  'Brincos':   ['Único','P','M','G'],
+  'Conjuntos': ['Único'],
+};
 
 const firebaseConfig = {
   apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
@@ -513,6 +551,9 @@ let uploadedPhotos = []; // { url, path, uid, posX, posY }
 let photoUidCounter = 0;
 let editingId = null;
 let existingSlug = '';
+let skuEditadoManualmente = false;
+let tamanhosPresetCustom = {}; // adições salvas pelo botão "+ Adicionar" (configuracoes/loja.tamanhosPreset)
+let tamanhosSelecionados = new Set();
 
 // ── EDIT MODE: load existing product ──
 const params = new URLSearchParams(window.location.search);
@@ -522,6 +563,86 @@ if (editId) {
   document.getElementById('page-title').textContent = 'Editar Produto';
   document.getElementById('btn-save-text').textContent = '✦ Salvar alterações';
   loadProduct(editId);
+}
+
+// ── TAMANHOS: carrega presets salvos ──
+(async function carregarPresetsTamanho() {
+  try {
+    const cfgSnap = await getDoc(doc(db, 'configuracoes', 'loja'));
+    if (cfgSnap.exists()) tamanhosPresetCustom = cfgSnap.data().tamanhosPreset || {};
+  } catch (e) { console.warn('Presets de tamanho:', e); }
+  renderTamanhoChips();
+})();
+
+function getPresetsCategoria(categoria) {
+  const padrao = TAMANHOS_PADRAO[categoria] || [];
+  const custom = tamanhosPresetCustom[categoria] || [];
+  return [...new Set([...padrao, ...custom])];
+}
+
+function renderTamanhoChips() {
+  const categoria = document.getElementById('categoria').value;
+  const wrap = document.getElementById('tamanhos-chips');
+  if (!categoria) {
+    wrap.innerHTML = '<span class="size-chip-hint">Selecione a categoria para ver os tamanhos</span>';
+    return;
+  }
+  const presets = getPresetsCategoria(categoria);
+  wrap.innerHTML = presets.length
+    ? presets.map(t => `<button type="button" class="size-chip ${tamanhosSelecionados.has(t) ? 'active' : ''}" onclick="toggleTamanhoChip('${t.replace(/'/g, "\\'")}')">${t}</button>`).join('')
+    : '<span class="size-chip-hint">Nenhum tamanho salvo ainda — adicione um abaixo</span>';
+}
+
+window.toggleTamanhoChip = function(t) {
+  if (tamanhosSelecionados.has(t)) tamanhosSelecionados.delete(t);
+  else tamanhosSelecionados.add(t);
+  document.getElementById('tamanhos').value = [...tamanhosSelecionados].join(', ');
+  renderTamanhoChips();
+};
+
+window.adicionarTamanhoPreset = async function() {
+  const categoria = document.getElementById('categoria').value;
+  if (!categoria) { showToast('Selecione a categoria primeiro'); return; }
+  const input = document.getElementById('novo-tamanho-input');
+  const valor = input.value.trim();
+  if (!valor) return;
+
+  tamanhosSelecionados.add(valor);
+  document.getElementById('tamanhos').value = [...tamanhosSelecionados].join(', ');
+  input.value = '';
+
+  if (!getPresetsCategoria(categoria).includes(valor)) {
+    tamanhosPresetCustom[categoria] = [...(tamanhosPresetCustom[categoria] || []), valor];
+    try {
+      await setDoc(doc(db, 'configuracoes', 'loja'), { tamanhosPreset: tamanhosPresetCustom }, { merge: true });
+    } catch (e) { console.warn('Salvar preset de tamanho:', e); }
+  }
+  renderTamanhoChips();
+};
+
+// ── CATEGORIA: reseta tamanhos e gera SKU automático ──
+window.categoriaAlterada = function() {
+  tamanhosSelecionados = new Set();
+  document.getElementById('tamanhos').value = '';
+  renderTamanhoChips();
+  autoFillSku();
+};
+
+async function autoFillSku() {
+  if (editingId || skuEditadoManualmente) return;
+  const categoria = document.getElementById('categoria').value;
+  const prefixo = SKU_PREFIXO[categoria];
+  if (!prefixo) return;
+  try {
+    const snap = await getDocs(collection(db, 'produtos'));
+    let max = 0;
+    const re = new RegExp('^' + prefixo + '-(\\d+)$');
+    snap.docs.forEach(d => {
+      const m = re.exec(d.data().sku || '');
+      if (m) max = Math.max(max, parseInt(m[1], 10));
+    });
+    document.getElementById('sku').value = `${prefixo}-${String(max + 1).padStart(3, '0')}`;
+  } catch (e) { console.warn('SKU automático:', e); }
 }
 
 async function loadProduct(id) {
@@ -540,7 +661,9 @@ async function loadProduct(id) {
     document.getElementById('sku').value = p.sku||'';
     document.getElementById('peso').value = p.peso||'';
     document.getElementById('tamanho').value = p.tamanho||'';
+    tamanhosSelecionados = new Set(p.tamanhos || []);
     document.getElementById('tamanhos').value = (p.tamanhos||[]).join(', ');
+    renderTamanhoChips();
     document.getElementById('acabamento').value = p.acabamento||'Polido';
     document.getElementById('badge').value = p.badge||'';
     document.getElementById('selo-oferta').value = p.seloOferta||'';

@@ -6,7 +6,7 @@
 <meta name="description" content="Catálogo Elenice Collection — Explore nossa coleção completa de semijoias exclusivas. Anéis, colares, pulseiras e brincos.">
 <title>Coleção — Elenice Collection</title>
 <link rel="canonical" id="canonical-link" href="https://www.elenicecollection.com.br/catalogo" />
-<link rel="stylesheet" href="assets/css/style.css?v=6">
+<link rel="stylesheet" href="assets/css/style.css?v=7">
 <style>
 /* ── CATALOG PAGE ── */
 
@@ -903,8 +903,8 @@ function render() {
           </a>
         </div>
         <div class="product-card-info">
-          <div class="product-cat">${p.catLabel} · ${p.variant}</div>
           <a href="${href}"><div class="product-name">${p.name}</div></a>
+          <div class="product-cat">${p.catLabel} · ${p.variant}</div>
           <div class="product-price-block">
             ${p.oldPrice ? `<span class="product-old-price">R$ ${origFmt}</span>` : ''}
             <span class="product-price-main">R$ ${precoFmt}</span>

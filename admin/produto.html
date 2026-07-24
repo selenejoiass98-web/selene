@@ -282,7 +282,7 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
               <textarea class="form-input" id="descricao" placeholder="Descreva a semijoia em detalhes: material, inspiração, como usar..."></textarea>
             </div>
           </div>
-          <div class="form-row">
+          <div class="form-row single">
             <div class="form-group">
               <label class="form-label">Categoria <span>*</span></label>
               <select class="form-input" id="categoria" onchange="updatePreview()">
@@ -294,15 +294,6 @@ select.form-input { appearance:none; -webkit-appearance:none; background-image:u
                 <option value="Conjuntos">Conjuntos</option>
               </select>
               <div class="form-error" id="err-categoria">Selecione uma categoria</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Material</label>
-              <select class="form-input" id="material">
-                <option value="Dourado 18k">Dourado 18k</option>
-                <option value="Rosé 18k">Rosé 18k</option>
-                <option value="Dourado 18k + Zircônia">Dourado 18k + Zircônia</option>
-                <option value="Dourado 18k + Esmalte">Dourado 18k + Esmalte</option>
-              </select>
             </div>
           </div>
         </div>
@@ -496,6 +487,7 @@ import { getFirestore, collection, doc, addDoc, getDoc, getDocs, updateDoc, serv
 // Cloudinary config
 const CLOUDINARY_CLOUD = 'ddmxyguk0';
 const CLOUDINARY_PRESET = 'selene-joias';
+const MATERIAL_PADRAO = 'Semijoia banhada a ouro 18k';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAsGGXCg0GfbJKsGuGDWDHfVpdeBna-aYI",
@@ -542,7 +534,6 @@ async function loadProduct(id) {
     document.getElementById('descricao-curta').value = p.descricaoCurta||'';
     document.getElementById('descricao').value = p.descricao||'';
     document.getElementById('categoria').value = p.categoria||'';
-    document.getElementById('material').value = p.material||'Dourado 18k';
     document.getElementById('preco').value = p.preco||'';
     document.getElementById('preco-original').value = p.precoOriginal||'';
     document.getElementById('estoque').value = p.estoque||'';
@@ -806,7 +797,7 @@ window.salvarProduto = async function(status) {
     descricaoCurta: document.getElementById('descricao-curta').value.trim(),
     descricao: document.getElementById('descricao').value.trim(),
     categoria: document.getElementById('categoria').value,
-    material: document.getElementById('material').value,
+    material: MATERIAL_PADRAO,
     preco: parseFloat(document.getElementById('preco').value) || 0,
     precoOriginal: parseFloat(document.getElementById('preco-original').value) || null,
     estoque: parseInt(document.getElementById('estoque').value) || 0,

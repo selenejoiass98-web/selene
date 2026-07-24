@@ -21,7 +21,7 @@
 <meta id="tw-description" name="twitter:description" content="Semijoia exclusiva da Elenice Collection.">
 <meta id="tw-image" name="twitter:image" content="">
 
-<link rel="stylesheet" href="assets/css/style.css?v=7">
+<link rel="stylesheet" href="assets/css/style.css?v=8">
 <style>
 /* ── PRODUCT PAGE ── */
 
@@ -279,29 +279,6 @@
   opacity: 0.35;
   cursor: not-allowed;
   text-decoration: line-through;
-}
-
-.material-options { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-.material-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--gold-pale);
-  background: transparent;
-  font-size: 0.68rem;
-  color: var(--text-mid);
-  cursor: pointer;
-  transition: all var(--transition);
-  font-family: var(--font-sans);
-  letter-spacing: 0.05em;
-}
-.material-btn:hover { border-color: var(--gold-light); }
-.material-btn.active { border-color: var(--gold); background: var(--cream); color: var(--gold); }
-.mat-color {
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.08);
 }
 
 /* Qty + CTA */
@@ -749,21 +726,6 @@
           </div>
         </div>
 
-        <!-- MATERIAL -->
-        <div class="option-group">
-          <div class="option-label">Material</div>
-          <div class="material-options">
-            <button class="material-btn active" onclick="selectMaterial(this)">
-              <div class="mat-color" style="background:linear-gradient(135deg,#C4A47A,#7C5C35);"></div>
-              Dourado 18k
-            </button>
-            <button class="material-btn" onclick="selectMaterial(this)">
-              <div class="mat-color" style="background:linear-gradient(135deg,#E8B4A0,#C47858);"></div>
-              Rosé 18k
-            </button>
-          </div>
-        </div>
-
         <!-- QTY + CTA -->
         <div class="product-cta-row">
           <div class="qty-selector">
@@ -1013,6 +975,7 @@
       <p>Seu carrinho está vazio</p>
     </div>
     <div id="cart-items"></div>
+    <div id="cart-suggestion"></div>
   </div>
   <div class="cart-footer" id="cart-footer" style="display:none;">
     <div class="free-shipping-bar" id="free-shipping-bar"></div>
@@ -1040,7 +1003,7 @@
   <span id="toast-msg">Produto adicionado!</span>
 </div>
 
-<script src="assets/js/cart.js?v=3"></script>
+<script src="assets/js/cart.js?v=4"></script>
 <script>
 (function() {
   const nav   = document.querySelector('.nav');
@@ -1077,7 +1040,6 @@ let currentProduct = null;
 let allProducts = [];
 let localQty = 1;
 let selectedSize = '';
-let selectedMaterial = 'Dourado 18k';
 let wishlisted = false;
 let PIX_DESCONTO = 5;
 
@@ -1115,6 +1077,11 @@ async function loadProduct() {
     allProducts = allSnap.docs
       .map(d => ({ id: d.id, ...d.data() }))
       .filter(p => p.status === 'ativo' && p.id !== currentProduct.id);
+
+    // Catálogo p/ sugestão "quem comprou este também levou" no carrinho (cart.js)
+    window.__ELENICE_PRODUCTS = allProducts.map(p => ({
+      id: p.id, nome: p.nome, preco: Number(p.preco) || 0, foto: p.fotos?.[0] || '', slug: p.slug || ''
+    }));
 
     renderProduct();
   } catch(e) {
@@ -1322,19 +1289,13 @@ galleryMainEl?.addEventListener('mouseleave', () => {
   if (img) img.style.transformOrigin = 'center center';
 });
 
-// ── SIZE / MATERIAL ──
+// ── SIZE ──
 window.selectSize = function(btn) {
   if (btn.classList.contains('unavailable')) return;
   document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   selectedSize = btn.textContent;
 };
-window.selectMaterial = function(btn) {
-  document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedMaterial = btn.textContent.trim();
-};
-
 // ── QTY ──
 window.changeLocalQty = function(delta) {
   localQty = Math.max(1, localQty + delta);
@@ -1345,7 +1306,7 @@ window.changeLocalQty = function(delta) {
 window.handleAddToCart = function() {
   if (!currentProduct) return;
   const p = currentProduct;
-  const variant = `${selectedMaterial}${selectedSize ? ' · ' + selectedSize : ''}`;
+  const variant = `${p.material || 'Semijoia banhada a ouro 18k'}${selectedSize ? ' · ' + selectedSize : ''}`;
   const image = p.fotos?.[0] || '';
   for (let i = 0; i < localQty; i++) {
     addToCart({ id: p.id, name: p.nome, variant, price: p.preco, symbol: '◈', image });

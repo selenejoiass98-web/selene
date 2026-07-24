@@ -33,6 +33,7 @@ function addToCart(product) {
   }
   saveCart();
   updateCartUI();
+  renderCartSuggestion(product);
   showToast(`"${product.name}" adicionado ao carrinho`);
   openCart();
 }
@@ -73,6 +74,8 @@ function updateCartUI() {
     listEl.innerHTML = '';
     if (emptyEl) emptyEl.style.display = 'flex';
     if (footerEl) footerEl.style.display = 'none';
+    const suggestionEl = document.getElementById('cart-suggestion');
+    if (suggestionEl) suggestionEl.innerHTML = '';
     return;
   }
 
@@ -122,6 +125,52 @@ function updateCartUI() {
   if (freteEl) freteEl.textContent = freeShipping ? 'Grátis 🎉' : 'Calcular no checkout';
   if (totalEl) totalEl.textContent = `R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
 }
+
+// ── SUGESTÃO "TAMBÉM LEVOU" ──
+// window.__ELENICE_PRODUCTS é preenchido pelas páginas que carregam o
+// catálogo (index, catalogo, produto) no formato {id, nome, preco, foto, slug}.
+// Em páginas sem catálogo (checkout, blog, políticas...) a lista fica vazia
+// e a sugestão simplesmente não aparece.
+function getCatalog() {
+  return Array.isArray(window.__ELENICE_PRODUCTS) ? window.__ELENICE_PRODUCTS : [];
+}
+
+function pickCheaperSuggestion(product) {
+  const price = Number(product.price) || 0;
+  const cheaper = getCatalog()
+    .filter(p => p.id !== product.id && Number(p.preco) > 0 && Number(p.preco) < price)
+    .sort((a, b) => Number(b.preco) - Number(a.preco));
+  return cheaper[0] || null;
+}
+
+function renderCartSuggestion(product) {
+  const el = document.getElementById('cart-suggestion');
+  if (!el) return;
+  const s = pickCheaperSuggestion(product);
+  if (!s) { el.innerHTML = ''; return; }
+  const precoFmt = Number(s.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const href = s.slug ? `produto.html?slug=${s.slug}` : `produto.html?id=${s.id}`;
+  el.innerHTML = `
+    <div class="cart-suggestion-box">
+      <div class="cart-suggestion-label">✦ Quem comprou este também levou</div>
+      <a href="${href}" class="cart-suggestion-item">
+        <div class="cart-suggestion-img">
+          ${s.foto ? `<img src="${s.foto}" alt="${s.nome}">` : `<span>◈</span>`}
+        </div>
+        <div>
+          <div class="cart-suggestion-name">${s.nome}</div>
+          <div class="cart-suggestion-price">R$ ${precoFmt}</div>
+        </div>
+      </a>
+      <button class="cart-suggestion-add" onclick="addSuggestionToCart('${s.id}')">+ Adicionar</button>
+    </div>`;
+}
+
+window.addSuggestionToCart = function(id) {
+  const p = getCatalog().find(x => x.id === id);
+  if (!p) return;
+  addToCart({ id: p.id, name: p.nome, variant: 'Semijoia banhada a ouro 18k', price: p.preco, symbol: '◈', image: p.foto });
+};
 
 // ── CART DRAWER ──
 function openCart() {

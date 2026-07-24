@@ -21,7 +21,7 @@
 <meta id="tw-description" name="twitter:description" content="Blog Elenice Collection">
 <meta id="tw-image" name="twitter:image" content="">
 
-<link rel="stylesheet" href="assets/css/style.css?v=7">
+<link rel="stylesheet" href="assets/css/style.css?v=8">
 <style>
 .nav { top: 36px; transition: top 0.2s ease, border-color var(--transition), box-shadow var(--transition); }
 body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
@@ -180,6 +180,7 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
       <a href="../catalogo.html" class="btn btn-outline" onclick="closeCart()">Ver produtos</a>
     </div>
     <div id="cart-items"></div>
+    <div id="cart-suggestion"></div>
   </div>
   <div class="cart-footer" id="cart-footer" style="display:none;">
     <div class="free-shipping-bar" id="free-shipping-bar"></div>
@@ -203,7 +204,7 @@ body { padding-top: calc(var(--nav-h, 72px) + 36px) !important; }
   <span id="toast-msg"></span>
 </div>
 
-<script src="../assets/js/cart.js?v=3"></script>
+<script src="../assets/js/cart.js?v=4"></script>
 <script>
 (function() {
   const nav = document.querySelector('.nav');
